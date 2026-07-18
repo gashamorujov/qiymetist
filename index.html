@@ -592,11 +592,20 @@ function toggleSelect(course){
 function filterCourses(q){
   q = q.trim().toLowerCase();
   if(!q) return COURSES;
-  return COURSES.filter(c =>
+  const matched = COURSES.filter(c =>
     c.code.toLowerCase().includes(q) ||
     c.az.toLowerCase().includes(q) ||
     c.en.toLowerCase().includes(q)
   );
+  // Sort: exact code match first, then partial code, then name match
+  matched.sort((a, b) => {
+    const aCode = a.code.toLowerCase();
+    const bCode = b.code.toLowerCase();
+    const aExact = aCode === q ? 0 : (aCode.includes(q) ? 1 : 2);
+    const bExact = bCode === q ? 0 : (bCode.includes(q) ? 1 : 2);
+    return aExact - bExact;
+  });
+  return matched;
 }
 
 function updateSearchMeta(list){
