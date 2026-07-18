@@ -318,6 +318,71 @@
     color:var(--slate); font-size:12px; line-height:1.7;
     border-top:1px solid var(--hairline); padding-top:24px;
   }
+
+
+  /* ---------- Course name popup ---------- */
+  .name-az-wrap{
+    cursor:pointer;
+    position:relative;
+  }
+  .name-az-popup{
+    display:none;
+    position:fixed;
+    z-index:9999;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    max-width:520px;
+    width:calc(100vw - 48px);
+    background:var(--ink);
+    color:#fff;
+    padding:24px 28px;
+    border-radius:16px;
+    font-size:15px;
+    line-height:1.55;
+    box-shadow:0 20px 60px rgba(0,0,0,0.35);
+    word-break:break-word;
+  }
+  .name-az-popup.en{
+    margin-top:8px;
+    opacity:0.75;
+    font-size:13px;
+    font-style:italic;
+  }
+  .name-az-popup .popup-close{
+    position:absolute;
+    top:12px;
+    right:16px;
+    border:none;
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    width:30px;
+    height:30px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .12s ease;
+  }
+  .name-az-popup .popup-close:hover{
+    background:rgba(255,255,255,0.25);
+  }
+  .name-az-popup.show{
+    display:block;
+  }
+  .name-az-popup-backdrop{
+    display:none;
+    position:fixed;
+    z-index:9998;
+    inset:0;
+    background:rgba(0,0,0,0.35);
+    backdrop-filter:blur(4px);
+  }
+  .name-az-popup-backdrop.show{
+    display:block;
+  }
 </style>
 </head>
 <body>
@@ -387,7 +452,8 @@
         <option value="none">Güzəşt yoxdur</option>
         <option value="veteran">Qazi — 30% endirim</option>
         <option value="war">Müharibə iştirakçısı — 10% endirim</option>
-        <option value="martyr">Şəhid ailəsi (I dərəcə) — təhsil haqqı 0, hər kurs üçün 80 AZN rüsum</option>
+        <option value="disability">Əlilliyi olan şəxs — 15% endirim</option>
+        <option value="martyr">Şəhid ailəsi (I dərəcə) — hər kurs üçün 16 AZN</option>
       </select>
       <div class="discount-note" id="discountNote"></div>
     </div>
@@ -403,15 +469,23 @@
 </div>
 
 <footer>
-  Qeydlər — Qazi: 30% endirim. Müharibə iştirakçıları: 10% endirim. Şəhid ailələri (I dərəcə): təhsil haqqı 0 AZN, yalnız 80 AZN rüsum ödənilir. “—” işarəsi həmin kurs üçün müvafiq məlumatın (saat/say/qiymət) mövcud olmadığını bildirir. Qiymətlər AZN ilə göstərilib.
+  Qeydlər — Qazi: 30% endirim. Müharibə iştirakçıları: 10% endirim. Əlilliyi olan şəxslər: 15% endirim. Şəhid ailələri (I dərəcə): hər kurs üçün 16 AZN. Endirim rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir (şəhid ailəsi istisna). “—” işarəsi həmin kurs üçün müvafiq məlumatın (saat/say/qiymət) mövcud olmadığını bildirir. Qiymətlər AZN ilə göstərilib.
 </footer>
+
+<!-- Course name popup -->
+<div class="name-az-popup-backdrop" id="namePopupBackdrop"></div>
+<div class="name-az-popup" id="namePopup">
+  <button class="popup-close" id="namePopupClose">✕</button>
+  <div id="namePopupAz"></div>
+  <div class="en" id="namePopupEn"></div>
+</div>
 
 <script>
 const COURSES = [
   {no:1,  code:'SP', az:'Əmniyyətli İdarəetmə haqqında Beynəlxalq Məcəllə', en:'International Safety Management Code', hours:16, count:15, price:235, fee:251},
   {no:2,  code:'SI', az:'Gəminin Mühafizəsi üzrə ümumi hazırlıq və təlimat', en:'Ship security-related training and instruction', hours:8, count:15, price:144, fee:160},
   {no:3,  code:'SH', az:'Gəminin Mühafizəsi üzrə müəyyən edilmiş vəzifələrə malik şəxslərin hazırlığı', en:'Training for seafarers with designated security duties', hours:16, count:15, price:235, fee:251},
-  {no:4,  code:'RS', az:'Gəmi Əmniyyətliyi üzrə Məsul Şəxs', en:'Ship Safety Officer', hours:null, count:null, price:235, fee:251},
+  {no:4,  code:'RS', az:'Gəmi Əmniyyətliyi üzrə Məsul Şəxs', en:'Ship Safety Officer', hours:18, count:12, price:235, fee:251},
   {no:5,  code:'SG', az:'Gəmi Mühafizəsi üzrə Məsul Şəxs', en:'Ship Security Officer', hours:18, count:15, price:235, fee:251},
   {no:6,  code:'SO', az:'Bütün dənizçilər üçün təhlükəsizlik üzrə tanışlıq, ilkin hazırlıq və təlimat', en:'Safety familiarization, basic training and instruction for all seafarers', hours:80, count:12, price:650, fee:666},
   {no:7,  code:'SW', az:'Kapitan Körpüsü Resurslarının İdarə Olunması', en:'Bridge Resource Management', hours:42, count:12, price:400, fee:416},
@@ -559,16 +633,18 @@ const discountNote = document.getElementById('discountNote');
 
 const DISCOUNT_NOTES = {
   none: '',
-  veteran: 'Ara cəmə və rüsuma 30% endirim tətbiq olunur.',
-  war: 'Ara cəmə və rüsuma 10% endirim tətbiq olunur.',
-  martyr: 'Hər seçilmiş kurs üzrə təhsil haqqı 0 AZN sayılır, yalnız kurs başına 80 AZN rüsum hesablanır.'
+  veteran: 'Rüsumsuz qiymətə 30% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
+  war: 'Rüsumsuz qiymətə 10% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
+  disability: 'Rüsumsuz qiymətə 15% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
+  martyr: 'Hər seçilmiş kurs üzrə yalnız 16 AZN ödənilir.'
 };
 
 function renderCalc(){
   const items = Array.from(selected.values());
-  calcCountBadge.textContent = items.length + ' kurs';
+  const n = items.length;
+  calcCountBadge.textContent = n + ' kurs';
 
-  if(items.length===0){
+  if(n===0){
     calcItems.innerHTML = '<div class="calc-empty">Hələ kurs seçilməyib. Cədvəldəki “+” düyməsinə bas.</div>';
   } else {
     calcItems.innerHTML = items.map(c => `
@@ -578,7 +654,7 @@ function renderCalc(){
           <div class="calc-item-code">${c.code}</div>
         </div>
         <div class="calc-item-right">
-          <div class="calc-item-price">${fmt(c.fee)} AZN</div>
+          <div class="calc-item-price">${fmt(c.price)} AZN + 16 AZN rüsum</div>
           <button class="calc-item-remove" data-code="${c.code}">sil</button>
         </div>
       </div>
@@ -593,21 +669,29 @@ function renderCalc(){
 
   const baseSum = items.reduce((s,c)=> s + (c.price||0), 0);
   const feeSum = items.reduce((s,c)=> s + (c.fee||0), 0);
+  const totalFee = n * 16;
   const mode = discountSelect.value;
   discountNote.textContent = DISCOUNT_NOTES[mode];
 
   let finalTotal = feeSum;
   let discountAmount = 0;
 
-  if(mode==='veteran'){
-    discountAmount = feeSum * 0.30;
-    finalTotal = feeSum - discountAmount;
-  } else if(mode==='war'){
-    discountAmount = feeSum * 0.10;
-    finalTotal = feeSum - discountAmount;
-  } else if(mode==='martyr'){
-    finalTotal = items.length * 80;
+  if(mode==='martyr'){
+    // Şəhid ailəsi: hər kurs üçün 16 AZN
+    finalTotal = n * 16;
     discountAmount = feeSum - finalTotal;
+  } else if(mode==='veteran'){
+    // 30% endirim rüsumsuz qiymətə, üzərinə 16 AZN/kurs rüsum
+    discountAmount = baseSum * 0.30;
+    finalTotal = (baseSum - discountAmount) + totalFee;
+  } else if(mode==='war'){
+    // 10% endirim rüsumsuz qiymətə, üzərinə 16 AZN/kurs rüsum
+    discountAmount = baseSum * 0.10;
+    finalTotal = (baseSum - discountAmount) + totalFee;
+  } else if(mode==='disability'){
+    // 15% endirim rüsumsuz qiymətə, üzərinə 16 AZN/kurs rüsum
+    discountAmount = baseSum * 0.15;
+    finalTotal = (baseSum - discountAmount) + totalFee;
   }
 
   sumBase.textContent = fmt(baseSum) + ' AZN';
@@ -622,6 +706,52 @@ document.getElementById('clearCalc').addEventListener('click', ()=>{
   renderTable(filterCourses(searchInput.value));
   renderCalc();
 });
+
+
+// ---------- Course name popup ----------
+const namePopup = document.getElementById('namePopup');
+const namePopupBackdrop = document.getElementById('namePopupBackdrop');
+const namePopupAz = document.getElementById('namePopupAz');
+const namePopupEn = document.getElementById('namePopupEn');
+const namePopupClose = document.getElementById('namePopupClose');
+
+function showNamePopup(az, en){
+  namePopupAz.textContent = az;
+  namePopupEn.textContent = en || '';
+  namePopup.classList.add('show');
+  namePopupBackdrop.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function hideNamePopup(){
+  namePopup.classList.remove('show');
+  namePopupBackdrop.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+namePopupClose.addEventListener('click', hideNamePopup);
+namePopupBackdrop.addEventListener('click', hideNamePopup);
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape') hideNamePopup();
+});
+
+// Patch renderTable to add click listeners on course names
+const _origRenderTable = renderTable;
+function _renderTableWithNames(list){
+  _origRenderTable(list);
+  document.querySelectorAll('.name-az').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      const row = this.closest('.course-row');
+      const nameBlock = this.closest('.name-block');
+      if(!nameBlock) return;
+      const nameEn = nameBlock.querySelector('.name-en');
+      showNamePopup(this.textContent, nameEn ? nameEn.textContent : '');
+    });
+  });
+}
+renderTable = _renderTableWithNames;
 
 // init
 renderTable(COURSES);
