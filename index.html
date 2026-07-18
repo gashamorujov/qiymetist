@@ -349,26 +349,7 @@
     font-size:13px;
     font-style:italic;
   }
-  .name-az-popup .popup-close{
-    position:absolute;
-    top:12px;
-    right:16px;
-    border:none;
-    background:rgba(255,255,255,0.12);
-    color:#fff;
-    width:30px;
-    height:30px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:background .12s ease;
-  }
-  .name-az-popup .popup-close:hover{
-    background:rgba(255,255,255,0.25);
-  }
+
   .name-az-popup.show{
     display:block;
   }
@@ -475,7 +456,6 @@
 <!-- Course name popup -->
 <div class="name-az-popup-backdrop" id="namePopupBackdrop"></div>
 <div class="name-az-popup" id="namePopup">
-  <button class="popup-close" id="namePopupClose">✕</button>
   <div id="namePopupAz"></div>
   <div class="en" id="namePopupEn"></div>
 </div>
@@ -722,8 +702,6 @@ const namePopup = document.getElementById('namePopup');
 const namePopupBackdrop = document.getElementById('namePopupBackdrop');
 const namePopupAz = document.getElementById('namePopupAz');
 const namePopupEn = document.getElementById('namePopupEn');
-const namePopupClose = document.getElementById('namePopupClose');
-
 function showNamePopup(az, en){
   namePopupAz.textContent = az;
   namePopupEn.textContent = en || '';
@@ -738,7 +716,6 @@ function hideNamePopup(){
   document.body.style.overflow = '';
 }
 
-namePopupClose.addEventListener('click', hideNamePopup);
 namePopupBackdrop.addEventListener('click', hideNamePopup);
 document.addEventListener('keydown', (e)=>{
   if(e.key==='Escape') hideNamePopup();
