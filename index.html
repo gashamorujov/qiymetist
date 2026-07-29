@@ -476,45 +476,45 @@
 
 <!-- PDF template -->
 <div id="pdfTemplate" style="position:fixed; left:-9999px; top:0; width:794px; background:#fff; font-family:'Inter','Helvetica Neue',Arial,sans-serif; color:#0F2A44; padding:0; z-index:-1; opacity:0;">
-  <div style="width:734px; min-height:1020px; margin:30px auto 0; background:#fff; display:flex; flex-direction:column;">
+  <div style="width:760px; min-height:1050px; margin:30px auto 0; background:#fff; display:flex; flex-direction:column;">
     <!-- Header -->
     <div style="display:flex; align-items:center; gap:14px; border-bottom:3px solid #0F2A44; padding-bottom:20px;">
-      <img id="pdfLogo" src="" alt="IST Trust Zone" style="height:46px; width:auto;">
+      <img id="pdfLogo" src="" alt="IST Trust Zone" style="height:50px; width:auto;">
       <div>
-        <div style="font-family:'Fraunces','Georgia',serif; font-size:26px; font-weight:700; color:#0F2A44;">IST Trust Zone</div>
-        <div style="font-size:11px; color:#5C7387; text-transform:uppercase; letter-spacing:0.15em;">Dəniz Təlim Mərkəzi</div>
+        <div style="font-family:'Fraunces','Georgia',serif; font-size:28px; font-weight:700; color:#0F2A44;">IST Trust Zone</div>
+        
       </div>
       <div style="margin-left:auto; text-align:right;">
-        <div style="font-size:18px; font-weight:700; color:#0F2A44;">Qiymət Təklifi</div>
+        <div style="font-size:20px; font-weight:700; color:#0F2A44;">Qiymət Təklifi</div>
         <div id="pdfDate" style="font-size:11px; color:#5C7387; margin-top:2px;"></div>
       </div>
     </div>
     <!-- Info -->
-    <div style="font-size:12px; color:#5C7387; margin:16px 0;">
+    <div style="font-size:13px; color:#5C7387; margin:18px 0;">
       <span style="font-weight:600; color:#0F2A44;">Seçilmiş kurslar:</span> <span id="pdfCount"></span> &nbsp;|&nbsp;
       <span style="font-weight:600; color:#0F2A44;">Ümumi saat:</span> <span id="pdfHours"></span>
     </div>
     <!-- Table -->
-    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+    <table style="width:100%; border-collapse:collapse; font-size:13px;">
       <thead>
         <tr style="background:#0F2A44; color:#fff;">
-          <th style="padding:10px 12px; text-align:left; font-weight:600; width:36px;">№</th>
-          <th style="padding:10px 12px; text-align:left; font-weight:600;">Təlimin adı</th>
-          <th style="padding:10px 12px; text-align:center; font-weight:600; width:60px;">Saat</th>
-          <th style="padding:10px 12px; text-align:right; font-weight:600; width:100px;">Qiymət (AZN)</th>
+          <th style="padding:12px 14px; text-align:left; font-weight:600; width:40px;">№</th>
+          <th style="padding:12px 14px; text-align:left; font-weight:600;">Təlimin adı</th>
+          <th style="padding:12px 14px; text-align:center; font-weight:600; width:65px;">Saat</th>
+          <th style="padding:12px 14px; text-align:right; font-weight:600; width:110px;">Qiymət (AZN)</th>
         </tr>
       </thead>
       <tbody id="pdfTbody"></tbody>
     </table>
     <!-- Summary -->
     <div style="border-top:2px solid #0F2A44; margin-top:16px; padding-top:14px; text-align:right;">
-      <div style="font-size:13px; color:#5C7387; margin-bottom:4px;">Ümumi kurs sayı: <span style="font-weight:600; color:#0F2A44;" id="pdfSumCount"></span></div>
+      <div style="font-size:14px; color:#5C7387; margin-bottom:5px;">Ümumi kurs sayı: <span style="font-weight:600; color:#0F2A44;" id="pdfSumCount"></span></div>
       <div style="font-size:13px; color:#5C7387; margin-bottom:4px;">Ümumi tədris saatı: <span style="font-weight:600; color:#0F2A44;" id="pdfSumHours"></span></div>
-      <div style="font-size:13px; color:#5C7387; margin-bottom:8px;">Yekun ödəniş: <span style="font-size:20px; font-weight:700; color:#B4903F;" id="pdfSumTotal"></span></div>
+      <div style="font-size:13px; color:#5C7387; margin-bottom:8px;">Yekun ödəniş: <span style="font-size:22px; font-weight:700; color:#B4903F;" id="pdfSumTotal"></span></div>
     </div>
     <div style="flex:1;"></div>
     <!-- Footer -->
-    <div style="border-top:1px solid #E3E8EE; padding-top:12px; font-size:9px; color:#8CA0B3; text-align:center; margin-top:20px;">
+    <div style="border-top:1px solid #E3E8EE; padding-top:14px; font-size:10px; color:#8CA0B3; text-align:center; margin-top:20px;">
       Bu sənəd <span id="pdfFooterDate"></span> tarixində IST Trust Zone rəsmi qiymət cədvəli əsasında yaradılmışdır.
     </div>
   </div>
@@ -866,10 +866,10 @@ function generatePdf(){
     const fee = c.fee !== null ? c.fee.toLocaleString('az-AZ', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' AZN' : '—';
     const hours = c.hours !== null ? c.hours : '—';
     return '<tr style="' + (even ? 'background:#F6F8FA;' : '') + '">' +
-      '<td style="padding:6px 10px; text-align:left; color:#5C7387;">' + (i+1) + '</td>' +
-      '<td style="padding:6px 10px; text-align:left; font-weight:600; font-size:10px;">' + c.az + '</td>' +
-      '<td style="padding:6px 10px; text-align:center;">' + hours + '</td>' +
-      '<td style="padding:6px 10px; text-align:right; font-weight:600;">' + fee + '</td>' +
+      '<td style="padding:8px 12px; text-align:left; color:#5C7387;">' + (i+1) + '</td>' +
+      '<td style="padding:8px 12px; text-align:left; font-weight:600; font-size:11px;">' + c.az + '</td>' +
+      '<td style="padding:8px 12px; text-align:center;">' + hours + '</td>' +
+      '<td style="padding:8px 12px; text-align:right; font-weight:600;">' + fee + '</td>' +
       '</tr>';
   }).join('');
 
@@ -887,7 +887,7 @@ function generatePdf(){
   // Wait for images + reflow, then capture
   setTimeout(() => {
     html2canvas(tmpl, {
-      scale: 2.5,
+      scale: 3,
       useCORS: true,
       logging: false,
       backgroundColor: '#ffffff',
