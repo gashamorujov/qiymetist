@@ -205,10 +205,10 @@
   }
   .course-row > .name-block .name-az{
     display:-webkit-box;
-    -webkit-line-clamp:2;
+    -webkit-line-clamp:3;
     -webkit-box-orient:vertical;
     overflow:hidden;
-    font-weight:600; font-size:14.5px; line-height:1.32;
+    font-weight:600; font-size:14.5px; line-height:1.35;
     word-break:break-word;
   }
   .course-row > .name-block .name-en{
@@ -478,7 +478,7 @@
 
 <!-- PDF template -->
 <div id="pdfTemplate" style="position:fixed; left:-9999px; top:0; width:794px; background:#fff; font-family:'Inter','Helvetica Neue',Arial,sans-serif; color:#0F2A44; padding:0; z-index:-1; opacity:0;">
-  <div style="width:734px; margin:30px auto 0; background:#fff;">
+  <div style="width:734px; min-height:1020px; margin:30px auto 0; background:#fff; display:flex; flex-direction:column;">
     <!-- Header -->
     <div style="display:flex; align-items:center; gap:14px; border-bottom:3px solid #0F2A44; padding-bottom:14px;">
       <img id="pdfLogo" src="" alt="IST Trust Zone" style="height:38px; width:auto;">
@@ -514,8 +514,9 @@
       <div style="font-size:12px; color:#5C7387; margin-bottom:3px;">Ümumi tədris saatı: <span style="font-weight:600; color:#0F2A44;" id="pdfSumHours"></span></div>
       <div style="font-size:12px; color:#5C7387; margin-bottom:6px;">Yekun ödəniş: <span style="font-size:17px; font-weight:700; color:#B4903F;" id="pdfSumTotal"></span></div>
     </div>
+    <div style="flex:1;"></div>
     <!-- Footer -->
-    <div style="border-top:1px solid #E3E8EE; margin-top:20px; padding-top:10px; font-size:8px; color:#8CA0B3; text-align:center;">
+    <div style="border-top:1px solid #E3E8EE; padding-top:10px; font-size:8px; color:#8CA0B3; text-align:center; margin-top:20px;">
       Bu sənəd <span id="pdfFooterDate"></span> tarixində IST Trust Zone rəsmi qiymət cədvəli əsasında yaradılmışdır.
     </div>
   </div>
