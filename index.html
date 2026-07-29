@@ -314,72 +314,7 @@
     border-top:1px solid var(--hairline); padding-top:24px;
   }
 
-
-  /* ---------- Course name popup ---------- */
-  .name-az-wrap{
-    cursor:pointer;
-    position:relative;
-  }
-  .name-az-popup{
-    display:none;
-    position:fixed;
-    z-index:9999;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    max-width:520px;
-    width:calc(100vw - 48px);
-    background:var(--ink);
-    color:#fff;
-    padding:24px 28px;
-    border-radius:16px;
-    font-size:15px;
-    line-height:1.55;
-    box-shadow:0 20px 60px rgba(0,0,0,0.35);
-    word-break:break-word;
-  }
-  .name-az-popup.en{
-    margin-top:8px;
-    opacity:0.75;
-    font-size:13px;
-    font-style:italic;
-  }
-
-  .name-az-popup .popup-close{
-    position:absolute;
-    top:12px;
-    right:16px;
-    border:none;
-    background:rgba(255,255,255,0.12);
-    color:#fff;
-    width:30px;
-    height:30px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:background .12s ease;
-  }
-  .name-az-popup .popup-close:hover{
-    background:rgba(255,255,255,0.25);
-  }
-
-  .name-az-popup.show{
-    display:block;
-  }
-  .name-az-popup-backdrop{
-    display:none;
-    position:fixed;
-    z-index:9998;
-    inset:0;
-    background:rgba(0,0,0,0.35);
-    backdrop-filter:blur(4px);
-  }
-  .name-az-popup-backdrop.show{
-    display:block;
-  }
+  
 </style>
 </head>
 <body>
@@ -475,12 +410,6 @@
   Qeydlər — Qazi: 30% endirim. Müharibə iştirakçıları: 10% endirim. Əlilliyi olan şəxslər: 15% endirim. Şəhid ailələri (I dərəcə): hər kurs üçün 16 AZN. Endirim rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir (şəhid ailəsi istisna). “—” işarəsi həmin kurs üçün müvafiq məlumatın (saat/say/qiymət) mövcud olmadığını bildirir. Qiymətlər AZN ilə göstərilib.
 </footer>
 
-<!-- Course name popup -->
-<div class="name-az-popup-backdrop" id="namePopupBackdrop"></div>
-<div class="name-az-popup" id="namePopup">
-  <div id="namePopupAz"></div>
-  <div class="en" id="namePopupEn"></div>
-</div>
 
 <!-- Hidden PDF template -->
 <div id="pdfContent" style="position:fixed; left:-9999px; top:0; width:190mm; background:#fff; font-family:'Inter','Helvetica Neue',Arial,sans-serif; color:#1a1a2e; padding:0; z-index:-1;">
@@ -776,133 +705,13 @@ document.getElementById('clearCalc').addEventListener('click', ()=>{
 });
 
 
-// ---------- Course name popup ----------
-const namePopup = document.getElementById('namePopup');
-const namePopupBackdrop = document.getElementById('namePopupBackdrop');
-const namePopupAz = document.getElementById('namePopupAz');
-const namePopupEn = document.getElementById('namePopupEn');
-const namePopupClose = document.getElementById('namePopupClose');
-function showNamePopup(az, en){
-  namePopupAz.textContent = az;
-  namePopupEn.textContent = en || '';
-  namePopup.classList.add('show');
-  namePopupBackdrop.classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
-
-function hideNamePopup(){
-  namePopup.classList.remove('show');
-  namePopupBackdrop.classList.remove('show');
-  document.body.style.overflow = '';
-}
-
-namePopupBackdrop.addEventListener('click', hideNamePopup);
 document.addEventListener('keydown', (e)=>{
-  if(e.key==='Escape'){
-    hideNamePopup();
-    if(selected.size > 0){
-      selected.clear();
-      renderTable(filterCourses(searchInput.value));
-      renderCalc();
-    }
+  if(e.key==='Escape' && selected.size > 0){
+    selected.clear();
+    renderTable(filterCourses(searchInput.value));
+    renderCalc();
   }
 });
-
-// Patch renderTable to add click listeners on course names
-const _origRenderTable = renderTable;
-function _renderTableWithNames(list){
-  _origRenderTable(list);
-  document.querySelectorAll('.name-az').forEach(el => {
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', function(e){
-      e.stopPropagation();
-      const row = this.closest('.course-row');
-      const nameBlock = this.closest('.name-block');
-      if(!nameBlock) return;
-      const nameEn = nameBlock.querySelector('.name-en');
-      showNamePopup(this.textContent, nameEn ? nameEn.textContent : '');
-    });
-  });
-}
-renderTable = _renderTableWithNames;
-
-
-function generatePdf(){
-  const items = Array.from(selected.values());
-  if(items.length===0){
-    const btn = document.getElementById('exportPdf');
-    btn.textContent = '⚠ Heç bir kurs seçilməyib';
-    setTimeout(()=>{ btn.innerHTML = '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"/><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"/><polyline points=\"10 9 9 9 8 9\"/></svg> PDF ixrac et'; }, 2000);
-    return;
-  }
-
-  const btn = document.getElementById('exportPdf');
-  btn.disabled = true;
-  btn.textContent = '⏳ Hazırlanır...';
-
-  // Set logo
-  const logo = document.querySelector('.brand img');
-  document.getElementById('pdfLogo').src = logo ? logo.src : '';
-
-  // Set date
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('az-AZ', {day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('pdfDate').textContent = dateStr;
-  document.getElementById('pdfFooterDate').textContent = dateStr;
-
-  // Course count
-  document.getElementById('pdfCourseCount').textContent = items.length;
-  document.getElementById('pdfSummaryCount').textContent = items.length;
-
-  // Total hours
-  const totalHours = items.reduce((s,c) => s + (c.hours||0), 0);
-  document.getElementById('pdfTotalHours').textContent = totalHours;
-  document.getElementById('pdfSummaryHours').textContent = totalHours;
-
-  // Table rows
-  const tbody = document.getElementById('pdfTableBody');
-  tbody.innerHTML = items.map((c, i) => {
-    const isEven = i % 2 === 0;
-    return '<tr style="' + (isEven ? 'background:#F6F8FA;' : '') + '">' +
-      '<td style="padding:7px 10px; text-align:left; color:#5C7387;">' + (i+1) + '</td>' +
-      '<td style="padding:7px 10px; text-align:left; font-weight:600;">' + c.az + '</td>' +
-      '<td style="padding:7px 10px; text-align:center; font-variant-numeric:tabular-nums;">' + (c.hours !== null ? c.hours : '—') + '</td>' +
-      '<td style="padding:7px 10px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600;">' + fmt(c.price || 0) + ' AZN</td>' +
-      '</tr>';
-  }).join('');
-
-  // Total
-  const totalHoursAll = items.reduce((s,c) => s + (c.hours||0), 0);
-  document.getElementById('pdfSummaryHours').textContent = totalHoursAll;
-
-  // Get final total from the UI
-  const totalText = document.getElementById('sumTotal').textContent;
-  document.getElementById('pdfSummaryTotal').textContent = totalText;
-
-  // Generate PDF
-  const element = document.getElementById('pdfContent');
-  // Temporarily bring element into view for html2canvas
-  element.style.position = 'absolute';
-  element.style.left = '0';
-  element.style.top = '0';
-  element.style.zIndex = '9999';
-
-  const opt = {
-    margin:       [0, 0, 0, 0],
-    filename:     'IST_Trust_Zone_qiymet_teklifi.pdf',
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, letterRendering: true, useCORS: true, logging: false, allowTaint: false },
-    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-  html2pdf().set(opt).from(element).save().then(() => {
-    element.style.left = '-9999px';
-    element.style.top = '0';
-    element.style.zIndex = '-1';
-    element.style.position = 'fixed';
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> PDF ixrac et';
-  });
-}
 
 // init
 renderTable(COURSES);
