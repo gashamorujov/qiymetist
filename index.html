@@ -359,26 +359,7 @@
     font-size:13px;
     font-style:italic;
   }
-  .course-name-popup .popup-close{
-    position:absolute;
-    top:12px;
-    right:16px;
-    border:none;
-    background:rgba(255,255,255,0.12);
-    color:#fff;
-    width:30px;
-    height:30px;
-    border-radius:8px;
-    cursor:pointer;
-    font-size:16px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition:background .12s ease;
-  }
-  .course-name-popup .popup-close:hover{
-    background:rgba(255,255,255,0.25);
-  }
+
   .course-name-popup.show{
     display:block;
   }
@@ -490,14 +471,13 @@
 <!-- Course name popup -->
 <div class="popup-backdrop" id="coursePopupBackdrop"></div>
 <div class="course-name-popup" id="coursePopup">
-  <button class="popup-close" id="coursePopupClose">✕</button>
   <div id="coursePopupAz"></div>
   <div class="popup-en" id="coursePopupEn"></div>
 </div>
 
 
 <!-- Hidden PDF template -->
-<div id="pdfContent" style="position:fixed; left:-9999px; top:0; width:190mm; background:#fff; font-family:'Inter','Helvetica Neue',Arial,sans-serif; color:#1a1a2e; padding:0; z-index:-1;">
+<div id="pdfContent" style="position:fixed; left:0; top:0; width:210mm; background:#fff; font-family:'Inter','Helvetica Neue',Arial,sans-serif; color:#1a1a2e; padding:0; opacity:0; pointer-events:none; z-index:-9999;">
   <div id="pdfInner" style="width:190mm; margin:0 auto; background:#fff;">
     <div style="padding:20mm 15mm 15mm 15mm;">
       <!-- Header -->
@@ -807,8 +787,6 @@ const coursePopup = document.getElementById('coursePopup');
 const coursePopupBackdrop = document.getElementById('coursePopupBackdrop');
 const coursePopupAz = document.getElementById('coursePopupAz');
 const coursePopupEn = document.getElementById('coursePopupEn');
-const coursePopupClose = document.getElementById('coursePopupClose');
-
 function showCoursePopup(az, en){
   coursePopupAz.textContent = az;
   coursePopupEn.textContent = en || '';
@@ -823,7 +801,6 @@ function hideCoursePopup(){
   document.body.style.overflow = '';
 }
 
-coursePopupClose.addEventListener('click', hideCoursePopup);
 coursePopupBackdrop.addEventListener('click', hideCoursePopup);
 
 // Click on course name shows popup
@@ -847,6 +824,77 @@ function _renderTableWithPopup(list){
   attachNameClickListeners();
 }
 renderTable = _renderTableWithPopup;
+
+function generatePdf(){
+  const items = Array.from(selected.values());
+  if(items.length===0){
+    const btn = document.getElementById('exportPdf');
+    btn.textContent = '⚠ Heç bir kurs seçilməyib';
+    setTimeout(()=>{ btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> PDF ixrac et'; }, 2000);
+    return;
+  }
+
+  const btn = document.getElementById('exportPdf');
+  btn.disabled = true;
+  btn.textContent = '⏳ Hazırlanır...';
+
+  const logo = document.querySelector('.brand img');
+  document.getElementById('pdfLogo').src = logo ? logo.src : '';
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('az-AZ', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('pdfDate').textContent = dateStr;
+  document.getElementById('pdfFooterDate').textContent = dateStr;
+
+  document.getElementById('pdfCourseCount').textContent = items.length;
+  document.getElementById('pdfSummaryCount').textContent = items.length;
+
+  const totalH = items.reduce((s,c) => s + (c.hours||0), 0);
+  document.getElementById('pdfTotalHours').textContent = totalH;
+  document.getElementById('pdfSummaryHours').textContent = totalH;
+
+  const tbody = document.getElementById('pdfTableBody');
+  tbody.innerHTML = items.map((c, i) => {
+    const even = i % 2 === 0;
+    const fee = c.fee !== null ? c.fee.toLocaleString('az-AZ', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' AZN' : '—';
+    const hours = c.hours !== null ? c.hours : '—';
+    return '<tr style="' + (even ? 'background:#F6F8FA;' : '') + '">' +
+      '<td style="padding:7px 10px; text-align:left; color:#5C7387;">' + (i+1) + '</td>' +
+      '<td style="padding:7px 10px; text-align:left; font-weight:600; word-break:break-word;">' + c.az + '</td>' +
+      '<td style="padding:7px 10px; text-align:center; font-variant-numeric:tabular-nums;">' + hours + '</td>' +
+      '<td style="padding:7px 10px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600;">' + fee + '</td>' +
+      '</tr>';
+  }).join('');
+
+  const totalText = document.getElementById('sumTotal').textContent;
+  document.getElementById('pdfSummaryTotal').textContent = totalText;
+
+  const element = document.getElementById('pdfContent');
+  element.style.opacity = '1';
+  element.style.zIndex = '9999';
+  element.style.pointerEvents = 'none';
+
+  setTimeout(() => {
+    const opt = {
+      margin:       [0, 0, 0, 0],
+      filename:     'IST_Trust_Zone_qiymet_teklifi.pdf',
+      image:        { type: 'jpeg', quality: 0.95 },
+      html2canvas:  { scale: 2, letterRendering: true, useCORS: true, logging: false, allowTaint: false },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save().then(() => {
+      element.style.opacity = '0';
+      element.style.zIndex = '-9999';
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> PDF ixrac et';
+    }).catch(() => {
+      element.style.opacity = '0';
+      element.style.zIndex = '-9999';
+      btn.disabled = false;
+      btn.innerHTML = 'Xəta baş verdi';
+    });
+  }, 100);
+}
 
 // init
 renderTable(COURSES);
