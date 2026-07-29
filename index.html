@@ -332,6 +332,67 @@
   }
 
   
+
+
+  /* ---------- Course name popup ---------- */
+  .course-name-popup{
+    display:none;
+    position:fixed;
+    z-index:9999;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    max-width:520px;
+    width:calc(100vw - 48px);
+    background:var(--ink);
+    color:#fff;
+    padding:24px 28px;
+    border-radius:16px;
+    font-size:15px;
+    line-height:1.55;
+    box-shadow:0 20px 60px rgba(0,0,0,0.35);
+    word-break:break-word;
+  }
+  .course-name-popup .popup-en{
+    margin-top:8px;
+    opacity:0.75;
+    font-size:13px;
+    font-style:italic;
+  }
+  .course-name-popup .popup-close{
+    position:absolute;
+    top:12px;
+    right:16px;
+    border:none;
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    width:30px;
+    height:30px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .12s ease;
+  }
+  .course-name-popup .popup-close:hover{
+    background:rgba(255,255,255,0.25);
+  }
+  .course-name-popup.show{
+    display:block;
+  }
+  .popup-backdrop{
+    display:none;
+    position:fixed;
+    z-index:9998;
+    inset:0;
+    background:rgba(0,0,0,0.35);
+    backdrop-filter:blur(4px);
+  }
+  .popup-backdrop.show{
+    display:block;
+  }
 </style>
 </head>
 <body>
@@ -426,6 +487,13 @@
 <footer>
   Qeydlər — Qazi: 30% endirim. Müharibə iştirakçıları: 10% endirim. Əlilliyi olan şəxslər: 15% endirim. Şəhid ailələri (I dərəcə): hər kurs üçün 16 AZN. Endirim rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir (şəhid ailəsi istisna). “—” işarəsi həmin kurs üçün müvafiq məlumatın (saat/say/qiymət) mövcud olmadığını bildirir. Qiymətlər AZN ilə göstərilib.
 </footer>
+<!-- Course name popup -->
+<div class="popup-backdrop" id="coursePopupBackdrop"></div>
+<div class="course-name-popup" id="coursePopup">
+  <button class="popup-close" id="coursePopupClose">✕</button>
+  <div id="coursePopupAz"></div>
+  <div class="popup-en" id="coursePopupEn"></div>
+</div>
 
 
 <!-- Hidden PDF template -->
@@ -723,12 +791,62 @@ document.getElementById('clearCalc').addEventListener('click', ()=>{
 
 
 document.addEventListener('keydown', (e)=>{
-  if(e.key==='Escape' && selected.size > 0){
-    selected.clear();
-    renderTable(filterCourses(searchInput.value));
-    renderCalc();
+  if(e.key==='Escape'){
+    if(coursePopup.classList.contains('show')){
+      hideCoursePopup();
+    } else if(selected.size > 0){
+      selected.clear();
+      renderTable(filterCourses(searchInput.value));
+      renderCalc();
+    }
   }
 });
+
+// ---------- Course name popup ----------
+const coursePopup = document.getElementById('coursePopup');
+const coursePopupBackdrop = document.getElementById('coursePopupBackdrop');
+const coursePopupAz = document.getElementById('coursePopupAz');
+const coursePopupEn = document.getElementById('coursePopupEn');
+const coursePopupClose = document.getElementById('coursePopupClose');
+
+function showCoursePopup(az, en){
+  coursePopupAz.textContent = az;
+  coursePopupEn.textContent = en || '';
+  coursePopup.classList.add('show');
+  coursePopupBackdrop.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function hideCoursePopup(){
+  coursePopup.classList.remove('show');
+  coursePopupBackdrop.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+coursePopupClose.addEventListener('click', hideCoursePopup);
+coursePopupBackdrop.addEventListener('click', hideCoursePopup);
+
+// Click on course name shows popup
+function attachNameClickListeners(){
+  document.querySelectorAll('.name-az').forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      const nameBlock = this.closest('.name-block');
+      if(!nameBlock) return;
+      const nameEn = nameBlock.querySelector('.name-en');
+      showCoursePopup(this.textContent, nameEn ? nameEn.textContent : '');
+    });
+  });
+}
+
+// Override renderTable to attach listeners after rendering
+const _origRenderTable = renderTable;
+function _renderTableWithPopup(list){
+  _origRenderTable(list);
+  attachNameClickListeners();
+}
+renderTable = _renderTableWithPopup;
 
 // init
 renderTable(COURSES);
