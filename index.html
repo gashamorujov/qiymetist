@@ -123,7 +123,7 @@
   /* ---------- Layout: table + calculator ---------- */
   .workspace{
     max-width:1180px; margin:0 auto; padding:8px 24px 100px;
-    display:grid; grid-template-columns:1fr 340px; gap:28px;
+    display:grid; grid-template-columns:1fr 440px; gap:28px;
     align-items:start;
   }
   @media (max-width:980px){
@@ -247,70 +247,80 @@
     position:sticky; top:88px;
     border:1px solid var(--hairline); border-radius:16px;
     background:var(--ink); color:#fff;
-    padding:22px;
+    padding:24px;
     max-height:calc(100vh - 108px);
     display:flex; flex-direction:column;
+    box-shadow:0 4px 24px rgba(0,0,0,0.08);
   }
-  .calc-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;}
-  .calc-title{ font-family:'Fraunces',serif; font-size:19px; font-weight:600; }
+  .calc-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;}
+  .calc-title{ font-family:'Fraunces',serif; font-size:22px; font-weight:700; letter-spacing:-0.01em; }
   .calc-badge{
-    background:rgba(255,255,255,0.12); border-radius:20px; padding:3px 10px;
-    font-size:12px; font-variant-numeric:tabular-nums;
+    background:rgba(255,255,255,0.12); border-radius:20px; padding:5px 14px;
+    font-size:14px; font-weight:600; font-variant-numeric:tabular-nums;
   }
-  .calc-sub{ font-size:12px; color:rgba(255,255,255,0.55); margin-bottom:16px; }
+  .calc-sub{ font-size:13px; color:rgba(255,255,255,0.55); margin-bottom:18px; line-height:1.4; }
 
   .calc-items{
-    flex:1; overflow-y:auto; margin:0 -6px; padding:0 6px;
-    max-height:280px;
+    flex:1; overflow-y:auto; margin:0 -8px; padding:0 8px;
+    max-height:300px;
   }
-  .calc-items::-webkit-scrollbar{ width:5px; }
+  .calc-items::-webkit-scrollbar{ width:6px; }
   .calc-items::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.18); border-radius:3px; }
 
   .calc-empty{
-    padding:26px 4px; color:rgba(255,255,255,0.45); font-size:13px; line-height:1.6;
+    padding:30px 6px; color:rgba(255,255,255,0.45); font-size:14px; line-height:1.6;
   }
 
   .calc-item{
     display:flex; align-items:flex-start; justify-content:space-between;
-    gap:10px; padding:11px 0; border-bottom:1px solid rgba(255,255,255,0.09);
+    gap:12px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.09);
   }
   .calc-item:last-child{ border-bottom:none; }
-  .calc-item-name{ font-size:13px; font-weight:600; line-height:1.3; }
-  .calc-item-code{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:rgba(255,255,255,0.5); margin-top:2px;}
-  .calc-item-right{ text-align:right; flex:none; }
-  .calc-item-price{ font-size:13px; font-variant-numeric:tabular-nums; font-weight:600; }
+  .calc-item-name{ font-size:14px; font-weight:600; line-height:1.35; }
+  .calc-item-code{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:rgba(255,255,255,0.5); margin-top:3px;}
+  .calc-item-right{ text-align:right; flex:none; min-width:140px; }
+  .calc-item-price{ font-size:14px; font-variant-numeric:tabular-nums; font-weight:600; }
   .calc-item-remove{
     border:none; background:none; color:rgba(255,255,255,0.4); cursor:pointer;
-    font-size:11px; margin-top:4px; text-decoration:underline; padding:0;
+    font-size:11.5px; margin-top:5px; text-decoration:underline; padding:0;
   }
   .calc-item-remove:hover{ color:#fff; }
 
-  .calc-discount{ margin:16px 0 8px; }
-  .calc-discount label{ font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,0.5); display:block; margin-bottom:7px; }
+  .calc-discount{ margin:18px 0 10px; }
+  .calc-discount label{ font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,0.5); display:block; margin-bottom:8px; }
   select#discountSelect{
-    width:100%; padding:10px 12px; border-radius:9px;
+    width:100%; padding:12px 14px; border-radius:10px;
     background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16);
-    color:#fff; font-family:'Inter',sans-serif; font-size:13px;
+    color:#fff; font-family:'Inter',sans-serif; font-size:14px;
     appearance:none; cursor:pointer;
   }
   select#discountSelect option{ color:#000; }
-  .discount-note{ font-size:11px; color:rgba(255,255,255,0.45); margin-top:7px; line-height:1.5; }
+  .discount-note{ font-size:12px; color:rgba(255,255,255,0.45); margin-top:8px; line-height:1.5; }
 
-  .calc-totals{ border-top:1px solid rgba(255,255,255,0.14); margin-top:14px; padding-top:14px; }
-  .calc-line{ display:flex; justify-content:space-between; font-size:12.5px; color:rgba(255,255,255,0.6); padding:3px 0; }
+  .calc-totals{ border-top:1px solid rgba(255,255,255,0.14); margin-top:16px; padding-top:16px; }
+  .calc-line{ display:flex; justify-content:space-between; font-size:13.5px; color:rgba(255,255,255,0.6); padding:4px 0; }
   .calc-line.total{
-    color:#fff; font-size:20px; font-family:'Fraunces',serif; font-weight:600;
-    padding-top:10px; margin-top:6px; border-top:1px dashed rgba(255,255,255,0.18);
+    color:#fff; font-size:22px; font-family:'Fraunces',serif; font-weight:700;
+    padding-top:12px; margin-top:8px; border-top:1px dashed rgba(255,255,255,0.18);
   }
   .calc-line.total span:last-child{ font-variant-numeric:tabular-nums; color:var(--gold); }
 
+  .calc-actions{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
   .calc-clear{
-    width:100%; margin-top:16px; padding:11px; border-radius:9px;
+    width:100%; padding:12px; border-radius:10px;
     background:transparent; border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.75);
-    font-family:'Inter',sans-serif; font-size:12.5px; cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:500; cursor:pointer;
     transition:all .12s ease;
   }
   .calc-clear:hover{ border-color:#fff; color:#fff; }
+  .calc-pdf{
+    width:100%; padding:12px; border-radius:10px;
+    background:var(--gold); border:none; color:var(--ink);
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:700; cursor:pointer;
+    transition:all .12s ease; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .calc-pdf:hover{ background:var(--gold-soft); }
+  .calc-pdf:disabled{ opacity:0.4; cursor:not-allowed; }
 
   /* ---------- Footer note ---------- */
   footer{
@@ -445,7 +455,13 @@
       <div class="calc-line total"><span>Yekun (rüsum daxil)</span><span id="sumTotal">0.00 AZN</span></div>
     </div>
 
-    <button class="calc-clear" id="clearCalc">Seçimi təmizlə</button>
+    <div class="calc-actions">
+      <button class="calc-pdf" id="exportPdf" onclick="generatePdf()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        PDF ixrac et
+      </button>
+      <button class="calc-clear" id="clearCalc">Seçimi təmizlə</button>
+    </div>
   </aside>
 </div>
 
@@ -460,7 +476,64 @@
   <div class="en" id="namePopupEn"></div>
 </div>
 
-<script>
+<!-- Hidden PDF template -->
+<div id="pdfContent" style="display:none; font-family:'Inter','Helvetica Neue',Arial,sans-serif; color:#1a1a2e; padding:0;">
+  <div id="pdfInner" style="width:190mm; margin:0 auto; background:#fff;">
+    <div style="padding:20mm 15mm 15mm 15mm;">
+      <!-- Header -->
+      <div style="display:flex; align-items:center; gap:14px; border-bottom:3px solid #0F2A44; padding-bottom:16px; margin-bottom:20px;">
+        <img id="pdfLogo" src="" alt="IST Trust Zone" style="height:42px; width:auto;">
+        <div>
+          <div style="font-family:'Georgia','Times New Roman',serif; font-size:20px; font-weight:700; color:#0F2A44;">IST Trust Zone</div>
+          <div style="font-size:11px; color:#5C7387; text-transform:uppercase; letter-spacing:0.15em;">Dəniz Təlim Mərkəzi</div>
+        </div>
+        <div style="margin-left:auto; text-align:right;">
+          <div style="font-size:16px; font-weight:700; color:#0F2A44;">Qiymət Təklifi</div>
+          <div id="pdfDate" style="font-size:11px; color:#5C7387; margin-top:2px;"></div>
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div style="font-size:12px; color:#5C7387; margin-bottom:18px;">
+        <span style="font-weight:600; color:#0F2A44;">Seçilmiş kurslar:</span> <span id="pdfCourseCount"></span> |
+        <span style="font-weight:600; color:#0F2A44;">Ümumi saat:</span> <span id="pdfTotalHours"></span>
+      </div>
+
+      <!-- Table -->
+      <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:18px;">
+        <thead>
+          <tr style="background:#0F2A44; color:#fff;">
+            <th style="padding:8px 10px; text-align:left; font-weight:600; width:40px;">№</th>
+            <th style="padding:8px 10px; text-align:left; font-weight:600;">Təlimin adı</th>
+            <th style="padding:8px 10px; text-align:center; font-weight:600; width:70px;">Saat</th>
+            <th style="padding:8px 10px; text-align:right; font-weight:600; width:90px;">Qiymət (AZN)</th>
+          </tr>
+        </thead>
+        <tbody id="pdfTableBody"></tbody>
+      </table>
+
+      <!-- Summary -->
+      <div style="border-top:2px solid #0F2A44; padding-top:14px; text-align:right;">
+        <div style="font-size:13px; color:#5C7387; margin-bottom:4px;">
+          Ümumi kurs sayı: <span style="font-weight:600; color:#0F2A44;" id="pdfSummaryCount"></span>
+        </div>
+        <div style="font-size:13px; color:#5C7387; margin-bottom:4px;">
+          Ümumi tədris saatı: <span style="font-weight:600; color:#0F2A44;" id="pdfSummaryHours"></span>
+        </div>
+        <div style="font-size:13px; color:#5C7387; margin-bottom:8px;">
+          Yekun ödəniş: <span style="font-size:18px; font-weight:700; color:#B4903F;" id="pdfSummaryTotal"></span>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="border-top:1px solid #E3E8EE; margin-top:30px; padding-top:12px; font-size:9px; color:#8CA0B3; text-align:center;">
+        Bu sənəd <span id="pdfFooterDate"></span> tarixində IST Trust Zone rəsmi qiymət cədvəli əsasında yaradılmışdır.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><script>
 const COURSES = [
   {no:1,  code:'SP', az:'Əmniyyətli İdarəetmə haqqında Beynəlxalq Məcəllə', en:'International Safety Management Code', hours:16, count:15, price:235, fee:251},
   {no:2,  code:'SI', az:'Gəminin Mühafizəsi üzrə ümumi hazırlıq və təlimat', en:'Ship security-related training and instruction', hours:8, count:15, price:144, fee:160},
@@ -738,6 +811,74 @@ function _renderTableWithNames(list){
   });
 }
 renderTable = _renderTableWithNames;
+
+
+function generatePdf(){
+  const items = Array.from(selected.values());
+  if(items.length===0){
+    const btn = document.getElementById('exportPdf');
+    btn.textContent = '⚠ Heç bir kurs seçilməyib';
+    setTimeout(()=>{ btn.innerHTML = '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z\"/><polyline points=\"14 2 14 8 20 8\"/><line x1=\"16\" y1=\"13\" x2=\"8\" y2=\"13\"/><line x1=\"16\" y1=\"17\" x2=\"8\" y2=\"17\"/><polyline points=\"10 9 9 9 8 9\"/></svg> PDF ixrac et'; }, 2000);
+    return;
+  }
+
+  const btn = document.getElementById('exportPdf');
+  btn.disabled = true;
+  btn.textContent = '⏳ Hazırlanır...';
+
+  // Set logo
+  const logo = document.querySelector('.brand img');
+  document.getElementById('pdfLogo').src = logo ? logo.src : '';
+
+  // Set date
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('az-AZ', {day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('pdfDate').textContent = dateStr;
+  document.getElementById('pdfFooterDate').textContent = dateStr;
+
+  // Course count
+  document.getElementById('pdfCourseCount').textContent = items.length;
+  document.getElementById('pdfSummaryCount').textContent = items.length;
+
+  // Total hours
+  const totalHours = items.reduce((s,c) => s + (c.hours||0), 0);
+  document.getElementById('pdfTotalHours').textContent = totalHours;
+  document.getElementById('pdfSummaryHours').textContent = totalHours;
+
+  // Table rows
+  const tbody = document.getElementById('pdfTableBody');
+  tbody.innerHTML = items.map((c, i) => {
+    const isEven = i % 2 === 0;
+    return '<tr style="' + (isEven ? 'background:#F6F8FA;' : '') + '">' +
+      '<td style="padding:7px 10px; text-align:left; color:#5C7387;">' + (i+1) + '</td>' +
+      '<td style="padding:7px 10px; text-align:left; font-weight:600;">' + c.az + '</td>' +
+      '<td style="padding:7px 10px; text-align:center; font-variant-numeric:tabular-nums;">' + (c.hours !== null ? c.hours : '—') + '</td>' +
+      '<td style="padding:7px 10px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600;">' + fmt(c.price || 0) + ' AZN</td>' +
+      '</tr>';
+  }).join('');
+
+  // Total
+  const totalHoursAll = items.reduce((s,c) => s + (c.hours||0), 0);
+  document.getElementById('pdfSummaryHours').textContent = totalHoursAll;
+
+  // Get final total from the UI
+  const totalText = document.getElementById('sumTotal').textContent;
+  document.getElementById('pdfSummaryTotal').textContent = totalText;
+
+  // Generate PDF
+  const element = document.getElementById('pdfContent');
+  const opt = {
+    margin:       [5, 5, 5, 5],
+    filename:     'IST_Trust_Zone_qiymet_teklifi.pdf',
+    image:        { type: 'jpeg', quality: 1 },
+    html2canvas:  { scale: 3, letterRendering: true, useCORS: true, logging: false },
+    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(element).save().then(() => {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> PDF ixrac et';
+  });
+}
 
 // init
 renderTable(COURSES);
