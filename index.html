@@ -426,6 +426,7 @@
       <div class="calc-title">Hesablama</div>
       <div style="display:flex; align-items:center; gap:8px;">
         <button class="calc-select5" id="select5Btn" title="SP, SH, SL, SI, SO kurslarını seç">5</button>
+        <button class="calc-select5" id="select3Btn" title="SH, SL, SK kurslarını seç">3</button>
         <div class="calc-badge" id="calcCountBadge">0 kurs</div>
       </div>
     </div>
@@ -752,6 +753,14 @@ discountSelect.addEventListener('change', renderCalc);
 
 document.getElementById('select5Btn').addEventListener('click', ()=>{
   ['SP','SH','SL','SI','SO'].forEach(code => {
+    const course = COURSES.find(c => c.code === code);
+    if(course && !selected.has(code)) selected.set(code, course);
+  });
+  renderTable(filterCourses(searchInput.value));
+  renderCalc();
+});
+document.getElementById('select3Btn').addEventListener('click', ()=>{
+  ['SH','SL','SK'].forEach(code => {
     const course = COURSES.find(c => c.code === code);
     if(course && !selected.has(code)) selected.set(code, course);
   });
