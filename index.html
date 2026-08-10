@@ -538,7 +538,7 @@
           <td style="padding:7px 8px; color:#5C7387; width:55%;">Ümumi kurs sayı</td>
           <td style="padding:7px 8px; text-align:right; font-weight:700; color:#0F2A44; font-variant-numeric:tabular-nums;" id="pdfSumCount">0</td>
         </tr>
-        <tr>
+        <tr id="pdfSumOrigRow">
           <td style="padding:7px 8px; color:#5C7387; border-top:1px solid #E3E8EE;">Ümumi qiymət</td>
           <td style="padding:7px 8px; text-align:right; font-weight:700; color:#0F2A44; border-top:1px solid #E3E8EE; font-variant-numeric:tabular-nums;" id="pdfSumOriginal">0,00 AZN</td>
         </tr>
@@ -933,7 +933,8 @@ function generatePdf(){
   const mode = discountSelect.value;
   const hasDiscount = mode !== 'none';
   document.getElementById('pdfDiscHead').textContent = hasDiscount ? 'Endirimli qiymət' : 'Yekun qiymət';
-  document.getElementById('pdfSumDiscLabel').textContent = hasDiscount ? 'Ümumi endirimli qiymət' : 'Yekun qiymət';
+  document.getElementById('pdfSumDiscLabel').textContent = hasDiscount ? 'Ümumi endirimli qiymət' : 'Ümumi qiymət';
+  document.getElementById('pdfSumOrigRow').style.display = hasDiscount ? '' : 'none';
   // Per-course discounted price (same rule as calculator)
   function courseDiscounted(c){
     if(mode==='martyr') return 16;
