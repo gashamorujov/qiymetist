@@ -534,10 +534,6 @@
     <!-- Summary -->
     <div style="border-top:2px solid #0F2A44; margin-top:16px; padding-top:12px;">
       <table style="width:100%; border-collapse:collapse; font-size:12px;">
-        <tr>
-          <td style="padding:7px 8px; color:#5C7387; width:55%;">Ümumi kurs sayı</td>
-          <td style="padding:7px 8px; text-align:right; font-weight:700; color:#0F2A44; font-variant-numeric:tabular-nums;" id="pdfSumCount">0</td>
-        </tr>
         <tr id="pdfSumOrigRow">
           <td style="padding:7px 8px; color:#5C7387; border-top:1px solid #E3E8EE;">Ümumi qiymət</td>
           <td style="padding:7px 8px; text-align:right; font-weight:700; color:#0F2A44; border-top:1px solid #E3E8EE; font-variant-numeric:tabular-nums;" id="pdfSumOriginal">0,00 AZN</td>
@@ -924,7 +920,6 @@ function generatePdf(){
   document.getElementById('pdfFooterDate').textContent = dateStr;
 
   document.getElementById('pdfCount').textContent = items.length;
-  document.getElementById('pdfSumCount').textContent = items.length;
 
   const totalH = items.reduce((s,c) => s + (c.hours||0), 0);
   document.getElementById('pdfHours').textContent = totalH;
