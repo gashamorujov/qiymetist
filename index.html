@@ -292,6 +292,24 @@
     appearance:none; cursor:pointer;
   }
   select#discountSelect option{ color:#000; }
+  .calc-custom-discount{
+    display:flex; align-items:center; gap:8px; margin-top:8px;
+  }
+  .calc-custom-discount input{
+    flex:1; padding:10px 12px; border-radius:9px;
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16);
+    color:#fff; font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
+    outline:none;
+  }
+  .calc-custom-discount input:focus{
+    border-color:var(--gold);
+  }
+  .calc-custom-discount input::placeholder{
+    color:rgba(255,255,255,0.35); font-weight:400; font-size:12px;
+  }
+  .calc-custom-percent{
+    color:rgba(255,255,255,0.6); font-size:16px; font-weight:600;
+  }
   .discount-note{ font-size:12px; color:rgba(255,255,255,0.45); margin-top:8px; line-height:1.5; }
 
   .calc-totals{ border-top:1px solid rgba(255,255,255,0.14); margin-top:16px; padding-top:16px; }
@@ -443,8 +461,13 @@
         <option value="veteran">Qazi — 30% endirim</option>
         <option value="war">Müharibə iştirakçısı — 10% endirim</option>
         <option value="disability">Əlilliyi olan şəxs — 15% endirim</option>
+        <option value="custom">Xüsusi faiz — öz faizini yaz</option>
         <option value="martyr">Şəhid ailəsi (I dərəcə) — hər kurs üçün 16 AZN</option>
       </select>
+      <div class="calc-custom-discount" id="customDiscountWrap" style="display:none;">
+        <input type="number" id="customDiscountInput" min="0" max="100" step="1" placeholder="Faiz daxil et, məsələn 12">
+        <span class="calc-custom-percent">%</span>
+      </div>
       <div class="discount-note" id="discountNote"></div>
     </div>
 
@@ -680,12 +703,15 @@ const sumDiscount = document.getElementById('sumDiscount');
 const sumTotal = document.getElementById('sumTotal');
 const discountSelect = document.getElementById('discountSelect');
 const discountNote = document.getElementById('discountNote');
+const customDiscountWrap = document.getElementById('customDiscountWrap');
+const customDiscountInput = document.getElementById('customDiscountInput');
 
 const DISCOUNT_NOTES = {
   none: '',
   veteran: 'Rüsumsuz qiymətə 30% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
   war: 'Rüsumsuz qiymətə 10% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
   disability: 'Rüsumsuz qiymətə 15% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
+  custom: 'Xüsusi faiz rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
   martyr: 'Hər seçilmiş kurs üzrə yalnız 16 AZN ödənilir.'
 };
 
@@ -722,6 +748,7 @@ function renderCalc(){
   const totalFee = n * 16;
   const mode = discountSelect.value;
   discountNote.textContent = DISCOUNT_NOTES[mode];
+  customDiscountWrap.style.display = mode==='custom' ? 'flex' : 'none';
 
   let finalTotal = feeSum;
   let discountAmount = 0;
@@ -730,6 +757,12 @@ function renderCalc(){
     // Şəhid ailəsi: hər kurs üçün 16 AZN
     finalTotal = n * 16;
     discountAmount = feeSum - finalTotal;
+  } else if(mode==='custom'){
+    // Xüsusi faiz rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN/kurs rüsum
+    const customRate = Math.min(Math.max(parseFloat(customDiscountInput.value) || 0, 0), 100);
+    discountAmount = baseSum * (customRate / 100);
+    finalTotal = (baseSum - discountAmount) + totalFee;
+    discountNote.textContent = 'Rüsumsuz qiymətə ' + customRate + '% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.';
   } else if(mode==='veteran'){
     // 30% endirim rüsumsuz qiymətə, üzərinə 16 AZN/kurs rüsum
     discountAmount = baseSum * 0.30;
@@ -750,6 +783,7 @@ function renderCalc(){
 }
 
 discountSelect.addEventListener('change', renderCalc);
+customDiscountInput.addEventListener('input', renderCalc);
 
 document.getElementById('select5Btn').addEventListener('click', ()=>{
   ['SP','SH','SL','SI','SO'].forEach(code => {
