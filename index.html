@@ -522,10 +522,11 @@
     <table style="width:100%; border-collapse:collapse; font-size:13px;">
       <thead>
         <tr style="background:#0F2A44; color:#fff;">
-          <th style="padding:12px 14px; text-align:left; font-weight:600; width:40px;">№</th>
+          <th style="padding:12px 14px; text-align:left; font-weight:600; width:36px;">№</th>
           <th style="padding:12px 14px; text-align:left; font-weight:600;">Təlimin adı</th>
-          <th style="padding:12px 14px; text-align:center; font-weight:600; width:65px;">Saat</th>
-          <th style="padding:12px 14px; text-align:right; font-weight:600; width:110px;">Qiymət (AZN)</th>
+          <th style="padding:12px 14px; text-align:center; font-weight:600; width:52px;">Saat</th>
+          <th style="padding:12px 14px; text-align:right; font-weight:600; width:100px;">Qiymət (AZN)</th>
+          <th style="padding:12px 14px; text-align:right; font-weight:600; width:110px; background:#B4903F;">Endirimli qiymət</th>
         </tr>
       </thead>
       <tbody id="pdfTbody"></tbody>
@@ -534,7 +535,8 @@
     <div style="border-top:2px solid #0F2A44; margin-top:16px; padding-top:14px; text-align:right;">
       <div style="font-size:14px; color:#5C7387; margin-bottom:5px;">Ümumi kurs sayı: <span style="font-weight:600; color:#0F2A44;" id="pdfSumCount"></span></div>
       <div style="font-size:13px; color:#5C7387; margin-bottom:4px;">Ümumi tədris saatı: <span style="font-weight:600; color:#0F2A44;" id="pdfSumHours"></span></div>
-      <div style="font-size:13px; color:#5C7387; margin-bottom:8px;">Yekun ödəniş: <span style="font-size:22px; font-weight:700; color:#B4903F;" id="pdfSumTotal"></span></div>
+      <div style="font-size:13px; color:#5C7387; margin-bottom:6px;">Ümumi qiymət: <span style="font-weight:700; color:#0F2A44; font-size:14px;" id="pdfSumOriginal"></span></div>
+      <div style="font-size:13px; color:#5C7387; margin-bottom:8px;">Ümumi endirimli qiymət: <span style="font-size:22px; font-weight:700; color:#B4903F;" id="pdfSumTotal"></span></div>
     </div>
     <div style="flex:1;"></div>
     <!-- Footer -->
@@ -904,20 +906,39 @@ function generatePdf(){
   document.getElementById('pdfSumHours').textContent = totalH;
 
   const tbody = document.getElementById('pdfTbody');
+  const mode = discountSelect.value;
+  // Per-course discounted price (same rule as calculator)
+  function courseDiscounted(c){
+    if(mode==='martyr') return 16;
+    if(mode==='veteran') return (c.price || 0) * 0.70 + 16;
+    if(mode==='war') return (c.price || 0) * 0.90 + 16;
+    if(mode==='disability') return (c.price || 0) * 0.85 + 16;
+    if(mode==='custom'){
+      const r = Math.min(Math.max(parseFloat(customDiscountInput.value) || 0, 0), 100);
+      return (c.price || 0) * (1 - r/100) + 16;
+    }
+    return c.fee;
+  }
+  const origTotal = items.reduce((s,c) => s + (c.fee || 0), 0);
+  const discTotal = items.reduce((s,c) => s + courseDiscounted(c), 0);
+
   tbody.innerHTML = items.map((c, i) => {
     const even = i % 2 === 0;
-    const fee = c.fee !== null ? c.fee.toLocaleString('az-AZ', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' AZN' : '—';
+    const fmtA = n => n.toLocaleString('az-AZ', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' AZN';
+    const fee = c.fee !== null ? fmtA(c.fee) : '—';
+    const disc = c.fee !== null ? fmtA(courseDiscounted(c)) : '—';
     const hours = c.hours !== null ? c.hours : '—';
     return '<tr style="' + (even ? 'background:#F6F8FA;' : '') + '">' +
-      '<td style="padding:8px 12px; text-align:left; color:#5C7387;">' + (i+1) + '</td>' +
-      '<td style="padding:8px 12px; text-align:left; font-weight:600; font-size:11px;">' + c.az + '</td>' +
-      '<td style="padding:8px 12px; text-align:center;">' + hours + '</td>' +
-      '<td style="padding:8px 12px; text-align:right; font-weight:600;">' + fee + '</td>' +
+      '<td style="padding:8px 10px; text-align:left; color:#5C7387;">' + (i+1) + '</td>' +
+      '<td style="padding:8px 10px; text-align:left; font-weight:600; font-size:10.5px;">' + c.az + '</td>' +
+      '<td style="padding:8px 10px; text-align:center;">' + hours + '</td>' +
+      '<td style="padding:8px 10px; text-align:right; font-weight:600;">' + fee + '</td>' +
+      '<td style="padding:8px 10px; text-align:right; font-weight:700; background:#F3EAD4;">' + disc + '</td>' +
       '</tr>';
   }).join('');
 
-  const totalText = document.getElementById('sumTotal').textContent;
-  document.getElementById('pdfSumTotal').textContent = totalText;
+  document.getElementById('pdfSumOriginal').textContent = origTotal.toLocaleString('az-AZ', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' AZN';
+  document.getElementById('pdfSumTotal').textContent = discTotal.toLocaleString('az-AZ', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' AZN';
 
   // === Make visible for html2canvas ===
   tmpl.style.position = 'fixed';
