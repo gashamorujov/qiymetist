@@ -285,13 +285,13 @@
 
   .calc-discount{ margin:18px 0 10px; }
   .calc-discount label{ font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,0.5); display:block; margin-bottom:8px; }
-  select#discountSelect{
+  select#discountSelect, select#feeMode{
     width:100%; padding:12px 14px; border-radius:10px;
     background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.16);
     color:#fff; font-family:'Inter',sans-serif; font-size:14px;
     appearance:none; cursor:pointer;
   }
-  select#discountSelect option{ color:#000; }
+  select#discountSelect option, select#feeMode option{ color:#000; }
   .calc-custom-discount{
     display:flex; align-items:center; gap:8px; margin-top:8px;
   }
@@ -464,17 +464,25 @@
         <option value="custom">Xüsusi faiz — öz faizini yaz</option>
         <option value="martyr">Şəhid ailəsi (I dərəcə) — hər kurs üçün 16 AZN</option>
       </select>
+
+      <label for="feeMode" style="margin-top:14px;">Mod</label>
+      <select id="feeMode">
+        <option value="fee">Rüsumlu</option>
+        <option value="nofee">Rüsumsuz</option>
+      </select>
+
+      <div class="discount-note" id="discountNote"></div>
+
       <div class="calc-custom-discount" id="customDiscountWrap" style="display:none;">
         <input type="number" id="customDiscountInput" min="0" max="100" step="1" placeholder="Faiz daxil et, məsələn 12">
         <span class="calc-custom-percent">%</span>
       </div>
-      <div class="discount-note" id="discountNote"></div>
     </div>
 
     <div class="calc-totals">
       <div class="calc-line"><span>Ara cəm (ƏDV-siz)</span><span id="sumBase">0.00 AZN</span></div>
       <div class="calc-line"><span>Güzəşt</span><span id="sumDiscount">− 0.00 AZN</span></div>
-      <div class="calc-line total"><span>Yekun (rüsum daxil)</span><span id="sumTotal">0.00 AZN</span></div>
+      <div class="calc-line total"><span id="sumTotalLabel">Yekun (rüsum daxil)</span><span id="sumTotal">0.00 AZN</span></div>
     </div>
 
     <div class="calc-actions">
@@ -516,7 +524,8 @@
     <!-- Info -->
     <div style="font-size:13px; color:#5C7387; margin:18px 0;">
       <span style="font-weight:600; color:#0F2A44;">Seçilmiş kurslar:</span> <span id="pdfCount"></span> &nbsp;|&nbsp;
-      <span style="font-weight:600; color:#0F2A44;">Ümumi saat:</span> <span id="pdfHours"></span>
+      <span style="font-weight:600; color:#0F2A44;">Ümumi saat:</span> <span id="pdfHours"></span> &nbsp;|&nbsp;
+      <span style="font-weight:600; color:#0F2A44;">Güzəşt:</span> <span id="pdfDiscount"></span>
     </div>
     <!-- Table -->
     <table style="width:100%; border-collapse:collapse; font-size:13px;">
@@ -724,23 +733,28 @@ const calcCountBadge = document.getElementById('calcCountBadge');
 const sumBase = document.getElementById('sumBase');
 const sumDiscount = document.getElementById('sumDiscount');
 const sumTotal = document.getElementById('sumTotal');
+const sumTotalLabel = document.getElementById('sumTotalLabel');
 const discountSelect = document.getElementById('discountSelect');
+const feeModeSelect = document.getElementById('feeMode');
 const discountNote = document.getElementById('discountNote');
 const customDiscountWrap = document.getElementById('customDiscountWrap');
 const customDiscountInput = document.getElementById('customDiscountInput');
 
-const DISCOUNT_NOTES = {
-  none: '',
-  veteran: 'Rüsumsuz qiymətə 30% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
-  war: 'Rüsumsuz qiymətə 10% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
-  disability: 'Rüsumsuz qiymətə 15% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
-  custom: 'Xüsusi faiz rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.',
-  martyr: 'Hər seçilmiş kurs üzrə yalnız 16 AZN ödənilir.'
-};
+function discountNoteText(mode, withFee, customRate){
+  if(mode==='martyr') return 'Hər seçilmiş kurs üzrə yalnız 16 AZN ödənilir.';
+  if(mode==='none') return '';
+  const rate = mode==='custom'
+    ? customRate
+    : (mode==='veteran' ? 30 : mode==='war' ? 10 : mode==='disability' ? 15 : '');
+  return withFee
+    ? 'Rüsumsuz qiymətə ' + rate + '% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.'
+    : 'Rüsumsuz qiymətə ' + rate + '% endirim tətbiq olunur.';
+}
 
 function renderCalc(){
   const items = Array.from(selected.values());
   const n = items.length;
+  const withFee = feeModeSelect.value === 'fee';
   calcCountBadge.textContent = n + ' kurs';
 
   if(n===0){
@@ -753,7 +767,7 @@ function renderCalc(){
           <div class="calc-item-code">${c.code}</div>
         </div>
         <div class="calc-item-right">
-          <div class="calc-item-price">${fmt(c.price)} AZN + 16 AZN rüsum</div>
+          <div class="calc-item-price">${fmt(c.price)} AZN${withFee ? ' + 16 AZN rüsum' : ''}</div>
           <button class="calc-item-remove" data-code="${c.code}">sil</button>
         </div>
       </div>
@@ -770,42 +784,44 @@ function renderCalc(){
   const feeSum = items.reduce((s,c)=> s + (c.fee||0), 0);
   const totalFee = n * 16;
   const mode = discountSelect.value;
-  discountNote.textContent = DISCOUNT_NOTES[mode];
+  const customRate = Math.min(Math.max(parseFloat(customDiscountInput.value) || 0, 0), 100);
+  discountNote.textContent = discountNoteText(mode, withFee, customRate);
   customDiscountWrap.style.display = mode==='custom' ? 'flex' : 'none';
 
-  let finalTotal = feeSum;
+  let finalTotal = withFee ? feeSum : baseSum;
   let discountAmount = 0;
 
+  const applyPct = rate => {
+    discountAmount = baseSum * rate;
+    finalTotal = (baseSum - discountAmount) + (withFee ? totalFee : 0);
+  };
+
   if(mode==='martyr'){
-    // Şəhid ailəsi: hər kurs üçün 16 AZN
+    // Şəhid ailəsi: hər kurs üçün 16 AZN (rüsumlu və rüsumsuz modda eyni qayda)
     finalTotal = n * 16;
-    discountAmount = feeSum - finalTotal;
+    discountAmount = (withFee ? feeSum : baseSum) - finalTotal;
   } else if(mode==='custom'){
-    // Xüsusi faiz rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN/kurs rüsum
-    const customRate = Math.min(Math.max(parseFloat(customDiscountInput.value) || 0, 0), 100);
-    discountAmount = baseSum * (customRate / 100);
-    finalTotal = (baseSum - discountAmount) + totalFee;
-    discountNote.textContent = 'Rüsumsuz qiymətə ' + customRate + '% endirim tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir.';
+    // Xüsusi faiz rüsumsuz qiymətə tətbiq olunur; rüsumlu modda üzərinə 16 AZN/kurs əlavə edilir
+    applyPct(customRate / 100);
   } else if(mode==='veteran'){
-    // 30% endirim rüsumsuz qiymətə, üzərinə 16 AZN/kurs rüsum
-    discountAmount = baseSum * 0.30;
-    finalTotal = (baseSum - discountAmount) + totalFee;
+    // 30% endirim rüsumsuz qiymətə; rüsumlu modda üzərinə 16 AZN/kurs rüsum
+    applyPct(0.30);
   } else if(mode==='war'){
-    // 10% endirim rüsumsuz qiymətə, üzərinə 16 AZN/kurs rüsum
-    discountAmount = baseSum * 0.10;
-    finalTotal = (baseSum - discountAmount) + totalFee;
+    // 10% endirim rüsumsuz qiymətə; rüsumlu modda üzərinə 16 AZN/kurs rüsum
+    applyPct(0.10);
   } else if(mode==='disability'){
-    // 15% endirim rüsumsuz qiymətə, üzərinə 16 AZN/kurs rüsum
-    discountAmount = baseSum * 0.15;
-    finalTotal = (baseSum - discountAmount) + totalFee;
+    // 15% endirim rüsumsuz qiymətə; rüsumlu modda üzərinə 16 AZN/kurs rüsum
+    applyPct(0.15);
   }
 
   sumBase.textContent = fmt(baseSum) + ' AZN';
   sumDiscount.textContent = (discountAmount>0? '− ':'') + fmt(discountAmount) + ' AZN';
   sumTotal.textContent = fmt(finalTotal) + ' AZN';
+  sumTotalLabel.textContent = withFee ? 'Yekun (rüsum daxil)' : 'Yekun (rüsumsuz)';
 }
 
 discountSelect.addEventListener('change', renderCalc);
+feeModeSelect.addEventListener('change', renderCalc);
 customDiscountInput.addEventListener('input', renderCalc);
 
 document.getElementById('select5Btn').addEventListener('click', ()=>{
@@ -926,37 +942,53 @@ function generatePdf(){
 
   const tbody = document.getElementById('pdfTbody');
   const mode = discountSelect.value;
+  const feeMode = feeModeSelect.value;
+  const withFee = feeMode === 'fee';
+  const customRate = Math.min(Math.max(parseFloat(customDiscountInput.value) || 0, 0), 100);
+
+  // Seçilmiş güzəşt kateqoriyası rəsmi sənəddə göstərilir
+  const pdfDiscountLabels = {
+    none: 'Yoxdur',
+    veteran: 'Qazi (30% endirim)',
+    war: 'Müharibə iştirakçısı (10% endirim)',
+    disability: 'Əlilliyi olan şəxs (15% endirim)',
+    custom: 'Xüsusi faiz (' + customRate + '% endirim)',
+    martyr: 'Şəhid ailəsi (I dərəcə)'
+  };
+  document.getElementById('pdfDiscount').textContent = pdfDiscountLabels[mode] || mode;
+
   const hasDiscount = mode !== 'none';
   document.getElementById('pdfDiscHead').textContent = hasDiscount ? 'Endirimli qiymət' : 'Yekun qiymət';
   document.getElementById('pdfSumDiscLabel').textContent = hasDiscount ? 'Ümumi endirimli qiymət' : 'Ümumi qiymət';
   document.getElementById('pdfSumOrigRow').style.display = hasDiscount ? '' : 'none';
-  // Per-course discounted price (same rule as calculator)
+  // Per-course original and discounted price (same rule as calculator, fee-aware)
+  function courseOrig(c){
+    return withFee ? (c.fee || 0) : (c.price || 0);
+  }
   function courseDiscounted(c){
     if(mode==='martyr') return 16;
-    if(mode==='veteran') return (c.price || 0) * 0.70 + 16;
-    if(mode==='war') return (c.price || 0) * 0.90 + 16;
-    if(mode==='disability') return (c.price || 0) * 0.85 + 16;
-    if(mode==='custom'){
-      const r = Math.min(Math.max(parseFloat(customDiscountInput.value) || 0, 0), 100);
-      return (c.price || 0) * (1 - r/100) + 16;
-    }
-    return c.fee;
+    const base = c.price || 0;
+    if(mode==='custom') return withFee ? base * (1 - customRate/100) + 16 : base * (1 - customRate/100);
+    if(mode==='veteran') return withFee ? base * 0.70 + 16 : base * 0.70;
+    if(mode==='war') return withFee ? base * 0.90 + 16 : base * 0.90;
+    if(mode==='disability') return withFee ? base * 0.85 + 16 : base * 0.85;
+    return courseOrig(c);
   }
-  const origTotal = items.reduce((s,c) => s + (c.fee || 0), 0);
+  const origTotal = items.reduce((s,c) => s + courseOrig(c), 0);
   const discTotal = items.reduce((s,c) => s + courseDiscounted(c), 0);
 
   tbody.innerHTML = items.map((c, i) => {
     const even = i % 2 === 0;
     const fmtA = n => n.toLocaleString('az-AZ', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' AZN';
-    const fee = c.fee !== null ? fmtA(c.fee) : '—';
-    const disc = c.fee !== null ? fmtA(courseDiscounted(c)) : '—';
+    const orig = courseOrig(c);
+    const disc = courseDiscounted(c);
     const hours = c.hours !== null ? c.hours : '—';
     return '<tr style="' + (even ? 'background:#F6F8FA;' : '') + '">' +
       '<td style="padding:8px 10px; text-align:left; color:#5C7387;">' + (i+1) + '</td>' +
       '<td style="padding:8px 10px; text-align:left; font-weight:600; font-size:10.5px;">' + c.az + '</td>' +
       '<td style="padding:8px 10px; text-align:center;">' + hours + '</td>' +
-      '<td style="padding:8px 10px; text-align:right; font-weight:600;">' + fee + '</td>' +
-      '<td style="padding:8px 10px; text-align:right; font-weight:700; background:#F3EAD4;">' + disc + '</td>' +
+      '<td style="padding:8px 10px; text-align:right; font-weight:600;">' + fmtA(orig) + '</td>' +
+      '<td style="padding:8px 10px; text-align:right; font-weight:700; background:#F3EAD4;">' + fmtA(disc) + '</td>' +
       '</tr>';
   }).join('');
 
