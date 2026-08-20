@@ -126,16 +126,7 @@
     transition:background .15s;
   }
   .reklam-add-btn:hover{ background:#9a7a30; }
-  .reklam-fee-toggle{
-    display:flex; border-radius:10px; overflow:hidden; border:1px solid var(--hairline);
-  }
-  .reklam-fee-toggle button{
-    flex:1; padding:10px; font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
-    border:none; cursor:pointer; transition:all .15s; background:var(--fog); color:var(--slate);
-  }
-  .reklam-fee-toggle button.active{
-    background:var(--ink); color:#fff;
-  }
+
   .reklam-selected-item{
     display:flex; align-items:center; gap:8px; padding:10px 12px;
     border:1px solid var(--hairline); border-radius:10px; background:var(--fog);
@@ -677,14 +668,6 @@
             <option value="">Kurs kodu seçin...</option>
           </select>
           <button class="reklam-add-btn" onclick="addReklamCourse()">+ Əlavə et</button>
-        </div>
-      </div>
-
-      <div class="reklam-field">
-        <label>Qiymət rejimi</label>
-        <div class="reklam-fee-toggle">
-          <button class="active" id="feeNofee" onclick="setReklamFee('nofee')">Rüsumsuz</button>
-          <button id="feeWith" onclick="setReklamFee('fee')">Rüsumlu</button>
         </div>
       </div>
 
@@ -1282,7 +1265,6 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
 
 // ========== REKLAM SECTION ==========
 let reklamCourses = []; // array of { code, course, startDate, endDate }
-let reklamFeeMode = 'nofee'; // 'nofee' or 'fee'
 
 function showSection(section){
   document.querySelectorAll('.page-section').forEach(s => s.classList.remove('visible'));
@@ -1304,14 +1286,6 @@ function buildReklamCourseSelect(filter){
     filtered.map(c =>
       '<option value="' + c.code + '">' + c.code + '</option>'
     ).join('');
-}
-
-function setReklamFee(mode){
-  reklamFeeMode = mode;
-  document.getElementById('feeNofee').classList.toggle('active', mode === 'nofee');
-  document.getElementById('feeWith').classList.toggle('active', mode === 'fee');
-  renderReklamSelectedList();
-  updateReklamPreview();
 }
 
 function addReklamCourse(){
@@ -1394,7 +1368,7 @@ function formatDate(d){
 
 function getCoursePrice(course){
   if(!course) return 0;
-  return reklamFeeMode === 'fee' ? (course.fee || course.price || 0) : (course.price || 0);
+  return course.price || 0;
 }
 
 function updateReklamPreview(){
@@ -1452,8 +1426,6 @@ function exportReklamPng(){
   btn.textContent = '⏳ Hazırlanır...';
 
   const logoSrc = document.querySelector('.brand img') ? document.querySelector('.brand img').src : '';
-  const withFee = reklamFeeMode === 'fee';
-
   let total = 0;
   let rowsHtml = '';
   reklamCourses.forEach(r => {
@@ -1461,7 +1433,7 @@ function exportReklamPng(){
     const dateRange = r.startDate && endDate
       ? formatDate(new Date(r.startDate + 'T00:00:00')) + ' – ' + formatDate(endDate)
       : '';
-    const price = withFee ? (r.course.fee || r.course.price || 0) : (r.course.price || 0);
+    const price = r.course.price || 0;
     total += price;
     const priceStr = price > 0 ? price.toLocaleString('az-AZ') + ' AZN' : '';
     rowsHtml += '<tr><td style="padding:12px 16px;border-bottom:1px solid #E3E8EE;font-weight:600;font-size:12.5px;line-height:1.4;">' + r.course.az + '</td>' +
