@@ -579,7 +579,7 @@
   <div class="search-meta" id="searchMeta"><b>30</b> kursdan <b>30</b>-u göstərilir</div>
 </section>
 
-<div class="workspace">
+<div class="workspace page-section visible" id="sectionWorkspace">
   <div class="panel">
     <div class="table-head">
       <div class="num">№</div>
@@ -1271,10 +1271,13 @@ function showSection(section){
   document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
   if(section === 'courses'){
     document.getElementById('sectionCourses').classList.add('visible');
+    document.getElementById('sectionWorkspace').classList.add('visible');
     document.getElementById('navCourses').classList.add('active');
+    document.querySelector('.top-stats').style.display = '';
   } else {
     document.getElementById('sectionReklam').classList.add('visible');
     document.getElementById('navReklam').classList.add('active');
+    document.querySelector('.top-stats').style.display = 'none';
   }
 }
 
