@@ -1269,15 +1269,18 @@ let reklamCourses = []; // array of { code, course, startDate, endDate }
 function showSection(section){
   document.querySelectorAll('.page-section').forEach(s => s.classList.remove('visible'));
   document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
+  const footer = document.querySelector('footer');
   if(section === 'courses'){
     document.getElementById('sectionCourses').classList.add('visible');
     document.getElementById('sectionWorkspace').classList.add('visible');
     document.getElementById('navCourses').classList.add('active');
     document.querySelector('.top-stats').style.display = '';
+    if(footer) footer.style.display = '';
   } else {
     document.getElementById('sectionReklam').classList.add('visible');
     document.getElementById('navReklam').classList.add('active');
     document.querySelector('.top-stats').style.display = 'none';
+    if(footer) footer.style.display = 'none';
   }
 }
 
@@ -1429,7 +1432,6 @@ function exportReklamPng(){
   btn.textContent = '⏳ Hazırlanır...';
 
   const logoSrc = document.querySelector('.brand img') ? document.querySelector('.brand img').src : '';
-  let total = 0;
   let rowsHtml = '';
   reklamCourses.forEach(r => {
     const endDate = r.startDate ? calcEndDate(new Date(r.startDate + 'T00:00:00'), r.course.hours) : null;
@@ -1437,33 +1439,32 @@ function exportReklamPng(){
       ? formatDate(new Date(r.startDate + 'T00:00:00')) + ' – ' + formatDate(endDate)
       : '';
     const price = r.course.price || 0;
-    total += price;
     const priceStr = price > 0 ? price.toLocaleString('az-AZ') + ' AZN' : '';
-    rowsHtml += '<tr><td style="padding:12px 16px;border-bottom:1px solid #E3E8EE;font-weight:600;font-size:12.5px;line-height:1.4;">' + r.course.az + '</td>' +
-      '<td style="padding:12px 16px;border-bottom:1px solid #E3E8EE;text-align:center;font-size:12.5px;color:#5C7387;white-space:nowrap;">' + dateRange + '</td>' +
-      '<td style="padding:12px 16px;border-bottom:1px solid #E3E8EE;text-align:right;font-weight:700;font-size:13px;white-space:nowrap;">' + priceStr + '</td></tr>';
+    rowsHtml += '<tr style="border-bottom:2px solid #E3E8EE;">' +
+      '<td style="padding:14px 20px;font-weight:700;font-size:14px;color:#0F2A44;line-height:1.4;letter-spacing:0.01em;">' + r.course.az + '</td>' +
+      '<td style="padding:14px 20px;text-align:center;font-size:14px;color:#5C7387;white-space:nowrap;font-weight:500;">' + dateRange + '</td>' +
+      '<td style="padding:14px 20px;text-align:right;font-weight:800;font-size:15px;color:#B4903F;white-space:nowrap;letter-spacing:0.02em;">' + priceStr + '</td></tr>';
   });
 
   const inner = tmpl.querySelector('div');
   inner.innerHTML =
-    '<div style="text-align:center;margin-bottom:24px;">' +
-    '<img src="' + logoSrc + '" alt="IST Trust Zone" style="height:120px;width:auto;margin-bottom:12px;">' +
-    '<div style="font-family:Fraunces,Georgia,serif;font-size:24px;font-weight:700;color:#0F2A44;margin-bottom:2px;">IST Trust Zone</div>' +
-    '<div style="font-size:12px;color:#5C7387;letter-spacing:0.08em;">Dəniz Təlim Mərkəzi</div>' +
+    '<div style="text-align:center;margin-bottom:20px;">' +
+    '<div style="font-family:Fraunces,Georgia,serif;font-size:28px;font-weight:700;color:#0F2A44;margin-bottom:2px;letter-spacing:-0.01em;">IST Trust Zone</div>' +
+    '<div style="font-size:13px;color:#5C7387;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:16px;">Dəniz Təlim Mərkəzi</div>' +
+    '<img src="' + logoSrc + '" alt="IST Trust Zone" style="height:100px;width:auto;margin-top:4px;">' +
     '</div>' +
-    '<div style="background:#F6F8FA;border-radius:12px;padding:20px 24px;margin-bottom:24px;width:100%;">' +
-    '<div style="text-align:center;font-size:15px;color:#14324F;font-weight:600;margin-bottom:8px;">Elmlər filialımızda keçiriləcək təlimlərə qeydiyyat davam edir.</div>' +
-    '<div style="text-align:center;font-size:13px;color:#5C7387;margin-bottom:3px;"><b>Ünvan:</b> Süleyman Dadaşov küçəsi 28, Köhnə şüşəli bazarın arxası</div>' +
+    '<div style="background:linear-gradient(135deg,#F6F8FA 0%,#EDE8F5 100%);border-radius:14px;padding:24px 28px;margin-bottom:28px;width:100%;border:1px solid #E3E8EE;">' +
+    '<div style="text-align:center;font-size:16px;color:#14324F;font-weight:700;margin-bottom:10px;line-height:1.5;">Elmlər filialımızda keçiriləcək təlimlərə qeydiyyat davam edir.</div>' +
+    '<div style="text-align:center;font-size:13px;color:#5C7387;margin-bottom:4px;"><b>Ünvan:</b> Süleyman Dadaşov küçəsi 28, Köhnə şüşəli bazarın arxası</div>' +
     '<div style="text-align:center;font-size:13px;color:#5C7387;"><b>Əlaqə:</b> 0772180035 / 0772335584 / 0772335950</div>' +
     '</div>' +
-    '<div style="width:100%;border-top:3px solid #0F2A44;margin-bottom:0;"></div>' +
-    '<table style="width:100%;border-collapse:collapse;font-size:13px;">' +
-    '<thead><tr style="background:#0F2A44;color:#fff;">' +
-    '<th style="padding:12px 16px;text-align:left;font-weight:600;font-size:12px;">Kursun adı</th>' +
-    '<th style="padding:12px 16px;text-align:center;font-weight:600;font-size:12px;">Başlama – Bitmə tarixi</th>' +
-    '<th style="padding:12px 16px;text-align:right;font-weight:600;font-size:12px;">Qiymət</th>' +
-    '</tr></thead><tbody>' + rowsHtml + '</tbody></table>' +
-    '<div style="display:flex;justify-content:flex-end;width:100%;padding:16px 16px 0;font-size:16px;font-weight:800;color:#0F2A44;border-top:2px solid #0F2A44;margin-top:4px;">Cəmi: ' + total.toLocaleString('az-AZ', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' AZN</div>';
+    '<div style="width:100%;border-top:4px solid #0F2A44;margin-bottom:0;"></div>' +
+    '<table style="width:100%;border-collapse:collapse;">' +
+    '<thead><tr style="background:linear-gradient(135deg,#0F2A44 0%,#1A4366 100%);color:#fff;">' +
+    '<th style="padding:14px 20px;text-align:left;font-weight:700;font-size:13px;letter-spacing:0.04em;">KURSUN ADI</th>' +
+    '<th style="padding:14px 20px;text-align:center;font-weight:700;font-size:13px;letter-spacing:0.04em;">TARİX</th>' +
+    '<th style="padding:14px 20px;text-align:right;font-weight:700;font-size:13px;letter-spacing:0.04em;">QİYMƏT</th>' +
+    '</tr></thead><tbody>' + rowsHtml + '</tbody></table>';
 
   tmpl.style.position = 'fixed';
   tmpl.style.left = '0';
