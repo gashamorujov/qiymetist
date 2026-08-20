@@ -566,7 +566,7 @@
   </div>
 </header>
 
-<section class="hero page-section visible" id="sectionCourses">
+<section class="hero page-section" id="sectionCourses">
   <div class="hero-kicker"><span class="dot"></span>Rəsmi qiymət cədvəli · 2026</div>
   <h1 class="hero-title">Kursu <em>saniyələr</em> içində tap.</h1>
   <p class="hero-sub">Bütün STCW təlim kurslarının kodu, müddəti, iştirakçı sayı və qiyməti bir səhifədə. Adı və ya koduna görə axtar, seçdiklərini hesablama panelinə əlavə et.</p>
@@ -579,7 +579,7 @@
   <div class="search-meta" id="searchMeta"><b>30</b> kursdan <b>30</b>-u göstərilir</div>
 </section>
 
-<div class="workspace page-section visible" id="sectionWorkspace">
+<div class="workspace page-section" id="sectionWorkspace">
   <div class="panel">
     <div class="table-head">
       <div class="num">№</div>
@@ -1501,6 +1501,11 @@ function exportReklamPng(){
     });
   }, 300);
 }
+
+// Ensure courses section is visible on page load
+document.addEventListener('DOMContentLoaded', function(){
+  showSection('courses');
+});
 
 buildReklamCourseSelect();
 
