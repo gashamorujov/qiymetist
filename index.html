@@ -64,160 +64,20 @@
 
   @media (max-width:720px){ .top-stats{display:none;} }
 
-  /* ---------- Navigation ---------- */
-  .main-nav{
-    display:flex; align-items:center; gap:4px; margin-left:auto;
+  /* ---------- Ad nav button ---------- */
+  .ad-nav-btn{
+    margin-left:auto;
+    display:flex; align-items:center; gap:7px;
+    background:var(--ink); color:#fff;
+    border:none; border-radius:10px;
+    padding:9px 16px 9px 14px;
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600;
+    cursor:pointer; transition:background .15s ease, transform .1s ease;
+    letter-spacing:.01em;
   }
-  .main-nav button{
-    background:none; border:1px solid transparent; border-radius:8px;
-    padding:8px 16px; font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
-    color:var(--slate); cursor:pointer; transition:all .15s ease; letter-spacing:.01em;
-  }
-  .main-nav button:hover{ color:var(--ink); background:var(--fog); }
-  .main-nav button.active{
-    color:var(--ink); background:var(--fog); border-color:var(--hairline);
-  }
-  @media (max-width:720px){
-    .main-nav button{ padding:6px 10px; font-size:12px; }
-  }
-
-  /* ---------- Sections ---------- */
-  .page-section{ display:none; }
-  .page-section.visible{ display:block; }
-
-  /* ---------- Reklam Builder ---------- */
-  .reklam-wrap{
-    max-width:1180px; margin:0 auto; padding:32px 24px 100px;
-    display:grid; grid-template-columns:380px 1fr; gap:32px; align-items:start;
-  }
-  @media (max-width:980px){ .reklam-wrap{ grid-template-columns:1fr; } }
-
-  .reklam-panel{
-    border:1px solid var(--hairline); border-radius:16px;
-    background:var(--paper); padding:24px;
-    position:sticky; top:88px;
-  }
-  .reklam-panel h3{
-    font-family:'Fraunces',serif; font-size:22px; font-weight:700;
-    margin:0 0 20px; color:var(--ink);
-  }
-  .reklam-field{ margin-bottom:16px; }
-  .reklam-field label{
-    display:block; font-size:11px; text-transform:uppercase; letter-spacing:.1em;
-    color:var(--slate); font-weight:600; margin-bottom:6px;
-  }
-  .reklam-field select, .reklam-field input{
-    width:100%; padding:10px 14px; border-radius:10px;
-    border:1px solid var(--hairline); background:var(--fog);
-    font-family:'Inter',sans-serif; font-size:14px; color:var(--ink);
-    outline:none; transition:border-color .15s;
-  }
-  .reklam-field select:focus, .reklam-field input:focus{
-    border-color:var(--ink);
-  }
-  .reklam-add-row{
-    display:flex; gap:8px; align-items:center;
-  }
-  .reklam-add-row select{ flex:1; }
-  .reklam-add-btn{
-    padding:10px 16px; border-radius:10px; border:none;
-    background:var(--gold); color:#fff; font-family:'Inter',sans-serif;
-    font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;
-    transition:background .15s;
-  }
-  .reklam-add-btn:hover{ background:#9a7a30; }
-
-  .reklam-selected-item{
-    display:flex; align-items:center; gap:8px; padding:10px 12px;
-    border:1px solid var(--hairline); border-radius:10px; background:var(--fog);
-    margin-bottom:8px; font-size:13px;
-  }
-  .reklam-selected-item .rsi-code{
-    font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600;
-    color:#fff; background:var(--ink); padding:3px 8px; border-radius:6px;
-    white-space:nowrap;
-  }
-  .reklam-selected-item input[type="date"]{
-    flex:1; padding:6px 8px; border-radius:6px; border:1px solid var(--hairline);
-    font-family:'Inter',sans-serif; font-size:12px; color:var(--ink); background:var(--paper);
-  }
-  .reklam-selected-item .rsi-end{
-    font-size:11px; color:var(--gold); font-weight:600; white-space:nowrap; min-width:90px;
-  }
-  .reklam-selected-item .rsi-remove{
-    border:none; background:none; color:var(--slate-light); cursor:pointer;
-    font-size:16px; padding:2px 4px; line-height:1; transition:color .1s;
-  }
-  .reklam-selected-item .rsi-remove:hover{ color:#c0392b; }
-  .reklam-actions{ margin-top:18px; display:flex; gap:10px; }
-  .reklam-btn{
-    flex:1; padding:12px; border-radius:10px; border:none;
-    font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
-    cursor:pointer; transition:all .15s;
-  }
-  .reklam-btn-primary{ background:var(--ink); color:#fff; }
-  .reklam-btn-primary:hover{ background:var(--ink-2); }
-  .reklam-btn-primary:disabled{ opacity:.5; cursor:not-allowed; }
-  .reklam-btn-outline{ background:var(--paper); color:var(--ink); border:1px solid var(--hairline); }
-  .reklam-btn-outline:hover{ border-color:var(--ink); }
-
-  /* ---------- Reklam Preview ---------- */
-  .reklam-preview-wrap{
-    display:flex; flex-direction:column; align-items:center;
-  }
-  .reklam-preview-label{
-    font-size:11px; text-transform:uppercase; letter-spacing:.12em;
-    color:var(--slate); font-weight:600; margin-bottom:12px;
-  }
-  .reklam-preview{
-    width:100%; max-width:600px; background:#fff;
-    border:1px solid var(--hairline); border-radius:12px;
-    overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.06);
-  }
-  .rp-header{
-    text-align:center; padding:36px 24px 24px;
-    border-bottom:2px solid var(--ink);
-  }
-  .rp-logo{ height:130px; width:auto; margin-bottom:16px; }
-  .rp-title{
-    font-family:'Fraunces',serif; font-size:20px; font-weight:700;
-    color:var(--ink); margin-bottom:4px;
-  }
-  .rp-subtitle{ font-size:12px; color:var(--slate); }
-  .rp-announcement{
-    padding:16px 24px; text-align:center; border-bottom:1px solid var(--hairline);
-    line-height:1.7;
-  }
-  .rp-announcement .rp-reg-text{
-    font-size:14px; font-weight:600; color:var(--ink); margin-bottom:8px;
-  }
-  .rp-announcement .rp-detail{
-    font-size:12px; color:var(--slate); line-height:1.6;
-  }
-  .rp-announcement .rp-detail b{ color:var(--ink); font-weight:600; }
-  .rp-table{ width:100%; border-collapse:collapse; }
-  .rp-table th{
-    background:var(--ink); color:#fff; padding:10px 16px;
-    font-size:11px; text-transform:uppercase; letter-spacing:.08em;
-    text-align:left; font-weight:600;
-  }
-  .rp-table th:nth-child(2), .rp-table td:nth-child(2){ text-align:center; }
-  .rp-table th:last-child, .rp-table td:last-child{ text-align:right; }
-  .rp-table td{
-    padding:10px 16px; font-size:13px; border-bottom:1px solid var(--hairline);
-    color:var(--ink);
-  }
-  .rp-table tr:last-child td{ border-bottom:none; }
-  .rp-table .rp-course{ text-align:left; }
-  .rp-table .rp-date{ font-size:12px; white-space:nowrap; }
-  .rp-footer{
-    padding:12px 24px; border-top:2px solid var(--ink);
-    font-size:11px; color:var(--slate); text-align:center; line-height:1.5;
-  }
-  .rp-empty{
-    padding:40px 24px; text-align:center; color:var(--slate); font-size:14px;
-  }
-
+  .ad-nav-btn:hover{ background:var(--gold); }
+  .ad-nav-btn:active{ transform:translateY(1px); }
+  @media (max-width:720px){ .ad-nav-btn{ margin-left:0; } .top-inner{ flex-wrap:wrap; } }
 
   /* ---------- Hero ---------- */
   .hero{
@@ -542,6 +402,282 @@
   .popup-backdrop.show{
     display:block;
   }
+
+  /* =====================================================================
+     REKLAM / KURS ELANI — tam ayrı interfeys
+     ===================================================================== */
+  .ad-overlay{
+    display:none;
+    position:fixed; inset:0; z-index:500;
+    background:var(--fog);
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+  .ad-overlay.show{ display:block; }
+
+  .ad-topbar{
+    position:sticky; top:0; z-index:10;
+    background:rgba(255,255,255,0.95); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hairline);
+    padding:14px 24px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .ad-topbar .ad-back{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--hairline); background:var(--paper);
+    color:var(--ink); border-radius:10px; padding:9px 14px;
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600;
+    cursor:pointer; transition:all .12s ease;
+  }
+  .ad-topbar .ad-back:hover{ border-color:var(--ink); }
+  .ad-topbar .ad-title{
+    font-family:'Fraunces',serif; font-weight:600; font-size:19px; letter-spacing:-0.01em;
+  }
+  .ad-topbar .ad-title em{ font-style:italic; color:var(--gold); font-weight:500; }
+  .ad-topbar .ad-sub{ font-size:11.5px; color:var(--slate); margin-left:auto; text-align:right; display:none; }
+  @media (min-width:860px){ .ad-topbar .ad-sub{ display:block; } }
+
+  .ad-body{
+    max-width:1320px; margin:0 auto;
+    padding:32px 24px 100px;
+    display:grid; grid-template-columns:420px 1fr; gap:28px;
+    align-items:start;
+    width:100%;
+  }
+  .ad-body > *{ min-width:0; }
+  @media (max-width:1080px){
+    .ad-body{ grid-template-columns:1fr; }
+  }
+  @media (max-width:640px){
+    .ad-body{ padding:18px 14px 80px; gap:20px; }
+  }
+
+  /* ---- Left: builder panel ---- */
+  .ad-panel{
+    border:1px solid var(--hairline); border-radius:16px;
+    background:var(--paper); padding:22px;
+    min-width:0;
+  }
+  @media (max-width:640px){
+    .ad-panel{ padding:16px; }
+  }
+  .ad-panel h2{
+    font-family:'Fraunces',serif; font-size:18px; font-weight:600;
+    margin:0 0 4px; letter-spacing:-0.01em;
+  }
+  .ad-panel .ad-panel-sub{ font-size:12.5px; color:var(--slate); margin:0 0 18px; line-height:1.5; }
+
+  .ad-search-wrap{
+    position:relative; margin-bottom:10px;
+  }
+  .ad-search-wrap svg{ position:absolute; left:14px; top:50%; transform:translateY(-50%); opacity:.5; pointer-events:none; }
+  .ad-search-wrap input{
+    width:100%; border:1px solid var(--hairline); background:var(--fog);
+    border-radius:12px; padding:12px 14px 12px 40px;
+    font-family:'Inter',sans-serif; font-size:14.5px; color:var(--ink);
+    outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .ad-search-wrap input:focus{
+    border-color:var(--ink); box-shadow:0 0 0 4px rgba(15,42,68,0.06); background:var(--paper);
+  }
+
+  .ad-search-results{
+    max-height:260px; overflow-y:auto;
+    border:1px solid var(--hairline); border-radius:12px;
+    margin-bottom:20px;
+    display:none;
+  }
+  .ad-search-results.show{ display:block; }
+  .ad-search-empty{
+    display:none; padding:16px; text-align:center; color:var(--slate); font-size:13px;
+  }
+  .ad-search-empty.show{ display:block; }
+  .ad-result-row{
+    display:flex; align-items:center; gap:10px;
+    padding:11px 14px; border-bottom:1px solid var(--hairline);
+    cursor:pointer; transition:background .12s ease;
+  }
+  .ad-result-row:last-child{ border-bottom:none; }
+  .ad-result-row:hover{ background:var(--fog); }
+  .ad-result-row.disabled{ opacity:.4; cursor:not-allowed; }
+  .ad-result-code{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; font-weight:600;
+    background:var(--ink); color:#fff; border-radius:6px; padding:4px 8px; flex:none;
+  }
+  .ad-result-name{ font-size:13.5px; font-weight:600; line-height:1.3; flex:1; }
+  .ad-result-add{
+    flex:none; width:26px; height:26px; border-radius:8px;
+    border:1px solid var(--hairline); background:var(--paper); color:var(--ink);
+    display:flex; align-items:center; justify-content:center; font-size:15px; line-height:1;
+  }
+
+  .ad-fee-toggle{
+    display:flex; gap:8px; margin-bottom:20px;
+    background:var(--fog); border:1px solid var(--hairline); border-radius:12px; padding:4px;
+    width:100%;
+  }
+  .ad-fee-toggle button{
+    flex:1 1 0; min-width:0; border:none; background:transparent; color:var(--slate);
+    padding:10px 6px; border-radius:9px; cursor:pointer;
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600;
+    transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .ad-fee-toggle button.active{
+    background:var(--ink); color:#fff;
+  }
+
+  .ad-selected-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--slate);
+    font-weight:600; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;
+  }
+  .ad-selected-count{
+    background:var(--gold-soft); color:var(--gold); border-radius:20px; padding:2px 10px;
+    font-size:11px; font-weight:700;
+  }
+
+  .ad-selected-list{ display:flex; flex-direction:column; gap:10px; }
+  .ad-selected-empty{
+    padding:28px 14px; text-align:center; color:var(--slate); font-size:13px;
+    border:1.5px dashed var(--hairline); border-radius:12px; line-height:1.6;
+  }
+
+  .ad-course-card{
+    border:1px solid var(--hairline); border-radius:12px; padding:14px;
+    background:var(--fog);
+  }
+  .ad-course-card-head{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:12px;
+  }
+  .ad-course-card-name{ font-size:13.5px; font-weight:600; line-height:1.35; }
+  .ad-course-card-code{
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--slate);
+    margin-top:2px; letter-spacing:.05em;
+  }
+  .ad-course-remove{
+    flex:none; border:none; background:none; color:var(--slate-light);
+    width:24px; height:24px; border-radius:7px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:15px;
+    transition:all .12s ease;
+  }
+  .ad-course-remove:hover{ background:#FBE7E7; color:#B4453F; }
+
+  .ad-date-row{
+    display:flex; align-items:center; gap:10px;
+  }
+  .ad-date-field{ flex:1; }
+  .ad-date-field label{
+    display:block; font-size:10px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--slate); font-weight:600; margin-bottom:5px;
+  }
+  .ad-date-field input[type="date"]{
+    width:100%; border:1px solid var(--hairline); background:var(--paper);
+    border-radius:9px; padding:8px 10px;
+    font-family:'Inter',sans-serif; font-size:13px; color:var(--ink);
+    outline:none; transition:border-color .15s ease;
+  }
+  .ad-date-field input[type="date"]:focus{ border-color:var(--ink); }
+  .ad-date-arrow{ color:var(--slate-light); flex:none; padding-top:14px; }
+  .ad-date-end{
+    flex:1; font-variant-numeric:tabular-nums; font-size:13px; font-weight:600;
+    color:var(--ink-2); padding-top:14px;
+  }
+
+  /* ---- Right: live preview ---- */
+  .ad-preview-col{ position:sticky; top:88px; }
+  .ad-preview-toolbar{
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+  }
+  .ad-preview-toolbar h2{
+    font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin:0; letter-spacing:-0.01em;
+  }
+  .ad-export-btn{
+    display:flex; align-items:center; gap:9px;
+    background:var(--gold); color:var(--ink); border:none; border-radius:11px;
+    padding:12px 20px; font-family:'Inter',sans-serif; font-size:14px; font-weight:700;
+    cursor:pointer; transition:all .12s ease;
+  }
+  .ad-export-btn:hover{ background:#c9a558; }
+  .ad-export-btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+  .ad-preview-frame{
+    border:1px solid var(--hairline); border-radius:16px;
+    background:#EFF2F5; padding:22px;
+    display:flex; justify-content:center;
+    max-height:calc(100vh - 168px); overflow:auto;
+    min-width:0;
+  }
+  @media (max-width:640px){
+    .ad-preview-frame{ padding:12px; }
+  }
+
+  /* ---- The poster itself (also the PNG export source) ----
+     Fixed intrinsic width (this is what PNG export captures);
+     on narrow viewports it is visually scaled down for preview only. */
+  .ad-poster-scale{
+    width:900px; flex:none;
+    transform-origin:top center;
+  }
+  .ad-poster{
+    width:900px;
+    background:#FFFFFF;
+    padding:56px 60px 48px;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    box-shadow:0 8px 30px rgba(15,42,68,0.12);
+  }
+  .ad-poster-logo{
+    display:flex; justify-content:center; margin-bottom:26px;
+  }
+  .ad-poster-logo img{
+    height:150px; width:auto; display:block;
+  }
+  .ad-poster-intro{
+    text-align:center; margin:0 auto 30px; max-width:680px;
+  }
+  .ad-poster-intro .line1{
+    font-family:'Fraunces',serif; font-weight:600; font-size:22px;
+    color:var(--ink); line-height:1.4; margin:0 0 14px; letter-spacing:-0.005em;
+  }
+  .ad-poster-intro .line2, .ad-poster-intro .line3{
+    font-size:15px; color:var(--ink-2); line-height:1.7; margin:0;
+  }
+  .ad-poster-intro .line2 b, .ad-poster-intro .line3 b{ color:var(--ink); font-weight:700; }
+  .ad-poster-intro .divider{
+    width:64px; height:3px; background:var(--gold); margin:18px auto; border-radius:2px;
+  }
+
+  .ad-poster-table{
+    width:100%; border-collapse:collapse; margin-top:8px;
+  }
+  .ad-poster-table thead th{
+    background:var(--ink); color:#fff;
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:700;
+    text-transform:uppercase; letter-spacing:.06em;
+    padding:14px 18px; text-align:left; border:1px solid var(--ink);
+  }
+  .ad-poster-table thead th.c-date, .ad-poster-table thead th.c-price{ text-align:center; }
+  .ad-poster-table tbody td{
+    padding:16px 18px; border:1px solid var(--hairline);
+    font-size:15.5px; line-height:1.4; vertical-align:middle;
+  }
+  .ad-poster-table tbody tr:nth-child(odd) td{ background:#FBFCFD; }
+  .ad-poster-table td.c-name{ font-weight:600; text-align:left; }
+  .ad-poster-table td.c-date{ text-align:center; font-variant-numeric:tabular-nums; color:var(--ink-2); font-weight:600; white-space:nowrap; }
+  .ad-poster-table td.c-price{ text-align:center; font-variant-numeric:tabular-nums; font-weight:700; color:var(--gold); white-space:nowrap; }
+
+  .ad-poster-empty{
+    text-align:center; color:var(--slate); font-size:14px; padding:40px 20px;
+    border:1.5px dashed var(--hairline); border-radius:12px; margin-top:8px;
+  }
+
+  @media (max-width:640px){
+    .ad-poster{ padding:36px 22px 30px; }
+    .ad-poster-logo img{ height:100px; }
+    .ad-poster-intro .line1{ font-size:18px; }
+    .ad-poster-intro .line2, .ad-poster-intro .line3{ font-size:12.5px; }
+    .ad-poster-table thead th, .ad-poster-table tbody td{ padding:10px 10px; font-size:12px; }
+  }
 </style>
 </head>
 <body>
@@ -555,10 +691,10 @@
         <div class="tag">Dəniz Təlim Mərkəzi</div>
       </div>
     </div>
-    <nav class="main-nav">
-      <button class="active" id="navCourses" onclick="showSection('courses')">Qiymət Cədvəli</button>
-      <button id="navReklam" onclick="showSection('reklam')">Reklam</button>
-    </nav>
+    <button class="ad-nav-btn" id="openAdBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/><path d="M7 13h4"/><path d="M7 16h7"/></svg>
+      Reklam
+    </button>
     <div class="top-stats">
       <div><div class="n" id="statCount">30</div><div class="l">Kurs</div></div>
       <div><div class="n" id="statHours">—</div><div class="l">Cəmi saat</div></div>
@@ -566,7 +702,7 @@
   </div>
 </header>
 
-<section class="hero page-section" id="sectionCourses">
+<section class="hero">
   <div class="hero-kicker"><span class="dot"></span>Rəsmi qiymət cədvəli · 2026</div>
   <h1 class="hero-title">Kursu <em>saniyələr</em> içində tap.</h1>
   <p class="hero-sub">Bütün STCW təlim kurslarının kodu, müddəti, iştirakçı sayı və qiyməti bir səhifədə. Adı və ya koduna görə axtar, seçdiklərini hesablama panelinə əlavə et.</p>
@@ -579,7 +715,7 @@
   <div class="search-meta" id="searchMeta"><b>30</b> kursdan <b>30</b>-u göstərilir</div>
 </section>
 
-<div class="workspace page-section" id="sectionWorkspace">
+<div class="workspace">
   <div class="panel">
     <div class="table-head">
       <div class="num">№</div>
@@ -654,46 +790,6 @@
   </aside>
 </div>
 
-<!-- Reklam Section -->
-<section class="page-section" id="sectionReklam">
-  <div class="reklam-wrap">
-    <div class="reklam-panel">
-      <h3>Reklam / Kurs Elanı</h3>
-
-      <div class="reklam-field">
-        <label for="reklamCourseSelect">Kurs seç (kod ilə)</label>
-        <input type="text" id="reklamSearchInput" placeholder="Kod yazın — məsələn SO, SH..." autocomplete="off" style="margin-bottom:8px;">
-        <div class="reklam-add-row">
-          <select id="reklamCourseSelect">
-            <option value="">Kurs kodu seçin...</option>
-          </select>
-          <button class="reklam-add-btn" onclick="addReklamCourse()">+ Əlavə et</button>
-        </div>
-      </div>
-
-      <div class="reklam-field" id="reklamSelectedWrap" style="display:none;">
-        <label>Seçilmiş kurslar</label>
-        <div id="reklamSelectedList"></div>
-      </div>
-
-      <div class="reklam-actions">
-        <button class="reklam-btn reklam-btn-primary" id="reklamExportBtn" onclick="exportReklamPng()" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          PNG olaraq yüklə
-        </button>
-        <button class="reklam-btn reklam-btn-outline" onclick="clearReklamAll()">Təmizlə</button>
-      </div>
-    </div>
-
-    <div class="reklam-preview-wrap">
-      <div class="reklam-preview-label">Canlı önizləmə</div>
-      <div class="reklam-preview" id="reklamPreview">
-        <div class="rp-empty">Kurs seçərək reklam yaratmağa başlayın.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <footer>
   Qeydlər — Qazi: 30% endirim. Müharibə iştirakçıları: 10% endirim. Əlilliyi olan şəxslər: 15% endirim. Şəhid ailələri (I dərəcə): hər kurs üçün 16 AZN. Endirim rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir (şəhid ailəsi istisna). “—” işarəsi həmin kurs üçün müvafiq məlumatın (saat/say/qiymət) mövcud olmadığını bildirir. Qiymətlər AZN ilə göstərilib.
 </footer>
@@ -704,13 +800,77 @@
   <div class="popup-en" id="coursePopupEn"></div>
 </div>
 
+<!-- ===================== REKLAM / KURS ELANI ===================== -->
+<div class="ad-overlay" id="adOverlay">
+  <div class="ad-topbar">
+    <button class="ad-back" id="adBackBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Geri
+    </button>
+    <div class="ad-title">Reklam <em>/ Kurs Elanı</em></div>
+    <div class="ad-sub">Kurs seç · tarixi qeyd et · PNG olaraq yüklə</div>
+  </div>
 
+  <div class="ad-body">
+    <!-- LEFT: builder -->
+    <div class="ad-panel">
+      <h2>Kurs axtar və əlavə et</h2>
+      <p class="ad-panel-sub">Kursun adını və ya kodunu yaz.</p>
 
-<!-- Reklam PNG export template -->
-<div id="reklamPngTemplate" style="position:fixed;left:-9999px;top:0;width:800px;background:#fff;font-family:'Inter','Helvetica Neue',Arial,sans-serif;color:#0F2A44;padding:0;z-index:-1;opacity:0;">
-  <div style="width:760px;margin:0 auto;padding:32px 20px 24px;display:flex;flex-direction:column;align-items:center;">
+      <div class="ad-search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#0F2A44" stroke-width="2"/><path d="M21 21L16.65 16.65" stroke="#0F2A44" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="adSearchInput" type="text" placeholder="Məsələn “GİME” və ya “SV”" autocomplete="off">
+      </div>
+      <div class="ad-search-results" id="adSearchResults"></div>
+      <div class="ad-search-empty" id="adSearchEmpty">Nəticə tapılmadı.</div>
+
+      <div class="ad-fee-toggle" role="tablist">
+        <button type="button" id="adFeeNo" class="active">Rüsumsuz</button>
+        <button type="button" id="adFeeYes">Rüsumlu</button>
+      </div>
+
+      <div class="ad-selected-label">
+        <span>Seçilmiş kurslar</span>
+        <span class="ad-selected-count" id="adSelectedCount">0</span>
+      </div>
+      <div class="ad-selected-list" id="adSelectedList">
+        <div class="ad-selected-empty" id="adSelectedEmpty">Hələ kurs əlavə edilməyib.<br>Axtarışdan kurs seç.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: live preview -->
+    <div class="ad-preview-col">
+      <div class="ad-preview-toolbar">
+        <h2>Canlı önizləmə</h2>
+        <button class="ad-export-btn" id="adExportBtn" type="button">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          PNG olaraq yüklə
+        </button>
+      </div>
+
+      <div class="ad-preview-frame" id="adPreviewFrame">
+        <div class="ad-poster-scale" id="adPosterScale">
+          <div class="ad-poster" id="adPoster">
+            <div class="ad-poster-logo">
+              <img id="adPosterLogo" src="" alt="IST Trust Zone">
+            </div>
+            <div class="ad-poster-intro">
+              <div class="line1">Elmlər filialımızda keçiriləcək təlimlərə qeydiyyat davam edir.</div>
+              <div class="divider"></div>
+              <div class="line2"><b>Ünvan:</b> Süleyman Dadaşov küçəsi 28, Köhnə şüşəli bazarın arxası</div>
+              <div class="line3"><b>Əlaqə:</b> 0772180035/0772335584/0772335950</div>
+            </div>
+
+            <div id="adPosterTableWrap">
+              <div class="ad-poster-empty" id="adPosterEmpty">Kurs seçdikdə cədvəl burada görünəcək.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
 
 <!-- PDF template -->
 <div id="pdfTemplate" style="position:fixed; left:-9999px; top:0; width:794px; background:#fff; font-family:'Inter','Helvetica Neue',Arial,sans-serif; color:#0F2A44; padding:0; z-index:-1; opacity:0;">
@@ -1263,260 +1423,300 @@ renderCalc();
 const totalHours = COURSES.reduce((s,c)=> s + (c.hours||0), 0);
 statHours.textContent = totalHours.toLocaleString("az-AZ");
 
-// ========== REKLAM SECTION ==========
-let reklamCourses = []; // array of { code, course, startDate, endDate }
+/* =====================================================================
+   REKLAM / KURS ELANI — tam ayrı modul
+   ===================================================================== */
+(function(){
+  const HOURS_PER_DAY = 8; // gün başına dərs saatı — bitmə tarixinin hesablanması üçün
 
-function showSection(section){
-  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('visible'));
-  document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
-  const footer = document.querySelector('footer');
-  if(section === 'courses'){
-    document.getElementById('sectionCourses').classList.add('visible');
-    document.getElementById('sectionWorkspace').classList.add('visible');
-    document.getElementById('navCourses').classList.add('active');
-    document.querySelector('.top-stats').style.display = '';
-    if(footer) footer.style.display = '';
-  } else {
-    document.getElementById('sectionReklam').classList.add('visible');
-    document.getElementById('navReklam').classList.add('active');
-    document.querySelector('.top-stats').style.display = 'none';
-    if(footer) footer.style.display = 'none';
+  const adOverlay = document.getElementById('adOverlay');
+  const openAdBtn = document.getElementById('openAdBtn');
+  const adBackBtn = document.getElementById('adBackBtn');
+  const adSearchInput = document.getElementById('adSearchInput');
+  const adSearchResults = document.getElementById('adSearchResults');
+  const adSearchEmpty = document.getElementById('adSearchEmpty');
+  const adSelectedList = document.getElementById('adSelectedList');
+  const adSelectedEmpty = document.getElementById('adSelectedEmpty');
+  const adSelectedCount = document.getElementById('adSelectedCount');
+  const adFeeNo = document.getElementById('adFeeNo');
+  const adFeeYes = document.getElementById('adFeeYes');
+  const adPosterTableWrap = document.getElementById('adPosterTableWrap');
+  const adPosterLogo = document.getElementById('adPosterLogo');
+  const adPoster = document.getElementById('adPoster');
+  const adPosterScale = document.getElementById('adPosterScale');
+  const adPreviewFrame = document.getElementById('adPreviewFrame');
+  const adExportBtn = document.getElementById('adExportBtn');
+
+  // ---------- Responsive preview scaling (visual only; PNG export always uses full resolution) ----------
+  function adFitPosterPreview(){
+    const posterWidth = 900; // must match .ad-poster width
+    const available = adPreviewFrame.clientWidth - 2 * parseFloat(getComputedStyle(adPreviewFrame).paddingLeft || 0);
+    const scale = Math.min(1, available / posterWidth);
+    adPosterScale.style.transform = scale < 1 ? `scale(${scale})` : '';
+    adPosterScale.style.marginBottom = scale < 1 ? `${(scale - 1) * adPoster.offsetHeight}px` : '';
   }
-}
+  window.addEventListener('resize', adFitPosterPreview);
 
-function buildReklamCourseSelect(filter){
-  const sel = document.getElementById('reklamCourseSelect');
-  const q = (filter || '').toUpperCase().trim();
-  const filtered = COURSES.filter(c => c.hours !== null && (!q || c.code.toUpperCase().includes(q)));
-  sel.innerHTML = '<option value="">Kurs kodu seçin...</option>' +
-    filtered.map(c =>
-      '<option value="' + c.code + '">' + c.code + '</option>'
-    ).join('');
-}
+  // adSelected: Map<no, {course, startDate: 'YYYY-MM-DD'}>
+  const adSelected = new Map();
+  let adFeeMode = 'nofee'; // 'nofee' | 'fee'
 
-function addReklamCourse(){
-  const sel = document.getElementById('reklamCourseSelect');
-  const code = sel.value;
-  if(!code) return;
-  // Prevent duplicate
-  if(reklamCourses.some(r => r.code === code)){
-    sel.value = '';
-    return;
-  }
-  const course = COURSES.find(c => c.code === code);
-  if(course) reklamCourses.push({ code: code, course: course, startDate: '', endDate: '' });
-  sel.value = '';
-  renderReklamSelectedList();
-  updateReklamPreview();
-}
-
-function removeReklamCourse(code){
-  reklamCourses = reklamCourses.filter(r => r.code !== code);
-  renderReklamSelectedList();
-  updateReklamPreview();
-}
-
-function renderReklamSelectedList(){
-  const wrap = document.getElementById('reklamSelectedWrap');
-  const list = document.getElementById('reklamSelectedList');
-  if(reklamCourses.length === 0){
-    wrap.style.display = 'none';
-    document.getElementById('reklamExportBtn').disabled = true;
-    return;
-  }
-  wrap.style.display = '';
-  list.innerHTML = reklamCourses.map((r, i) => {
-    const endDate = r.startDate ? calcEndDate(new Date(r.startDate + 'T00:00:00'), r.course.hours) : null;
-    r.endDate = endDate;
-    return '<div class="reklam-selected-item">' +
-      '<span class="rsi-code">' + r.code + '</span>' +
-      '<input type="date" value="' + (r.startDate || '') + '" onchange="updateReklamStartDate(' + i + ', this.value)">' +
-      '<div class="rsi-end">' + (endDate ? formatDate(new Date(endDate.getTime())) + '–' + formatDate(endDate) : '') + '</div>' +
-      '<button class="rsi-remove" onclick="removeReklamCourse(\'' + r.code + '\')" title="Sil">✕</button>' +
-    '</div>';
-  }).join('');
-  const hasDates = reklamCourses.some(r => r.startDate);
-  document.getElementById('reklamExportBtn').disabled = !hasDates;
-}
-
-function updateReklamStartDate(index, value){
-  reklamCourses[index].startDate = value;
-  renderReklamSelectedList();
-  updateReklamPreview();
-}
-
-function clearReklamAll(){
-  reklamCourses = [];
-  renderReklamSelectedList();
-  updateReklamPreview();
-}
-
-function calcEndDate(startDate, hours){
-  if(!startDate || !hours) return null;
-  const days = Math.ceil(hours / 8);
-  const d = new Date(startDate);
-  let added = 0;
-  while(added < days){
-    d.setDate(d.getDate() + 1);
-    const dow = d.getDay();
-    if(dow !== 0 && dow !== 6) added++;
-  }
-  return d;
-}
-
-function formatDate(d){
-  if(!d) return '';
-  const dd = String(d.getDate()).padStart(2,'0');
-  const mm = String(d.getMonth()+1).padStart(2,'0');
-  const yyyy = d.getFullYear();
-  return dd + '.' + mm + '.' + yyyy;
-}
-
-function getCoursePrice(course){
-  if(!course) return 0;
-  return course.price || 0;
-}
-
-function updateReklamPreview(){
-  const preview = document.getElementById('reklamPreview');
-  const exportBtn = document.getElementById('reklamExportBtn');
-
-  if(reklamCourses.length === 0){
-    exportBtn.disabled = true;
-    preview.innerHTML = '<div class="rp-empty">Kurs seçərək reklam yaratmağa başlayın.</div>';
-    return;
+  function adCoursePrice(course){
+    if(course.price == null) return null;
+    return adFeeMode === 'fee' ? course.fee : course.price;
   }
 
-  const hasDates = reklamCourses.some(r => r.startDate);
-  exportBtn.disabled = !hasDates;
+  function adDurationDays(course){
+    if(!course.hours) return 1;
+    return Math.max(1, Math.ceil(course.hours / HOURS_PER_DAY));
+  }
 
-  const logoSrc = document.querySelector('.brand img') ? document.querySelector('.brand img').src : '';
+  function fmtDate(d){
+    return String(d.getDate()).padStart(2,'0') + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + d.getFullYear();
+  }
 
-  const rows = reklamCourses.map(r => {
-    const endDate = r.startDate ? calcEndDate(new Date(r.startDate + 'T00:00:00'), r.course.hours) : null;
-    const dateRange = r.startDate && endDate
-      ? formatDate(new Date(r.startDate + 'T00:00:00')) + '–' + formatDate(endDate)
-      : '—';
-    const price = getCoursePrice(r.course);
-    const priceStr = price > 0 ? price.toLocaleString('az-AZ') + ' AZN' : '—';
-    return '<tr><td>' + r.course.az + '</td><td class="rp-date">' + dateRange + '</td><td class="rp-price">' + priceStr + '</td></tr>';
-  }).join('');
+  function adEndDate(startDateStr, course){
+    if(!startDateStr) return null;
+    const start = new Date(startDateStr + 'T00:00:00');
+    if(isNaN(start.getTime())) return null;
+    const days = adDurationDays(course);
+    const end = new Date(start);
+    end.setDate(end.getDate() + (days - 1));
+    return end;
+  }
 
-  preview.innerHTML = `
-    <div class="rp-header">
-      <img class="rp-logo" src="${logoSrc}" alt="IST Trust Zone">
-      <div class="rp-title">IST Trust Zone</div>
-      <div class="rp-subtitle">Dəniz Təlim Mərkəzi</div>
-    </div>
-    <div class="rp-announcement">
-      <div class="rp-reg-text">Elmlər filialımızda keçiriləcək təlimlərə qeydiyyat davam edir.</div>
-      <div class="rp-detail">
-        <b>Ünvan:</b> Süleyman Dadaşov küçəsi 28, Köhnə şüşəli bazarın arxası<br>
-        <b>Əlaqə:</b> 0772180035 / 0772335584 / 0772335950
+  // ---------- Logo sync (reuse main brand logo) ----------
+  function adSyncLogo(){
+    const mainLogo = document.querySelector('.brand img');
+    if(mainLogo && mainLogo.src) adPosterLogo.src = mainLogo.src;
+  }
+
+  // ---------- Search ----------
+  function adRenderSearch(q){
+    const query = (q || '').trim().toLocaleLowerCase('az-AZ');
+    if(!query){
+      adSearchResults.classList.remove('show');
+      adSearchEmpty.classList.remove('show');
+      adSearchResults.innerHTML = '';
+      return;
+    }
+    const matches = COURSES.filter(c=>{
+      if(adSelected.has(c.no)) return false;
+      return c.code.toLocaleLowerCase('az-AZ').includes(query) ||
+             c.az.toLocaleLowerCase('az-AZ').includes(query) ||
+             (c.en && c.en.toLocaleLowerCase('az-AZ').includes(query));
+    }).slice(0, 30);
+
+    if(matches.length === 0){
+      adSearchResults.classList.remove('show');
+      adSearchEmpty.classList.add('show');
+      adSearchResults.innerHTML = '';
+      return;
+    }
+    adSearchEmpty.classList.remove('show');
+    adSearchResults.classList.add('show');
+    adSearchResults.innerHTML = matches.map(c => `
+      <div class="ad-result-row" data-no="${c.no}">
+        <span class="ad-result-code">${c.code}</span>
+        <span class="ad-result-name">${c.az}</span>
+        <span class="ad-result-add">+</span>
       </div>
-    </div>
-    <table class="rp-table">
-      <thead><tr><th>Kursun adı</th><th>Başlama – Bitmə tarixi</th><th>Qiymət</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <div class="rp-footer"></div>
-  `;
-}
-
-// PNG Export
-function exportReklamPng(){
-  if(reklamCourses.length === 0 || !reklamCourses.some(r => r.startDate)) return;
-  const btn = document.getElementById('reklamExportBtn');
-  const tmpl = document.getElementById('reklamPngTemplate');
-  btn.disabled = true;
-  btn.textContent = '⏳ Hazırlanır...';
-
-  const logoSrc = document.querySelector('.brand img') ? document.querySelector('.brand img').src : '';
-  let rowsHtml = '';
-  reklamCourses.forEach(r => {
-    const endDate = r.startDate ? calcEndDate(new Date(r.startDate + 'T00:00:00'), r.course.hours) : null;
-    const dateRange = r.startDate && endDate
-      ? formatDate(new Date(r.startDate + 'T00:00:00')) + ' – ' + formatDate(endDate)
-      : '';
-    const price = r.course.price || 0;
-    const priceStr = price > 0 ? price.toLocaleString('az-AZ') + ' AZN' : '';
-    rowsHtml += '<tr style="border-bottom:2px solid #E3E8EE;">' +
-      '<td style="padding:14px 20px;font-weight:700;font-size:14px;color:#0F2A44;line-height:1.4;letter-spacing:0.01em;">' + r.course.az + '</td>' +
-      '<td style="padding:14px 20px;text-align:center;font-size:14px;color:#5C7387;white-space:nowrap;font-weight:500;">' + dateRange + '</td>' +
-      '<td style="padding:14px 20px;text-align:right;font-weight:800;font-size:15px;color:#B4903F;white-space:nowrap;letter-spacing:0.02em;">' + priceStr + '</td></tr>';
-  });
-
-  const inner = tmpl.querySelector('div');
-  inner.innerHTML =
-    '<div style="text-align:center;margin-bottom:20px;">' +
-    '<div style="font-family:Fraunces,Georgia,serif;font-size:28px;font-weight:700;color:#0F2A44;margin-bottom:2px;letter-spacing:-0.01em;">IST Trust Zone</div>' +
-    '<div style="font-size:13px;color:#5C7387;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:16px;">Dəniz Təlim Mərkəzi</div>' +
-    '<img src="' + logoSrc + '" alt="IST Trust Zone" style="height:100px;width:auto;margin-top:4px;">' +
-    '</div>' +
-    '<div style="background:linear-gradient(135deg,#F6F8FA 0%,#EDE8F5 100%);border-radius:14px;padding:24px 28px;margin-bottom:28px;width:100%;border:1px solid #E3E8EE;">' +
-    '<div style="text-align:center;font-size:16px;color:#14324F;font-weight:700;margin-bottom:10px;line-height:1.5;">Elmlər filialımızda keçiriləcək təlimlərə qeydiyyat davam edir.</div>' +
-    '<div style="text-align:center;font-size:13px;color:#5C7387;margin-bottom:4px;"><b>Ünvan:</b> Süleyman Dadaşov küçəsi 28, Köhnə şüşəli bazarın arxası</div>' +
-    '<div style="text-align:center;font-size:13px;color:#5C7387;"><b>Əlaqə:</b> 0772180035 / 0772335584 / 0772335950</div>' +
-    '</div>' +
-    '<div style="width:100%;border-top:4px solid #0F2A44;margin-bottom:0;"></div>' +
-    '<table style="width:100%;border-collapse:collapse;">' +
-    '<thead><tr style="background:linear-gradient(135deg,#0F2A44 0%,#1A4366 100%);color:#fff;">' +
-    '<th style="padding:14px 20px;text-align:left;font-weight:700;font-size:13px;letter-spacing:0.04em;">KURSUN ADI</th>' +
-    '<th style="padding:14px 20px;text-align:center;font-weight:700;font-size:13px;letter-spacing:0.04em;">TARİX</th>' +
-    '<th style="padding:14px 20px;text-align:right;font-weight:700;font-size:13px;letter-spacing:0.04em;">QİYMƏT</th>' +
-    '</tr></thead><tbody>' + rowsHtml + '</tbody></table>';
-
-  tmpl.style.position = 'fixed';
-  tmpl.style.left = '0';
-  tmpl.style.top = '0';
-  tmpl.style.zIndex = '99999';
-  tmpl.style.opacity = '1';
-  tmpl.style.pointerEvents = 'none';
-
-  setTimeout(() => {
-    html2canvas(tmpl, {
-      scale: 3,
-      useCORS: true,
-      logging: false,
-      backgroundColor: '#ffffff',
-      width: 800,
-      windowWidth: 800
-    }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = 'IST_Trust_Zone_reklam.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      tmpl.style.opacity = '0';
-      tmpl.style.zIndex = '-1';
-      tmpl.style.left = '-9999px';
-      btn.disabled = false;
-      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> PNG olaraq yüklə';
-    }).catch(err => {
-      console.error('Export error:', err);
-      tmpl.style.opacity = '0';
-      tmpl.style.zIndex = '-1';
-      tmpl.style.left = '-9999px';
-      btn.disabled = false;
-      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> PNG olaraq yüklə';
+    `).join('');
+    adSearchResults.querySelectorAll('.ad-result-row').forEach(row=>{
+      row.addEventListener('click', ()=>{
+        const no = Number(row.dataset.no);
+        const course = COURSES.find(c=>c.no === no);
+        if(course) adAddCourse(course);
+        adSearchInput.value = '';
+        adRenderSearch('');
+        adSearchInput.focus();
+      });
     });
-  }, 300);
-}
+  }
 
-// Ensure courses section is visible on page load
-document.addEventListener('DOMContentLoaded', function(){
-  showSection('courses');
-});
+  adSearchInput.addEventListener('input', ()=> adRenderSearch(adSearchInput.value));
 
-buildReklamCourseSelect();
+  // ---------- Add / remove ----------
+  function adAddCourse(course){
+    if(adSelected.has(course.no)) return;
+    adSelected.set(course.no, { course, startDate: '' });
+    adRenderSelected();
+    adRenderPoster();
+  }
 
-// Reklam search filter
-const reklamSearchInput = document.getElementById('reklamSearchInput');
-if(reklamSearchInput){
-  reklamSearchInput.addEventListener('input', function(){
-    buildReklamCourseSelect(this.value);
+  function adRemoveCourse(no){
+    adSelected.delete(no);
+    adRenderSelected();
+    adRenderPoster();
+  }
+
+  function adSetStartDate(no, dateStr){
+    const entry = adSelected.get(no);
+    if(!entry) return;
+    entry.startDate = dateStr;
+    adRenderSelected();
+    adRenderPoster();
+  }
+
+  // ---------- Fee toggle ----------
+  function adSetFeeMode(mode){
+    adFeeMode = mode;
+    adFeeNo.classList.toggle('active', mode === 'nofee');
+    adFeeYes.classList.toggle('active', mode === 'fee');
+    adRenderSelected();
+    adRenderPoster();
+  }
+  adFeeNo.addEventListener('click', ()=> adSetFeeMode('nofee'));
+  adFeeYes.addEventListener('click', ()=> adSetFeeMode('fee'));
+
+  // ---------- Render: selected course cards (management UI) ----------
+  function adRenderSelected(){
+    adSelectedCount.textContent = String(adSelected.size);
+    if(adSelected.size === 0){
+      adSelectedEmpty.style.display = '';
+      // remove any existing cards
+      adSelectedList.querySelectorAll('.ad-course-card').forEach(el=>el.remove());
+      return;
+    }
+    adSelectedEmpty.style.display = 'none';
+    adSelectedList.querySelectorAll('.ad-course-card').forEach(el=>el.remove());
+
+    Array.from(adSelected.values()).forEach(entry=>{
+      const c = entry.course;
+      const price = adCoursePrice(c);
+      const end = adEndDate(entry.startDate, c);
+      const card = document.createElement('div');
+      card.className = 'ad-course-card';
+      card.innerHTML = `
+        <div class="ad-course-card-head">
+          <div>
+            <div class="ad-course-card-name">${c.code} — ${c.az}</div>
+            <div class="ad-course-card-code">${price != null ? fmt(price) + ' AZN' : 'Qiymət yoxdur'}</div>
+          </div>
+          <button class="ad-course-remove" type="button" aria-label="Sil">✕</button>
+        </div>
+        <div class="ad-date-row">
+          <div class="ad-date-field">
+            <label>Başlama tarixi</label>
+            <input type="date" value="${entry.startDate || ''}">
+          </div>
+          <div class="ad-date-arrow">→</div>
+          <div class="ad-date-end">${end ? fmtDate(end) : '—'}</div>
+        </div>
+      `;
+      card.querySelector('.ad-course-remove').addEventListener('click', ()=> adRemoveCourse(c.no));
+      card.querySelector('input[type="date"]').addEventListener('change', (e)=> adSetStartDate(c.no, e.target.value));
+      adSelectedList.appendChild(card);
+    });
+  }
+
+  // ---------- Render: live poster preview (= PNG export source) ----------
+  function adRenderPoster(){
+    const entries = Array.from(adSelected.values());
+    if(entries.length === 0){
+      adPosterTableWrap.innerHTML = '<div class="ad-poster-empty">Kurs seçdikdə cədvəl burada görünəcək.</div>';
+      adFitPosterPreview();
+      return;
+    }
+    const rows = entries.map(entry=>{
+      const c = entry.course;
+      const end = adEndDate(entry.startDate, c);
+      const dateLabel = (entry.startDate && end)
+        ? `${fmtDate(new Date(entry.startDate + 'T00:00:00'))}–${fmtDate(end)}`
+        : '—';
+      const price = adCoursePrice(c);
+      const priceLabel = price != null ? `${fmt(price)} AZN` : '—';
+      return `
+        <tr>
+          <td class="c-name">${c.az}</td>
+          <td class="c-date">${dateLabel}</td>
+          <td class="c-price">${priceLabel}</td>
+        </tr>
+      `;
+    }).join('');
+
+    adPosterTableWrap.innerHTML = `
+      <table class="ad-poster-table">
+        <thead>
+          <tr>
+            <th class="c-name">Kursun adı</th>
+            <th class="c-date">Tarix</th>
+            <th class="c-price">Qiymət</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+    adFitPosterPreview();
+  }
+
+  // ---------- Open / close overlay ----------
+  function adOpen(){
+    adOverlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    adSyncLogo();
+    adRenderSelected();
+    adRenderPoster();
+  }
+  function adClose(){
+    adOverlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  openAdBtn.addEventListener('click', adOpen);
+  adBackBtn.addEventListener('click', adClose);
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && adOverlay.classList.contains('show')) adClose();
   });
-}
 
+  // ---------- PNG export ----------
+  adExportBtn.addEventListener('click', ()=>{
+    if(adSelected.size === 0){
+      const original = adExportBtn.innerHTML;
+      adExportBtn.innerHTML = '⚠ Əvvəlcə kurs seç';
+      setTimeout(()=>{ adExportBtn.innerHTML = original; }, 2000);
+      return;
+    }
+    const original = adExportBtn.innerHTML;
+    adExportBtn.disabled = true;
+    adExportBtn.textContent = '⏳ Hazırlanır...';
+
+    // Ensure export is always full-resolution, regardless of any responsive
+    // preview scaling applied to the wrapper (mobile screens shrink the
+    // on-screen preview via CSS transform; the exported PNG must not).
+    const prevTransform = adPosterScale.style.transform;
+    const prevMargin = adPosterScale.style.marginBottom;
+    adPosterScale.style.transform = '';
+    adPosterScale.style.marginBottom = '';
+
+    html2canvas(adPoster, {
+      scale: 3,
+      backgroundColor: '#FFFFFF',
+      useCORS: true,
+      logging: false
+    }).then(canvas=>{
+      adPosterScale.style.transform = prevTransform;
+      adPosterScale.style.marginBottom = prevMargin;
+      const link = document.createElement('a');
+      const now = new Date();
+      const stamp = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
+      link.download = `IST_Trust_Zone_reklam_${stamp}.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+      adExportBtn.disabled = false;
+      adExportBtn.innerHTML = original;
+    }).catch(err=>{
+      adPosterScale.style.transform = prevTransform;
+      adPosterScale.style.marginBottom = prevMargin;
+      console.error('PNG export error:', err);
+      adExportBtn.disabled = false;
+      adExportBtn.innerHTML = 'Xəta baş verdi';
+      setTimeout(()=>{ adExportBtn.innerHTML = original; }, 2000);
+    });
+  });
+
+  // Keep logo synced if brand logo loads late
+  window.addEventListener('load', adSyncLogo);
+})();
 </script>
 </body>
 </html>
