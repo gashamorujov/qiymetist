@@ -64,6 +64,156 @@
 
   @media (max-width:720px){ .top-stats{display:none;} }
 
+  /* ---------- Navigation ---------- */
+  .main-nav{
+    display:flex; align-items:center; gap:4px; margin-left:auto;
+  }
+  .main-nav button{
+    background:none; border:1px solid transparent; border-radius:8px;
+    padding:8px 16px; font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
+    color:var(--slate); cursor:pointer; transition:all .15s ease; letter-spacing:.01em;
+  }
+  .main-nav button:hover{ color:var(--ink); background:var(--fog); }
+  .main-nav button.active{
+    color:var(--ink); background:var(--fog); border-color:var(--hairline);
+  }
+  @media (max-width:720px){
+    .main-nav button{ padding:6px 10px; font-size:12px; }
+  }
+
+  /* ---------- Sections ---------- */
+  .page-section{ display:none; }
+  .page-section.visible{ display:block; }
+
+  /* ---------- Reklam Builder ---------- */
+  .reklam-wrap{
+    max-width:1180px; margin:0 auto; padding:32px 24px 100px;
+    display:grid; grid-template-columns:380px 1fr; gap:32px; align-items:start;
+  }
+  @media (max-width:980px){ .reklam-wrap{ grid-template-columns:1fr; } }
+
+  .reklam-panel{
+    border:1px solid var(--hairline); border-radius:16px;
+    background:var(--paper); padding:24px;
+    position:sticky; top:88px;
+  }
+  .reklam-panel h3{
+    font-family:'Fraunces',serif; font-size:18px; font-weight:600;
+    margin:0 0 18px; color:var(--ink);
+  }
+  .reklam-field{ margin-bottom:16px; }
+  .reklam-field label{
+    display:block; font-size:11px; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--slate); font-weight:600; margin-bottom:6px;
+  }
+  .reklam-field select, .reklam-field input{
+    width:100%; padding:10px 14px; border-radius:10px;
+    border:1px solid var(--hairline); background:var(--fog);
+    font-family:'Inter',sans-serif; font-size:14px; color:var(--ink);
+    outline:none; transition:border-color .15s;
+  }
+  .reklam-field select:focus, .reklam-field input:focus{
+    border-color:var(--ink);
+  }
+  .reklam-toggle{
+    display:flex; border-radius:10px; overflow:hidden; border:1px solid var(--hairline);
+  }
+  .reklam-toggle button{
+    flex:1; padding:10px; font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
+    border:none; cursor:pointer; transition:all .15s; background:var(--fog); color:var(--slate);
+  }
+  .reklam-toggle button.active{
+    background:var(--ink); color:#fff;
+  }
+  .reklam-date-info{
+    font-size:12px; color:var(--slate); margin-top:4px; min-height:18px;
+  }
+  .reklam-course-list{
+    max-height:240px; overflow-y:auto; border:1px solid var(--hairline);
+    border-radius:10px; background:var(--fog);
+  }
+  .reklam-course-list::-webkit-scrollbar{ width:5px; }
+  .reklam-course-list::-webkit-scrollbar-thumb{ background:var(--hairline); border-radius:3px; }
+  .reklam-course-item{
+    padding:10px 14px; border-bottom:1px solid var(--hairline); cursor:pointer;
+    font-size:13px; transition:background .1s;
+  }
+  .reklam-course-item:last-child{ border-bottom:none; }
+  .reklam-course-item:hover{ background:#eef1f4; }
+  .reklam-course-item.selected{ background:var(--gold-soft); font-weight:600; }
+  .reklam-course-item .rc-code{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+    color:var(--gold); margin-right:6px;
+  }
+  .reklam-course-item .rc-hours{
+    float:right; font-size:11px; color:var(--slate);
+  }
+  .reklam-actions{ margin-top:18px; display:flex; gap:10px; }
+  .reklam-btn{
+    flex:1; padding:12px; border-radius:10px; border:none;
+    font-family:'Inter',sans-serif; font-size:14px; font-weight:600;
+    cursor:pointer; transition:all .15s;
+  }
+  .reklam-btn-primary{ background:var(--ink); color:#fff; }
+  .reklam-btn-primary:hover{ background:var(--ink-2); }
+  .reklam-btn-primary:disabled{ opacity:.5; cursor:not-allowed; }
+  .reklam-btn-outline{ background:var(--paper); color:var(--ink); border:1px solid var(--hairline); }
+  .reklam-btn-outline:hover{ border-color:var(--ink); }
+
+  /* ---------- Reklam Preview ---------- */
+  .reklam-preview-wrap{
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .reklam-preview-label{
+    font-size:11px; text-transform:uppercase; letter-spacing:.12em;
+    color:var(--slate); font-weight:600; margin-bottom:12px;
+  }
+  .reklam-preview{
+    width:100%; max-width:600px; background:#fff;
+    border:1px solid var(--hairline); border-radius:12px;
+    overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.06);
+  }
+  .rp-header{
+    text-align:center; padding:28px 24px 18px;
+    border-bottom:2px solid var(--ink);
+  }
+  .rp-logo{ height:60px; width:auto; margin-bottom:10px; }
+  .rp-title{
+    font-family:'Fraunces',serif; font-size:20px; font-weight:700;
+    color:var(--ink); margin-bottom:4px;
+  }
+  .rp-subtitle{ font-size:12px; color:var(--slate); }
+  .rp-info{
+    padding:14px 24px; font-size:12px; color:var(--slate);
+    text-align:center; border-bottom:1px solid var(--hairline);
+  }
+  .rp-info b{ color:var(--ink); }
+  .rp-table{ width:100%; border-collapse:collapse; }
+  .rp-table th{
+    background:var(--ink); color:#fff; padding:10px 16px;
+    font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+    text-align:left; font-weight:600;
+  }
+  .rp-table th:last-child, .rp-table td:last-child{ text-align:right; }
+  .rp-table th:nth-child(2), .rp-table td:nth-child(2){ text-align:center; }
+  .rp-table td{
+    padding:10px 16px; font-size:13px; border-bottom:1px solid var(--hairline);
+    color:var(--ink);
+  }
+  .rp-table tr:last-child td{ border-bottom:none; }
+  .rp-table .rp-price{ font-weight:700; color:var(--gold); white-space:nowrap; }
+  .rp-table .rp-date{ font-size:12px; white-space:nowrap; }
+  .rp-footer{
+    padding:14px 24px; border-top:2px solid var(--ink);
+    font-size:11px; color:var(--slate); text-align:center; line-height:1.6;
+  }
+  .rp-footer .rp-address{ margin-bottom:4px; }
+  .rp-footer .rp-phones{ font-weight:600; color:var(--ink); }
+  .rp-empty{
+    padding:40px 24px; text-align:center; color:var(--slate); font-size:14px;
+  }
+
+
   /* ---------- Hero ---------- */
   .hero{
     max-width:1180px; margin:0 auto;
@@ -400,6 +550,10 @@
         <div class="tag">Dəniz Təlim Mərkəzi</div>
       </div>
     </div>
+    <nav class="main-nav">
+      <button class="active" id="navCourses" onclick="showSection('courses')">Qiymət Cədvəli</button>
+      <button id="navReklam" onclick="showSection('reklam')">Reklam</button>
+    </nav>
     <div class="top-stats">
       <div><div class="n" id="statCount">30</div><div class="l">Kurs</div></div>
       <div><div class="n" id="statHours">—</div><div class="l">Cəmi saat</div></div>
@@ -407,7 +561,7 @@
   </div>
 </header>
 
-<section class="hero">
+<section class="hero page-section visible" id="sectionCourses">
   <div class="hero-kicker"><span class="dot"></span>Rəsmi qiymət cədvəli · 2026</div>
   <h1 class="hero-title">Kursu <em>saniyələr</em> içində tap.</h1>
   <p class="hero-sub">Bütün STCW təlim kurslarının kodu, müddəti, iştirakçı sayı və qiyməti bir səhifədə. Adı və ya koduna görə axtar, seçdiklərini hesablama panelinə əlavə et.</p>
@@ -495,6 +649,56 @@
   </aside>
 </div>
 
+<!-- Reklam Section -->
+<section class="page-section" id="sectionReklam">
+  <div class="reklam-wrap">
+    <div class="reklam-panel">
+      <h3>Reklam / Kurs Elanı</h3>
+
+      <div class="reklam-field">
+        <label>Kurs seçin</label>
+        <div class="reklam-course-list" id="reklamCourseList"></div>
+      </div>
+
+      <div class="reklam-field">
+        <label>Başlama tarixi</label>
+        <input type="date" id="reklamStartDate" onchange="updateReklamPreview()">
+      </div>
+
+      <div class="reklam-field">
+        <label>Bitmə tarixi (avtomatik)</label>
+        <input type="text" id="reklamEndDate" readonly style="background:var(--paper); color:var(--gold); font-weight:600;">
+        <div class="reklam-date-info" id="reklamDateInfo"></div>
+      </div>
+
+      <div class="reklam-field">
+        <label>Qiymət növü</label>
+        <div class="reklam-toggle">
+          <button class="active" id="toggleNofee" onclick="setReklamFeeMode('nofee')">Rüsumsuz</button>
+          <button id="toggleFee" onclick="setReklamFeeMode('fee')">Rüsumlu</button>
+        </div>
+      </div>
+
+      <div class="reklam-field">
+        <label>Qiymət</label>
+        <input type="text" id="reklamPrice" readonly style="background:var(--paper); font-weight:700; font-size:16px; color:var(--gold);">
+      </div>
+
+      <div class="reklam-actions">
+        <button class="reklam-btn reklam-btn-primary" id="reklamExportBtn" onclick="exportReklamPng()" disabled>PNG olaraq yüklə</button>
+      </div>
+    </div>
+
+    <div class="reklam-preview-wrap">
+      <div class="reklam-preview-label">Canlı önizləmə</div>
+      <div class="reklam-preview" id="reklamPreview">
+        <div class="rp-empty">Kurs seçərək reklam yaratmağa başlayın.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
 <footer>
   Qeydlər — Qazi: 30% endirim. Müharibə iştirakçıları: 10% endirim. Əlilliyi olan şəxslər: 15% endirim. Şəhid ailələri (I dərəcə): hər kurs üçün 16 AZN. Endirim rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir (şəhid ailəsi istisna). “—” işarəsi həmin kurs üçün müvafiq məlumatın (saat/say/qiymət) mövcud olmadığını bildirir. Qiymətlər AZN ilə göstərilib.
 </footer>
@@ -1056,6 +1260,165 @@ updateSearchMeta(COURSES);
 renderCalc();
 const totalHours = COURSES.reduce((s,c)=> s + (c.hours||0), 0);
 statHours.textContent = totalHours.toLocaleString("az-AZ");
+
+// ========== REKLAM SECTION ==========
+let reklamSelectedCourse = null;
+let reklamFeeMode = 'nofee'; // default: rüsumsuz
+
+function showSection(section){
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.main-nav button').forEach(b => b.classList.remove('active'));
+  if(section === 'courses'){
+    document.getElementById('sectionCourses').classList.add('visible');
+    document.getElementById('navCourses').classList.add('active');
+  } else {
+    document.getElementById('sectionReklam').classList.add('visible');
+    document.getElementById('navReklam').classList.add('active');
+  }
+}
+
+// Build course list for reklam
+function buildReklamCourseList(){
+  const list = document.getElementById('reklamCourseList');
+  list.innerHTML = COURSES.filter(c => c.price !== null).map(c =>
+    '<div class="reklam-course-item" data-code="' + c.code + '" onclick="selectReklamCourse(\'' + c.code + '\')">' +
+    '<span class="rc-code">' + c.code + '</span>' + c.az +
+    '<span class="rc-hours">' + (c.hours || '—') + ' saat</span>' +
+    '</div>'
+  ).join('');
+}
+
+function selectReklamCourse(code){
+  const course = COURSES.find(c => c.code === code);
+  if(!course) return;
+  reklamSelectedCourse = course;
+  // Highlight selected
+  document.querySelectorAll('.reklam-course-item').forEach(el => {
+    el.classList.toggle('selected', el.dataset.code === code);
+  });
+  updateReklamPreview();
+}
+
+function setReklamFeeMode(mode){
+  reklamFeeMode = mode;
+  document.getElementById('toggleNofee').classList.toggle('active', mode === 'nofee');
+  document.getElementById('toggleFee').classList.toggle('active', mode === 'fee');
+  updateReklamPreview();
+}
+
+// Calculate end date: start date + ceil(hours/8) working days (skip weekends)
+function calcEndDate(startDate, hours){
+  if(!startDate || !hours) return null;
+  const days = Math.ceil(hours / 8);
+  const d = new Date(startDate);
+  let added = 0;
+  while(added < days){
+    d.setDate(d.getDate() + 1);
+    const dow = d.getDay();
+    if(dow !== 0 && dow !== 6) added++; // skip weekends
+  }
+  return d;
+}
+
+function formatDate(d){
+  if(!d) return '';
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yyyy = d.getFullYear();
+  return dd + '.' + mm + '.' + yyyy;
+}
+
+function updateReklamPreview(){
+  const course = reklamSelectedCourse;
+  const startInput = document.getElementById('reklamStartDate');
+  const endDateInput = document.getElementById('reklamEndDate');
+  const dateInfo = document.getElementById('reklamDateInfo');
+  const priceInput = document.getElementById('reklamPrice');
+  const exportBtn = document.getElementById('reklamExportBtn');
+  const preview = document.getElementById('reklamPreview');
+
+  if(!course){
+    endDateInput.value = '';
+    dateInfo.textContent = '';
+    priceInput.value = '';
+    exportBtn.disabled = true;
+    preview.innerHTML = '<div class="rp-empty">Kurs seçərək reklam yaratmağa başlayın.</div>';
+    return;
+  }
+
+  const startDate = startInput.value ? new Date(startInput.value + 'T00:00:00') : null;
+  const endDate = startDate ? calcEndDate(startDate, course.hours) : null;
+  const price = reklamFeeMode === 'fee' ? (course.fee || course.price) : course.price;
+
+  endDateInput.value = endDate ? formatDate(endDate) : '';
+  dateInfo.textContent = course.hours ? 'Kurs müddəti: ' + course.hours + ' saat (' + Math.ceil(course.hours/8) + ' gün)' : '';
+  priceInput.value = price ? price.toLocaleString('az-AZ') + ' AZN' : '';
+  exportBtn.disabled = !startDate;
+
+  // Build preview
+  const dateRange = startDate && endDate
+    ? formatDate(startDate) + '–' + formatDate(endDate)
+    : '—';
+
+  preview.innerHTML = `
+    <div class="rp-header">
+      <img class="rp-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABnEAAAZxCAYAAABpG7OpAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAACAASURBVHic7N19kNT1fQfw7y1ycHggDyIq3x8RAVEUQVDcVYigQqNGTaI01ibTkNoZk2naTpvJpE3STvtPp9NxMpOmnWnNjJPWydhciKmpOOGMKJzeCRwPd3hwcHDI/ng8ODieDjh2t3+grUmbJ3nY3t7rNXOzu7/b29/79u6v33s+nw0BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4MKrKncAAACAn9eZ7suePnM66TneG44f7w3Hez9w2/uBx/997Ezo7e0NZwqFMGjQoFBTXR1qa2pCbW1NuKK25tz9mppQ8979c8f+5znVl1Xnp0yMTeX+vQEAAD7osnIHAAAABrZlK5qy+w8fTdo7doW2zl1hVG1tHDJ4UDx1OiSZTCZkMiGEUgilTCmETCZkMpmQKWVCCJkQMue+MqEUSqUQSoVSCJlSyIT3vhVCKJXOPaeUCSFTKr333NJ7xzKhVMqEIUMG55/8s7/N9Rw7nk6dOD5MnTwxXDlyeP6xhXMVOwAAQNkocQAAgEuiuW1b9tChnqS1ozO0tu8K7Z2dYXjtiDhmzBWxq+doUsqEUCqVwppN7TH76T+OhWIpKRaLoVgshWKxGIql926LpVAs/fzxc/ffl6mqOlf2ZD5wW/X+7fvHfuZ…25765 tokens truncated…0+Z04dJlsWb9puju7o5BjQ0xbmxzHLjv+BgzfHjFtv1vuX7GzPyKVRvTeQuXxrI166O9vT0iIkYMHRT7jh8Xw4cPzM48+bjdqk8iIq66/rb8jq7etC6Xi37967OTp1T+WFIJrp8xM79l6/Z05ZL1L/gYgxobo199TVbpU4ddce3N+TUbtqYLly6L9es3RXdEDB3UGPuOHxsjhgzMpu4G9/3NM0v5rVs60k1tbZGrrsn++LVTxfj2FdfmI3pe0Lo/dXV1Ma55RAwbPCA78rDd65kKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKn5AawAACNNJREFUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/+3BIQEAAACAoP+vfWECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXgEuRIeKkG7tGAAAAABJRU5ErkJggg==" alt="IST Trust Zone">
+      <div class="rp-title">IST Trust Zone</div>
+      <div class="rp-subtitle">Dəniz Təlim Mərkəzi</div>
+    </div>
+    <div class="rp-info">
+      <b>Təlim kursu:</b> ${course.az}<br>
+      <b>Müddət:</b> ${course.hours || '—'} saat (${course.hours ? Math.ceil(course.hours/8) + ' gün' : '—'})
+    </div>
+    <table class="rp-table">
+      <thead><tr><th>Kursun adı</th><th>Başlama – Bitmə</th><th>Qiymət</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>${course.az}</td>
+          <td class="rp-date">${dateRange}</td>
+          <td class="rp-price">${price ? price.toLocaleString('az-AZ') + ' AZN' : '—'}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="rp-footer">
+      <div class="rp-address">Ünvan: Bakı ş., Heydər Əliyev prospekti</div>
+      <div class="rp-phones">+994 77 233 55 84 | +994 77 218 00 35 | +994 77 233 59 50</div>
+    </div>
+  `;
+}
+
+// PNG Export
+function exportReklamPng(){
+  if(!reklamSelectedCourse) return;
+  const btn = document.getElementById('reklamExportBtn');
+  const preview = document.getElementById('reklamPreview');
+  btn.disabled = true;
+  btn.textContent = '⏳ Hazırlanır...';
+
+  setTimeout(() => {
+    html2canvas(preview, {
+      scale: 3,
+      useCORS: true,
+      logging: false,
+      backgroundColor: '#ffffff'
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'IST_Trust_Zone_reklam_' + (reklamSelectedCourse ? reklamSelectedCourse.code : '') + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      btn.disabled = false;
+      btn.textContent = 'PNG olaraq yüklə';
+    }).catch(err => {
+      console.error('Export error:', err);
+      btn.disabled = false;
+      btn.textContent = 'Xəta baş verdi';
+    });
+  }, 100);
+}
+
+// Init reklam course list
+buildReklamCourseList();
+
 </script>
 </body>
 </html>
