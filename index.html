@@ -1665,7 +1665,7 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   openAdBtn.addEventListener('click', adOpen);
   adBackBtn.addEventListener('click', adClose);
   document.addEventListener('keydown', (e)=>{
-    if(e.key === 'Escape' && adOverlay.classList.contains('show')) adClose();
+    if(e.key === 'Escape' && adOverlay.classList.contains('show')) { adSelected.clear(); adRenderSelected(); adRenderPoster(); adClose(); }
   });
 
   // ---------- PNG export ----------
