@@ -695,6 +695,10 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/><path d="M7 13h4"/><path d="M7 16h7"/></svg>
       Reklam
     </button>
+    <button class="ad-nav-btn" id="openMessagesBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Mesajlar
+    </button>
     <div class="top-stats">
       <div><div class="n" id="statCount">30</div><div class="l">Kurs</div></div>
       <div><div class="n" id="statHours">—</div><div class="l">Cəmi saat</div></div>
@@ -1717,6 +1721,34 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   // Keep logo synced if brand logo loads late
   window.addEventListener('load', adSyncLogo);
 })();
+
+<script>
+  const openMessagesBtn = document.getElementById('openMessagesBtn');
+  const messagesOverlay = document.getElementById('messagesOverlay');
+  const messagesBackBtn = document.getElementById('messagesBackBtn');
+  const messagesFrame = document.getElementById('messagesFrame');
+  const MESSAGES_URL = 'https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+  openMessagesBtn.addEventListener('click', ()=>{
+    if(messagesFrame.src === 'about:blank') messagesFrame.src = MESSAGES_URL;
+    messagesOverlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  });
+  function messagesClose(){
+    messagesOverlay.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  messagesBackBtn.addEventListener('click', messagesClose);
+  document.addEventListener('keydown',(e)=>{
+    if(e.key === 'Escape' && messagesOverlay.classList.contains('show')) messagesClose();
+  });
 </script>
+
+<div class="ad-overlay" id="messagesOverlay">
+  <div style="position:sticky; top:0; z-index:10; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid var(--hairline); padding:12px 24px; display:flex; align-items:center; gap:14px;">
+    <button class="ad-nav-btn" id="messagesBackBtn" type="button" style="margin-left:0;">← Geri</button>
+    <span style="font-family:'Fraunces',serif; font-size:17px; font-weight:600;">Kurs və İmtahan Mesajları</span>
+  </div>
+  <iframe id="messagesFrame" src="about:blank" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>
+</div>
 </body>
 </html>
