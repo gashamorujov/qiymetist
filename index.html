@@ -57,7 +57,6 @@
   .brand-text{ line-height:1.05; }
   .brand-text .name{ font-family:'Fraunces',serif; font-weight:600; font-size:17px; letter-spacing:.01em;}
   .brand-text .tag{ font-size:10.5px; letter-spacing:.18em; color:var(--slate); text-transform:uppercase; }
-  .nav-btns{ margin-left:auto; display:flex; gap:10px; }
   .top-stats{ margin-left:auto; display:flex; gap:22px; }
   .top-stats div{ text-align:right; }
   .top-stats .n{ font-family:'Fraunces',serif; font-size:19px; font-weight:600; }
@@ -66,6 +65,7 @@
   @media (max-width:720px){ .top-stats{display:none;} }
 
   /* ---------- Ad nav button ---------- */
+  .nav-btns{ margin-left:auto; display:flex; gap:10px; }
   .ad-nav-btn{
     display:flex; align-items:center; gap:7px;
     background:var(--ink); color:#fff;
@@ -77,7 +77,7 @@
   }
   .ad-nav-btn:hover{ background:var(--gold); }
   .ad-nav-btn:active{ transform:translateY(1px); }
-  @media (max-width:720px){ .top-inner{ flex-wrap:wrap; } }
+  @media (max-width:720px){ .nav-btns{ margin-left:0; } .top-inner{ flex-wrap:wrap; } }
 
   /* ---------- Hero ---------- */
   .hero{
@@ -1731,7 +1731,7 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   const messagesFrame = document.getElementById('messagesFrame');
   const MESSAGES_URL = 'https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
   openMessagesBtn.addEventListener('click', ()=>{
-    if(!messagesFrame.src || messagesFrame.src === 'about:blank' || !messagesFrame.src.includes('gashamorujov')) { messagesFrame.src = MESSAGES_URL; }
+    if(messagesFrame.src === 'about:blank') messagesFrame.src = MESSAGES_URL;
     messagesOverlay.classList.add('show');
     document.body.style.overflow = 'hidden';
   });
