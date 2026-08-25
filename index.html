@@ -423,6 +423,15 @@
     padding:14px 24px;
     display:flex; align-items:center; gap:14px;
   }
+  .messages-topbar .ad-back,
+  .ad-back{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--hairline); background:var(--paper);
+    color:var(--ink); border-radius:10px; padding:9px 14px;
+    font-family:'Inter',sans-serif; font-size:13.5px; font-weight:600;
+    cursor:pointer; transition:all .12s ease;
+  }
+  .ad-back:hover{ border-color:var(--ink); }
   .ad-topbar .ad-back{
     display:flex; align-items:center; gap:8px;
     border:1px solid var(--hairline); background:var(--paper);
@@ -1725,14 +1734,15 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   window.addEventListener('load', adSyncLogo);
 })();
 
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
   const openMessagesBtn = document.getElementById('openMessagesBtn');
   const messagesOverlay = document.getElementById('messagesOverlay');
   const messagesBackBtn = document.getElementById('messagesBackBtn');
   const messagesFrame = document.getElementById('messagesFrame');
   const MESSAGES_URL = 'https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+  if(!openMessagesBtn || !messagesOverlay) return;
 
-  openMessagesBtn.addEventListener('click', ()=>{
+  openMessagesBtn.addEventListener('click', function(){
     if(!messagesFrame.getAttribute('src') || messagesFrame.getAttribute('src') === 'about:blank'){
       messagesFrame.setAttribute('src', MESSAGES_URL);
     }
@@ -1747,10 +1757,10 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
 
   messagesBackBtn.addEventListener('click', messagesClose);
 
-  document.addEventListener('keydown', (e)=>{
+  document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && messagesOverlay.classList.contains('show')) messagesClose();
   });
-})();
+});
 </script>
 
 <div class="ad-overlay" id="messagesOverlay">
