@@ -961,7 +961,15 @@
   </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script><script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<div id="msgOverlay" style="display:none;position:fixed;inset:0;z-index:9000;background:#F6F8FA;overflow-y:auto;">
+  <div style="position:sticky;top:0;z-index:9001;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid #E3E8EE;padding:12px 24px;display:flex;align-items:center;gap:14px;">
+    <button id="msgBackBtn" style="display:flex;align-items:center;gap:8px;border:1px solid #E3E8EE;background:#fff;color:#0F2A44;border-radius:10px;padding:9px 14px;font-family:Inter,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;">&#8592; Geri</button>
+    <span style="font-family:Fraunces,serif;font-size:17px;font-weight:600;">Kurs v&#231; &#304;mtahan Mesajlar&#305;</span>
+  </div>
+  <iframe id="msgFrame" src="about:blank" style="width:100%;height:calc(100vh - 60px);border:none;"></iframe>
+</div>
+<script>
 const COURSES = [
   {no:1,  code:'SP', az:'Əmniyyətli İdarəetmə haqqında Beynəlxalq Məcəllə', en:'International Safety Management Code', hours:16, count:15, price:235, fee:251},
   {no:2,  code:'SI', az:'Gəminin Mühafizəsi üzrə ümumi hazırlıq və təlimat', en:'Ship security-related training and instruction', hours:8, count:15, price:144, fee:160},
@@ -1734,36 +1742,32 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   window.addEventListener('load', adSyncLogo);
 
 
-})();
-</script>
-<div id="msgOverlay" style="display:none;position:fixed;inset:0;z-index:500;background:#F6F8FA;overflow-y:auto;">
-  <div style="position:sticky;top:0;z-index:10;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid #E3E8EE;padding:12px 24px;display:flex;align-items:center;gap:14px;">
-    <button id="msgBackBtn" style="display:flex;align-items:center;gap:8px;border:1px solid #E3E8EE;background:#fff;color:#0F2A44;border-radius:10px;padding:9px 14px;font-family:Inter,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;">&#8592; Geri</button>
-    <span style="font-family:Fraunces,serif;font-size:17px;font-weight:600;">Kurs v&#231; &#304;mtahan Mesajlar&#305;</span>
-  </div>
-  <iframe id="msgFrame" src="about:blank" style="width:100%;height:calc(100vh - 60px);border:none;"></iframe>
-</div>
-<script>
-(function(){
-  var btn=document.getElementById('openMessagesBtn');
-  var ov=document.getElementById('msgOverlay');
-  var fr=document.getElementById('msgFrame');
-  var bk=document.getElementById('msgBackBtn');
-  if(!btn||!ov){return;}
-  function openMsg(){
-    fr.src='https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
-    ov.style.display='block';
-    document.body.style.overflow='hidden';
-  }
-  function closeMsg(){
-    ov.style.display='none';
-    document.body.style.overflow='';
-  }
-  btn.onclick=openMsg;
-  if(bk)bk.onclick=closeMsg;
-  document.onkeydown=function(e){
-    if(e.key==='Escape'&&ov.style.display==='block')closeMsg();
-  };
+  // --- Messages overlay ---
+  (function(){
+    var btn=document.getElementById('openMessagesBtn');
+    if(!btn)return;
+    btn.onclick=function(){
+      var ov=document.getElementById('msgOverlay');
+      var fr=document.getElementById('msgFrame');
+      if(ov)ov.style.display='block';
+      if(fr)fr.src='https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+      document.body.style.overflow='hidden';
+    };
+    var bk=document.getElementById('msgBackBtn');
+    if(bk)bk.onclick=function(){
+      document.getElementById('msgOverlay').style.display='none';
+      document.body.style.overflow='';
+    };
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'){
+        var ov=document.getElementById('msgOverlay');
+        if(ov&&ov.style.display==='block'){
+          ov.style.display='none';
+          document.body.style.overflow='';
+        }
+      }
+    });
+  })();
 })();
 </script>
 </body>
