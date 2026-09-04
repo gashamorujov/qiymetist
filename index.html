@@ -1733,6 +1733,7 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   // Keep logo synced if brand logo loads late
   window.addEventListener('load', adSyncLogo);
 })();
+</script>
 
 <div class="ad-overlay" id="messagesOverlay">
   <div style="position:sticky; top:0; z-index:10; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid var(--hairline); padding:12px 24px; display:flex; align-items:center; gap:14px;">
@@ -1742,6 +1743,7 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   <iframe id="messagesFrame" src="about:blank" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>
 </div>
 
+<script>
 document.addEventListener('DOMContentLoaded', function(){
   const openMessagesBtn = document.getElementById('openMessagesBtn');
   const messagesOverlay = document.getElementById('messagesOverlay');
