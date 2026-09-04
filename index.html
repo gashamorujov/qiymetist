@@ -1745,21 +1745,25 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
 </div>
 <script>
 (function(){
-  var btn=document.getElementById("openMessagesBtn");
-  var ov=document.getElementById("msgOverlay");
-  var fr=document.getElementById("msgFrame");
-  var bk=document.getElementById("msgBackBtn");
+  var btn=document.getElementById('openMessagesBtn');
+  var ov=document.getElementById('msgOverlay');
+  var fr=document.getElementById('msgFrame');
+  var bk=document.getElementById('msgBackBtn');
   if(!btn||!ov){return;}
-  btn.addEventListener("click",function(){
-    if(!fr.src||fr.getAttribute("src")==="about:blank"){
-      fr.src="https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/";
-    }
-    ov.style.display="block";
-    document.body.style.overflow="hidden";
-  });
-  function close(){ov.style.display="none";document.body.style.overflow="";}
-  if(bk)bk.addEventListener("click",close);
-  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov.style.display==="block")close();});
+  function openMsg(){
+    fr.src='https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+    ov.style.display='block';
+    document.body.style.overflow='hidden';
+  }
+  function closeMsg(){
+    ov.style.display='none';
+    document.body.style.overflow='';
+  }
+  btn.onclick=openMsg;
+  if(bk)bk.onclick=closeMsg;
+  document.onkeydown=function(e){
+    if(e.key==='Escape'&&ov.style.display==='block')closeMsg();
+  };
 })();
 </script>
 </body>
