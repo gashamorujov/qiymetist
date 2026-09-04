@@ -84,12 +84,13 @@
   .hero{
     max-width:1180px; margin:0 auto;
     padding:20px 24px 16px;
-    position:relative;
+    position:relative; z-index:1;
   }
   /* ---------- Search ---------- */
   .search-wrap{
     display:flex; align-items:center; gap:12px;
-    background:var(--fog);
+    background:rgba(246,248,250,0.95);
+    backdrop-filter:blur(6px);
     border:1px solid var(--hairline);
     border-radius:14px;
     padding:6px 8px 6px 18px;
@@ -120,6 +121,7 @@
   /* ---------- Layout: table + calculator ---------- */
   .workspace{
     max-width:1180px; margin:0 auto; padding:8px 24px 100px;
+    position:relative; z-index:1;
     display:grid; grid-template-columns:1fr 440px; gap:28px;
     align-items:start;
   }
@@ -128,6 +130,11 @@
   }
 
   /* ---------- Table ---------- */
+  .panel, .calc, footer{
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(8px);
+    border-radius:var(--radius);
+  }
   .panel{
     border:1px solid var(--hairline); border-radius:16px;
     background:var(--paper);
@@ -703,9 +710,23 @@
     letter-spacing:-.01em; color:var(--ink);
   }
   #msgOverlay .msg-title em{ font-style:italic; color:var(--gold); font-weight:500; }
+  /* ---------- ForceField Background ---------- */
+  #ff-canvas{
+    position:fixed;
+    top:0; left:0;
+    width:100vw; height:100vh;
+    z-index:0;
+    pointer-events:none;
+  }
+  #ff-canvas canvas{
+    display:block;
+    width:100%!important;
+    height:100%!important;
+  }
 </style>
 </head>
 <body>
+<div id="ff-canvas"></div>
 
 <header class="top">
   <div class="top-inner">
@@ -1782,6 +1803,204 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
       }
     });
   })();
+})();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<script>
+(function(){
+  var container = document.getElementById("ff-canvas");
+  if(!container || typeof p5 === "undefined") return;
+
+  /* ForceFieldBackground — IST Trust Zone themed */
+  var img;
+  var points = [];
+  var palette = [];
+  var lastSpacing = -1, lastNoiseScale = -1, lastDensity = -1;
+  var lastHue = -1, lastSaturation = -1;
+  var magnifierX = 0, magnifierY = 0;
+  var magnifierInertia = 0.12;
+
+  /* IST Trust Zone palette: ink blue + gold accents */
+  var HUE = 210;
+  var SATURATION = 40;
+  var SPACING = 14;
+  var DENSITY = 1.8;
+  var MIN_STROKE = 1.5;
+  var MAX_STROKE = 4.5;
+  var FORCE_STRENGTH = 18;
+  var MAG_RADIUS = 160;
+  var FRICTION = 0.88;
+  var RESTORE_SPEED = 0.06;
+  var INVERT = false;
+  var THRESHOLD = 40;
+  var NOISE_SCALE = 0.006;
+
+  function generatePalette(h, s){
+    palette = [];
+    for(var i = 0; i < 12; i++){
+      var inter = i / 11;
+      var h2 = h + inter * 15 - 7;
+      var s2 = s * (0.6 + inter * 0.4);
+      var l = 35 + inter * 35;
+      palette.push("hsl(" + h2 + "," + s2 + "%," + l + "%)");
+    }
+    /* Add gold accent */
+    palette.push("hsl(42, 55%, 55%)");
+    palette.push("hsl(42, 45%, 45%)");
+  }
+  generatePalette(HUE, SATURATION);
+
+  var myP5 = new p5(function(p){
+    function processImage(){
+      if(!img || !img.width) return;
+      img.loadPixels();
+    }
+
+    function generatePoints(){
+      points = [];
+      if(!img || !img.width) return;
+      var safeSpacing = Math.max(SPACING, 5);
+      var w = p.width;
+      var h = p.height;
+      for(var x = 0; x < w; x += safeSpacing){
+        for(var y = 0; y < h; y += safeSpacing){
+          if(Math.random() > DENSITY) continue;
+          var nx = p.noise(x * NOISE_SCALE, y * NOISE_SCALE) - 0.5;
+          var ny = p.noise((x+500) * NOISE_SCALE, (y+500) * NOISE_SCALE) - 0.5;
+          var px = x + nx * safeSpacing;
+          var py = y + ny * safeSpacing;
+          points.push({
+            pos: p.createVector(px, py),
+            orig: p.createVector(px, py),
+            vel: p.createVector(0, 0)
+          });
+        }
+      }
+      lastSpacing = SPACING;
+      lastNoiseScale = NOISE_SCALE;
+      lastDensity = DENSITY;
+    }
+
+    function applyForceField(mx, my){
+      for(var i = 0; i < points.length; i++){
+        var pt = points[i];
+        var dx = pt.pos.x - mx;
+        var dy = pt.pos.y - my;
+        var d = Math.sqrt(dx*dx + dy*dy);
+        if(d < MAG_RADIUS && d > 0){
+          var f = FORCE_STRENGTH / Math.max(1, d);
+          pt.vel.x += (dx / d) * f;
+          pt.vel.y += (dy / d) * f;
+        }
+        pt.vel.x *= FRICTION;
+        pt.vel.y *= FRICTION;
+        pt.vel.x += (pt.orig.x - pt.pos.x) * RESTORE_SPEED;
+        pt.vel.y += (pt.orig.y - pt.pos.y) * RESTORE_SPEED;
+        pt.pos.x += pt.vel.x;
+        pt.pos.y += pt.vel.y;
+      }
+    }
+
+    p.preload = function(){
+      /* Generate a procedural gradient image instead of loading external */
+    };
+
+    p.setup = function(){
+      var canvas = p.createCanvas(container.clientWidth, container.clientHeight);
+      canvas.parent("ff-canvas");
+      p.pixelDensity(1);
+      p.noiseDetail(4, 0.5);
+
+      /* Create a procedural mountain-like image */
+      img = p.createGraphics(p.width, p.height);
+      img.loadPixels();
+      for(var x = 0; x < p.width; x++){
+        for(var y = 0; y < p.height; y++){
+          var n = p.noise(x * 0.003, y * 0.004);
+          var mountain = Math.pow(n, 1.5) * 255;
+          var gradient = p.map(y, 0, p.height, 0, 120);
+          var val = Math.min(255, mountain * 0.6 + gradient);
+          var idx = (x + y * p.width) * 4;
+          img.pixels[idx] = val;
+          img.pixels[idx+1] = val;
+          img.pixels[idx+2] = val;
+          img.pixels[idx+3] = 255;
+        }
+      }
+      img.updatePixels();
+      processImage();
+      generatePoints();
+      magnifierX = p.width / 2;
+      magnifierY = p.height / 2;
+    };
+
+    p.windowResized = function(){
+      p.resizeCanvas(container.clientWidth, container.clientHeight);
+      /* Recreate procedural image */
+      img = p.createGraphics(p.width, p.height);
+      img.loadPixels();
+      for(var x = 0; x < p.width; x++){
+        for(var y = 0; y < p.height; y++){
+          var n = p.noise(x * 0.003, y * 0.004);
+          var mountain = Math.pow(n, 1.5) * 255;
+          var gradient = p.map(y, 0, p.height, 0, 120);
+          var val = Math.min(255, mountain * 0.6 + gradient);
+          var idx = (x + y * p.width) * 4;
+          img.pixels[idx] = val;
+          img.pixels[idx+1] = val;
+          img.pixels[idx+2] = val;
+          img.pixels[idx+3] = 255;
+        }
+      }
+      img.updatePixels();
+      processImage();
+      generatePoints();
+    };
+
+    p.draw = function(){
+      if(!img) return;
+      p.background(15, 22, 34);
+      if(HUE !== lastHue || SATURATION !== lastSaturation){
+        generatePalette(HUE, SATURATION);
+        lastHue = HUE;
+        lastSaturation = SATURATION;
+      }
+      if(SPACING !== lastSpacing || NOISE_SCALE !== lastNoiseScale || DENSITY !== lastDensity){
+        generatePoints();
+      }
+      magnifierX = p.lerp(magnifierX, p.mouseX, magnifierInertia);
+      magnifierY = p.lerp(magnifierY, p.mouseY, magnifierInertia);
+      applyForceField(magnifierX, magnifierY);
+      img.loadPixels();
+      p.noFill();
+      for(var i = 0; i < points.length; i++){
+        var pt = points[i];
+        var x = pt.pos.x;
+        var y = pt.pos.y;
+        var px = p.constrain(Math.floor(x), 0, img.width - 1);
+        var py = p.constrain(Math.floor(y), 0, img.height - 1);
+        var idx = (px + py * img.width) * 4;
+        var brightness = img.pixels[idx];
+        if(brightness === undefined) continue;
+        var show = INVERT ? brightness < THRESHOLD : brightness > THRESHOLD;
+        if(show){
+          var shadeIdx = Math.floor(p.map(brightness, 0, 255, 0, palette.length - 1));
+          shadeIdx = p.constrain(shadeIdx, 0, palette.length - 1);
+          var sz = p.map(brightness, 0, 255, MIN_STROKE, MAX_STROKE);
+          var d = p.dist(x, y, magnifierX, magnifierY);
+          if(d < MAG_RADIUS){
+            sz *= p.map(d, 0, MAG_RADIUS, 1.8, 1);
+          }
+          if(palette[shadeIdx]){
+            p.stroke(palette[shadeIdx]);
+            p.strokeWeight(sz);
+            p.point(x, y);
+          }
+        }
+      }
+    };
+  });
 })();
 </script>
 </body>
