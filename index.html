@@ -83,28 +83,9 @@
   /* ---------- Hero ---------- */
   .hero{
     max-width:1180px; margin:0 auto;
-    padding:56px 24px 28px;
+    padding:20px 24px 16px;
     position:relative;
   }
-  .hero-kicker{
-    display:inline-flex; align-items:center; gap:8px;
-    font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    color:var(--gold); font-weight:600; margin-bottom:16px;
-  }
-  .hero-kicker .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); }
-  h1.hero-title{
-    font-family:'Fraunces',serif; font-weight:600;
-    font-size:clamp(26px,4.4vw,50px);
-    line-height:1.08; letter-spacing:-0.01em;
-    margin:0 0 14px;
-    white-space:nowrap;
-  }
-  h1.hero-title em{ font-style:italic; color:var(--gold); font-weight:500;}
-  .hero-sub{
-    font-size:16px; color:var(--slate); max-width:52ch; line-height:1.55;
-    margin:0 0 32px;
-  }
-
   /* ---------- Search ---------- */
   .search-wrap{
     display:flex; align-items:center; gap:12px;
@@ -688,35 +669,40 @@
     .ad-poster-intro .line2, .ad-poster-intro .line3{ font-size:12.5px; }
     .ad-poster-table thead th, .ad-poster-table tbody td{ padding:10px 10px; font-size:12px; }
   }
-  /* ---------- Water ripple canvas ---------- */
-  .water-canvas-wrap{
-    position:relative;
-    width:100%;
-    height:220px;
-    overflow:hidden;
-    border-radius:16px;
-    margin:0 0 24px;
-    background:linear-gradient(135deg, var(--ink) 0%, var(--ink-2) 50%, #1a3a5c 100%);
+  /* ---------- Messages overlay ---------- */
+  #msgOverlay{
+    animation:msgSlideIn .35s cubic-bezier(.4,0,.2,1);
   }
-  .water-canvas-wrap canvas{
-    display:block;
-    width:100%;
-    height:100%;
+  @keyframes msgSlideIn{
+    from{opacity:0;transform:translateY(100%);}
+    to{opacity:1;transform:translateY(0);}
   }
-  .water-label{
-    position:absolute;
-    bottom:12px;
-    left:16px;
-    font-size:10px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:rgba(255,255,255,0.45);
-    font-weight:600;
-    pointer-events:none;
+  #msgOverlay .msg-topbar{
+    display:flex; align-items:center; gap:14px;
+    padding:14px 24px;
+    background:rgba(255,255,255,0.97);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--hairline);
+    position:sticky; top:0; z-index:9001;
   }
-  @media (max-width:720px){
-    .water-canvas-wrap{height:160px;}
+  #msgOverlay .msg-back{
+    display:flex; align-items:center; gap:8px;
+    border:1.5px solid var(--hairline); background:var(--paper);
+    color:var(--ink); border-radius:12px; padding:10px 18px;
+    font-family:"Inter",sans-serif; font-size:13.5px; font-weight:600;
+    cursor:pointer; transition:all .2s ease;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
   }
+  #msgOverlay .msg-back:hover{
+    border-color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.08);
+    transform:translateX(-2px);
+  }
+  #msgOverlay .msg-back:active{ transform:scale(.97); }
+  #msgOverlay .msg-title{
+    font-family:"Fraunces",serif; font-size:18px; font-weight:600;
+    letter-spacing:-.01em; color:var(--ink);
+  }
+  #msgOverlay .msg-title em{ font-style:italic; color:var(--gold); font-weight:500; }
 </style>
 </head>
 <body>
@@ -744,17 +730,9 @@
       <div><div class="n" id="statCount">30</div><div class="l">Kurs</div></div>
       <div><div class="n" id="statHours">—</div><div class="l">Cəmi saat</div></div>
     </div>
-  </div>
 </header>
-
 <section class="hero">
-  <div class="water-canvas-wrap">
-    <canvas id="waterCanvas"></canvas>
-    <div class="water-label">Sürüşdür · toxun · kəşf et</div>
-  </div>
-  <div class="hero-kicker"><span class="dot"></span>Rəsmi qiymət cədvəli · 2026</div>
-  <h1 class="hero-title">Kursu <em>saniyələr</em> içində tap.</h1>
-  <p class="hero-sub">Bütün STCW təlim kurslarının kodu, müddəti, iştirakçı sayı və qiyməti bir səhifədə. Adı və ya koduna görə axtar, seçdiklərini hesablama panelinə əlavə et.</p>
+
 
   <div class="search-wrap">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#0F2A44" stroke-width="2"/><path d="M21 21L16.65 16.65" stroke="#0F2A44" stroke-width="2" stroke-linecap="round"/></svg>
@@ -996,9 +974,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
 <div id="msgOverlay" style="display:none;position:fixed;inset:0;z-index:9000;background:#F6F8FA;overflow-y:auto;">
-  <div style="position:sticky;top:0;z-index:9001;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid #E3E8EE;padding:12px 24px;display:flex;align-items:center;gap:14px;">
-    <button id="msgBackBtn" style="display:flex;align-items:center;gap:8px;border:1px solid #E3E8EE;background:#fff;color:#0F2A44;border-radius:10px;padding:9px 14px;font-family:Inter,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;">&#8592; Geri</button>
-    <span style="font-family:Fraunces,serif;font-size:17px;font-weight:600;">Kurs v&#231; &#304;mtahan Mesajlar&#305;</span>
+  <div class="msg-topbar">
+    <button id="msgBackBtn" class="msg-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Geri
+    </button>
+    <span class="msg-title">Kurs və <em>0130mtahan</em> Mesajları</span>
   </div>
   <iframe id="msgFrame" src="about:blank" style="width:100%;height:calc(100vh - 60px);border:none;"></iframe>
 </div>
@@ -1801,195 +1782,6 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
       }
     });
   })();
-})();
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-(function initWaterRipple(){
-  var canvasEl = document.getElementById("waterCanvas");
-  if(!canvasEl || typeof THREE === "undefined") return;
-
-  var scene = new THREE.Scene();
-  var simScene = new THREE.Scene();
-  var camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-  var renderer = new THREE.WebGLRenderer({
-    canvas: canvasEl,
-    antialias: true,
-    alpha: true,
-    preserveDrawingBuffer: true
-  });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-  var wrap = canvasEl.parentElement;
-  function resize(){
-    var w = wrap.clientWidth;
-    var h = wrap.clientHeight;
-    renderer.setSize(w, h);
-    var pw = w * window.devicePixelRatio;
-    var ph = h * window.devicePixelRatio;
-    rtA.setSize(pw, ph);
-    rtB.setSize(pw, ph);
-    simMaterial.uniforms.resolution.value.set(pw, ph);
-    rebuildTextTexture(pw, ph);
-  }
-
-  var mouse = new THREE.Vector2();
-  var frame = 0;
-  var pw = wrap.clientWidth * window.devicePixelRatio;
-  var ph = wrap.clientHeight * window.devicePixelRatio;
-  var options = {
-    format: THREE.RGBAFormat,
-    type: THREE.FloatType,
-    minFilter: THREE.LinearFilter,
-    magFilter: THREE.LinearFilter,
-    stencilBuffer: false,
-    depthBuffer: false
-  };
-  var rtA = new THREE.WebGLRenderTarget(pw, ph, options);
-  var rtB = new THREE.WebGLRenderTarget(pw, ph, options);
-
-  var simMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      textureA: { value: null },
-      mouse: { value: mouse },
-      resolution: { value: new THREE.Vector2(pw, ph) },
-      time: { value: 0 },
-      frame: { value: 0 }
-    },
-    vertexShader: "
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }",
-    fragmentShader: "
-      uniform sampler2D textureA;
-      uniform vec2 mouse;
-      uniform vec2 resolution;
-      uniform float time;
-      uniform int frame;
-      varying vec2 vUv;
-      const float delta = 1.4;
-      void main() {
-        vec2 uv = vUv;
-        if (frame == 0) { gl_FragColor = vec4(0.0); return; }
-        vec4 data = texture2D(textureA, uv);
-        float pressure = data.x;
-        float pVel = data.y;
-        vec2 texelSize = 1.0 / resolution;
-        float p_right = texture2D(textureA, uv + vec2(texelSize.x, 0.0)).x;
-        float p_left  = texture2D(textureA, uv + vec2(-texelSize.x, 0.0)).x;
-        float p_up    = texture2D(textureA, uv + vec2(0.0, texelSize.y)).x;
-        float p_down  = texture2D(textureA, uv + vec2(0.0, -texelSize.y)).x;
-        pVel += delta * (-2.0 * pressure + p_right + p_left) / 4.0;
-        pVel += delta * (-2.0 * pressure + p_up + p_down) / 4.0;
-        pressure += delta * pVel;
-        pVel -= 0.005 * delta * pressure;
-        pVel *= 1.0 - 0.002 * delta;
-        pressure *= 0.999;
-        vec2 mouseUV = mouse / resolution;
-        if(mouse.x > 0.0) {
-          float dist = distance(uv, mouseUV);
-          if(dist <= 0.03) {
-            pressure += 3.0 * (1.0 - dist / 0.03);
-          }
-        }
-        gl_FragColor = vec4(pressure, pVel, (p_right - p_left) / 2.0, (p_up - p_down) / 2.0);
-      }"
-  });
-
-  var renderMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      textureA: { value: null },
-      textureB: { value: null }
-    },
-    vertexShader: "
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }",
-    fragmentShader: "
-      uniform sampler2D textureA;
-      uniform sampler2D textureB;
-      varying vec2 vUv;
-      void main() {
-        vec4 data = texture2D(textureA, vUv);
-        vec2 distortion = 0.35 * data.zw;
-        vec4 textColor = texture2D(textureB, vUv + distortion);
-        gl_FragColor = textColor;
-      }",
-    transparent: true
-  });
-
-  var plane = new THREE.PlaneGeometry(2, 2);
-  var simQuad = new THREE.Mesh(plane, simMaterial);
-  var renderQuad = new THREE.Mesh(plane, renderMaterial);
-  simScene.add(simQuad);
-  scene.add(renderQuad);
-
-  var textCanvas = document.createElement("canvas");
-  textCanvas.width = pw;
-  textCanvas.height = ph;
-  var ctx = textCanvas.getContext("2d", { alpha: true });
-
-  function rebuildTextTexture(w, h){
-    textCanvas.width = w;
-    textCanvas.height = h;
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = "#0F2A44";
-    ctx.fillRect(0, 0, w, h);
-    var fs = Math.round(Math.min(w * 0.085, 120));
-    ctx.fillStyle = "#B4903F";
-    ctx.font = "bold " + fs + "px Fraunces, serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("IST TRUST ZONE", w / 2, h / 2 - fs * 0.15);
-    var fs2 = Math.round(fs * 0.28);
-    ctx.fillStyle = "rgba(255,255,255,0.55)";
-    ctx.font = fs2 + "px Inter, sans-serif";
-    ctx.fillText("Dəniz Təlim Mərkəzi · Qiymət Cədvəli", w / 2, h / 2 + fs * 0.35);
-    textTexture.needsUpdate = true;
-  }
-  rebuildTextTexture(pw, ph);
-  var textTexture = new THREE.CanvasTexture(textCanvas);
-  textTexture.minFilter = THREE.LinearFilter;
-  textTexture.magFilter = THREE.LinearFilter;
-  textTexture.format = THREE.RGBAFormat;
-
-  wrap.addEventListener("mousemove", function(e){
-    var rect = wrap.getBoundingClientRect();
-    mouse.x = (e.clientX - rect.left) * window.devicePixelRatio;
-    mouse.y = (rect.height - (e.clientY - rect.top)) * window.devicePixelRatio;
-  });
-  wrap.addEventListener("mouseleave", function(){ mouse.set(-1, -1); });
-  wrap.addEventListener("touchmove", function(e){
-    var t = e.touches[0];
-    var rect = wrap.getBoundingClientRect();
-    mouse.x = (t.clientX - rect.left) * window.devicePixelRatio;
-    mouse.y = (rect.height - (t.clientY - rect.top)) * window.devicePixelRatio;
-  }, { passive: true });
-  wrap.addEventListener("touchend", function(){ mouse.set(-1, -1); });
-
-  window.addEventListener("resize", resize);
-  resize();
-
-  function animate(){
-    simMaterial.uniforms.frame.value = frame++;
-    simMaterial.uniforms.time.value = performance.now() / 1000;
-    simMaterial.uniforms.textureA.value = rtA.texture;
-    renderer.setRenderTarget(rtB);
-    renderer.render(simScene, camera);
-    renderMaterial.uniforms.textureA.value = rtB.texture;
-    renderMaterial.uniforms.textureB.value = textTexture;
-    renderer.setRenderTarget(null);
-    renderer.render(scene, camera);
-    var temp = rtA; rtA = rtB; rtB = temp;
-    requestAnimationFrame(animate);
-  }
-  animate();
 })();
 </script>
 </body>
