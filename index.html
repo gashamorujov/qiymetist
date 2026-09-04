@@ -1734,6 +1734,14 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   window.addEventListener('load', adSyncLogo);
 })();
 
+<div class="ad-overlay" id="messagesOverlay">
+  <div style="position:sticky; top:0; z-index:10; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid var(--hairline); padding:12px 24px; display:flex; align-items:center; gap:14px;">
+    <button class="ad-back" id="messagesBackBtn" type="button">← Geri</button>
+    <span style="font-family:'Fraunces',serif; font-size:17px; font-weight:600;'>Kurs və İmtahan Mesajları</span>
+  </div>
+  <iframe id="messagesFrame" src="about:blank" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>
+</div>
+
 document.addEventListener('DOMContentLoaded', function(){
   const openMessagesBtn = document.getElementById('openMessagesBtn');
   const messagesOverlay = document.getElementById('messagesOverlay');
@@ -1762,13 +1770,5 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 });
 </script>
-
-<div class="ad-overlay" id="messagesOverlay">
-  <div style="position:sticky; top:0; z-index:10; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid var(--hairline); padding:12px 24px; display:flex; align-items:center; gap:14px;">
-    <button class="ad-back" id="messagesBackBtn" type="button">← Geri</button>
-    <span style="font-family:'Fraunces',serif; font-size:17px; font-weight:600;">Kurs və İmtahan Mesajları</span>
-  </div>
-  <iframe id="messagesFrame" src="about:blank" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>
-</div>
 </body>
 </html>
