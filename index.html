@@ -961,15 +961,7 @@
   </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script><div class="ad-overlay" id="messagesOverlay">
-  <div style="position:sticky; top:0; z-index:10; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid var(--hairline); padding:12px 24px; display:flex; align-items:center; gap:14px;">
-    <button class="ad-back" id="messagesBackBtn" type="button">← Geri</button>
-    <span style="font-family:'Fraunces',serif; font-size:17px; font-weight:600;'>Kurs və İmtahan Mesajları</span>
-  </div>
-  <iframe id="messagesFrame" src="about:blank" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>
-</div>
-
-<script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script><script>
 const COURSES = [
   {no:1,  code:'SP', az:'Əmniyyətli İdarəetmə haqqında Beynəlxalq Məcəllə', en:'International Safety Management Code', hours:16, count:15, price:235, fee:251},
   {no:2,  code:'SI', az:'Gəminin Mühafizəsi üzrə ümumi hazırlıq və təlimat', en:'Ship security-related training and instruction', hours:8, count:15, price:144, fee:160},
@@ -1741,29 +1733,34 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   // Keep logo synced if brand logo loads late
   window.addEventListener('load', adSyncLogo);
 
-  // --- Messages overlay ---
-  var openMessagesBtn = document.getElementById('openMessagesBtn');
-  var messagesOverlay = document.getElementById('messagesOverlay');
-  var messagesBackBtn = document.getElementById('messagesBackBtn');
-  var messagesFrame = document.getElementById('messagesFrame');
-  var MESSAGES_URL = 'https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
-  if(openMessagesBtn && messagesOverlay){
-    openMessagesBtn.addEventListener('click', function(){
-      if(!messagesFrame.getAttribute('src') || messagesFrame.getAttribute('src') === 'about:blank'){
-        messagesFrame.setAttribute('src', MESSAGES_URL);
-      }
-      messagesOverlay.classList.add('show');
-      document.body.style.overflow = 'hidden';
-    });
-    function messagesClose(){
-      messagesOverlay.classList.remove('show');
-      document.body.style.overflow = '';
-    }
-    if(messagesBackBtn) messagesBackBtn.addEventListener('click', messagesClose);
-    document.addEventListener('keydown', function(e){
-      if(e.key === 'Escape' && messagesOverlay.classList.contains('show')) messagesClose();
-    });
-  }
+
 })();
 </script>
+<div id="msgOverlay" style="display:none;position:fixed;inset:0;z-index:500;background:#F6F8FA;overflow-y:auto;">
+  <div style="position:sticky;top:0;z-index:10;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-bottom:1px solid #E3E8EE;padding:12px 24px;display:flex;align-items:center;gap:14px;">
+    <button id="msgBackBtn" style="display:flex;align-items:center;gap:8px;border:1px solid #E3E8EE;background:#fff;color:#0F2A44;border-radius:10px;padding:9px 14px;font-family:Inter,sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;">&#8592; Geri</button>
+    <span style="font-family:Fraunces,serif;font-size:17px;font-weight:600;">Kurs v&#231; &#304;mtahan Mesajlar&#305;</span>
+  </div>
+  <iframe id="msgFrame" src="about:blank" style="width:100%;height:calc(100vh - 60px);border:none;"></iframe>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById("openMessagesBtn");
+  var ov=document.getElementById("msgOverlay");
+  var fr=document.getElementById("msgFrame");
+  var bk=document.getElementById("msgBackBtn");
+  if(!btn||!ov){return;}
+  btn.addEventListener("click",function(){
+    if(!fr.src||fr.getAttribute("src")==="about:blank"){
+      fr.src="https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/";
+    }
+    ov.style.display="block";
+    document.body.style.overflow="hidden";
+  });
+  function close(){ov.style.display="none";document.body.style.overflow="";}
+  if(bk)bk.addEventListener("click",close);
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&ov.style.display==="block")close();});
+})();
+</script>
+</body>
 </html>
