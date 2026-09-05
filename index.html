@@ -711,21 +711,44 @@
     from{ opacity:0; transform:translateY(-10px); }
     to{ opacity:1; transform:translateY(0); }
   }
-  .ad-overlay.show{
-    animation:overlayIn .45s cubic-bezier(.22,.9,.25,1);
-  }
   .ad-overlay.closing{
     animation:overlayOut .22s ease forwards;
-  }
-  #msgOverlay{
-    animation:overlayIn .45s cubic-bezier(.22,.9,.25,1);
   }
   #msgOverlay.closing{
     animation:overlayOut .22s ease forwards;
   }
+
+  /* ---- Smooth wave reveal ---- */
+  .wave-curtain{
+    position:fixed; inset:0; z-index:9500;
+    background:linear-gradient(180deg,#0E2037 0%,#16314E 78%,#1D3D5F 100%);
+    pointer-events:none;
+    overflow:hidden;
+    transform:translateY(0);
+  }
+  .wave-curtain .wave-edge{
+    position:absolute;
+    left:0; right:0; bottom:-2px;
+    width:100%; height:22vh;
+    min-height:90px; max-height:240px;
+    display:block;
+    animation:waveSway 2.6s ease-in-out infinite alternate;
+  }
+  @keyframes waveReveal{
+    0%{ transform:translateY(0); }
+    100%{ transform:translateY(-101%); }
+  }
+  @keyframes waveSway{
+    from{ transform:translateX(-18px); }
+    to{ transform:translateX(24px); }
+  }
+  .ad-overlay.show .wave-curtain,
+  #msgOverlay.open .wave-curtain{
+    animation:waveReveal .8s cubic-bezier(.4,0,.2,1) forwards;
+  }
   .ad-overlay.show .ad-body,
-  #msgOverlay .msg-topbar{
-    animation:panelFadeIn .4s cubic-bezier(.22,.9,.25,1);
+  #msgOverlay.open .msg-topbar{
+    animation:panelFadeIn .5s cubic-bezier(.22,.9,.25,1) .12s backwards;
   }
   /* ---------- ForceField Background ---------- */
   #ff-canvas{
@@ -777,7 +800,7 @@
     <input id="searchInput" type="text" placeholder="Kurs adı və ya kodu ilə axtar — məsələn “ECDIS” və ya “SR”" autocomplete="off">
     <button class="search-clear" id="clearBtn" aria-label="Axtarışı təmizlə">✕</button>
   </div>
-  <div class="search-meta" id="searchMeta"><b>30</b> kursdan <b>30</b>-u göstərilir</div>
+  <div class="search-meta" id="searchMeta"></div>
 </section>
 
 <div class="workspace">
@@ -864,6 +887,11 @@
 
 <!-- ===================== REKLAM / KURS ELANI ===================== -->
 <div class="ad-overlay" id="adOverlay">
+<div class="wave-curtain">
+  <svg class="wave-edge" viewBox="0 0 1440 180" preserveAspectRatio="none">
+    <path d="M0,90 C180,150 360,30 540,90 C720,150 900,30 1080,90 C1260,150 1380,50 1440,90 L1440,180 L0,180 Z" fill="#1D3D5F" opacity="0.9"/>
+  </svg>
+</div>
   <div class="ad-topbar">
     <button class="ad-back" id="adBackBtn" type="button">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -1009,6 +1037,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
 <div id="msgOverlay" style="display:none;position:fixed;inset:0;z-index:9000;background:#F6F8FA;overflow-y:auto;">
+<div class="wave-curtain">
+  <svg class="wave-edge" viewBox="0 0 1440 180" preserveAspectRatio="none">
+    <path d="M0,90 C180,150 360,30 540,90 C720,150 900,30 1080,90 C1260,150 1380,50 1440,90 L1440,180 L0,180 Z" fill="#1D3D5F" opacity="0.9"/>
+  </svg>
+</div>
   <div class="msg-topbar">
     <button id="msgBackBtn" class="msg-back">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
@@ -1150,9 +1183,11 @@ function filterCourses(q){
 }
 
 function updateSearchMeta(list){
-  searchMeta.innerHTML = `<b>${list.length}</b> kursdan <b>${list.length}</b>-u göstərilir`;
-  if(list.length !== COURSES.length){
+  const q = (searchInput.value || '').trim();
+  if(q && list.length !== COURSES.length){
     searchMeta.innerHTML = `<b>${COURSES.length}</b> kursdan <b>${list.length}</b>-u tapıldı`;
+  } else {
+    searchMeta.innerHTML = '';
   }
 }
 
@@ -1805,6 +1840,7 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
       var fr=document.getElementById('msgFrame');
       if(!ov)return;
       ov.classList.remove('closing');
+      ov.classList.add('open');
       ov.style.display='block';
       if(fr&&(fr.getAttribute('src')==='about:blank'||!fr.getAttribute('src'))){
         fr.src='https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
@@ -1817,7 +1853,7 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
       ov.classList.add('closing');
       setTimeout(function(){
         ov.style.display='none';
-        ov.classList.remove('closing');
+        ov.classList.remove('open','closing');
         document.body.style.overflow='';
       },230);
     }
