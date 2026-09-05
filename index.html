@@ -83,7 +83,7 @@
   /* ---------- Hero ---------- */
   .hero{
     max-width:1180px; margin:0 auto;
-    padding:20px 24px 16px;
+    padding:16px 24px 10px;
     position:relative; z-index:1;
   }
   /* ---------- Search ---------- */
@@ -130,10 +130,11 @@
   }
 
   /* ---------- Table ---------- */
-  .panel, .calc, footer{
+  .panel, .calc{
     background:rgba(255,255,255,0.92);
     backdrop-filter:blur(8px);
     border-radius:var(--radius);
+    box-shadow:0 10px 40px rgba(15,42,68,0.10);
   }
   .panel{
     border:1px solid var(--hairline); border-radius:16px;
@@ -341,14 +342,7 @@
   .calc-pdf:hover{ background:var(--gold-soft); }
   .calc-pdf:disabled{ opacity:0.4; cursor:not-allowed; }
 
-  /* ---------- Footer note ---------- */
-  footer{
-    max-width:1180px; margin:0 auto; padding:0 24px 60px;
-    color:var(--slate); font-size:12px; line-height:1.7;
-    border-top:1px solid var(--hairline); padding-top:24px;
-  }
 
-  
 
 
   /* ---------- Course name popup ---------- */
@@ -677,13 +671,6 @@
     .ad-poster-table thead th, .ad-poster-table tbody td{ padding:10px 10px; font-size:12px; }
   }
   /* ---------- Messages overlay ---------- */
-  #msgOverlay{
-    animation:msgSlideIn .35s cubic-bezier(.4,0,.2,1);
-  }
-  @keyframes msgSlideIn{
-    from{opacity:0;transform:translateY(100%);}
-    to{opacity:1;transform:translateY(0);}
-  }
   #msgOverlay .msg-topbar{
     display:flex; align-items:center; gap:14px;
     padding:14px 24px;
@@ -710,6 +697,36 @@
     letter-spacing:-.01em; color:var(--ink);
   }
   #msgOverlay .msg-title em{ font-style:italic; color:var(--gold); font-weight:500; }
+
+  /* ---------- Overlay transitions ---------- */
+  @keyframes overlayIn{
+    from{ opacity:0; transform:translateY(28px) scale(.985); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes overlayOut{
+    from{ opacity:1; transform:translateY(0) scale(1); }
+    to{ opacity:0; transform:translateY(18px) scale(.99); }
+  }
+  @keyframes panelFadeIn{
+    from{ opacity:0; transform:translateY(-10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .ad-overlay.show{
+    animation:overlayIn .45s cubic-bezier(.22,.9,.25,1);
+  }
+  .ad-overlay.closing{
+    animation:overlayOut .22s ease forwards;
+  }
+  #msgOverlay{
+    animation:overlayIn .45s cubic-bezier(.22,.9,.25,1);
+  }
+  #msgOverlay.closing{
+    animation:overlayOut .22s ease forwards;
+  }
+  .ad-overlay.show .ad-body,
+  #msgOverlay .msg-topbar{
+    animation:panelFadeIn .4s cubic-bezier(.22,.9,.25,1);
+  }
   /* ---------- ForceField Background ---------- */
   #ff-canvas{
     position:fixed;
@@ -838,9 +855,6 @@
   </aside>
 </div>
 
-<footer>
-  Qeydlər — Qazi: 30% endirim. Müharibə iştirakçıları: 10% endirim. Əlilliyi olan şəxslər: 15% endirim. Şəhid ailələri (I dərəcə): hər kurs üçün 16 AZN. Endirim rüsumsuz qiymətə tətbiq olunur, üzərinə 16 AZN rüsum əlavə edilir (şəhid ailəsi istisna). “—” işarəsi həmin kurs üçün müvafiq məlumatın (saat/say/qiymət) mövcud olmadığını bildirir. Qiymətlər AZN ilə göstərilib.
-</footer>
 <!-- Course name popup -->
 <div class="popup-backdrop" id="coursePopupBackdrop"></div>
 <div class="course-name-popup" id="coursePopup">
@@ -1709,8 +1723,9 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
     adFitPosterPreview();
   }
 
-  // ---------- Open / close overlay ----------
+  // ---------- Open / close overlay (animated) ----------
   function adOpen(){
+    adOverlay.classList.remove('closing');
     adOverlay.classList.add('show');
     document.body.style.overflow = 'hidden';
     adSyncLogo();
@@ -1718,8 +1733,12 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
     adRenderPoster();
   }
   function adClose(){
-    adOverlay.classList.remove('show');
-    document.body.style.overflow = '';
+    if(adOverlay.classList.contains('closing')) return;
+    adOverlay.classList.add('closing');
+    setTimeout(function(){
+      adOverlay.classList.remove('show','closing');
+      document.body.style.overflow = '';
+    }, 230);
   }
   openAdBtn.addEventListener('click', adOpen);
   adBackBtn.addEventListener('click', adClose);
@@ -1777,29 +1796,38 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   window.addEventListener('load', adSyncLogo);
 
 
-  // --- Messages overlay ---
+  // --- Messages overlay (animated) ---
   (function(){
     var btn=document.getElementById('openMessagesBtn');
     if(!btn)return;
-    btn.onclick=function(){
+    function msgShow(){
       var ov=document.getElementById('msgOverlay');
       var fr=document.getElementById('msgFrame');
-      if(ov)ov.style.display='block';
-      if(fr)fr.src='https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+      if(!ov)return;
+      ov.classList.remove('closing');
+      ov.style.display='block';
+      if(fr&&(fr.getAttribute('src')==='about:blank'||!fr.getAttribute('src'))){
+        fr.src='https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+      }
       document.body.style.overflow='hidden';
-    };
+    }
+    function msgHide(){
+      var ov=document.getElementById('msgOverlay');
+      if(!ov||ov.classList.contains('closing'))return;
+      ov.classList.add('closing');
+      setTimeout(function(){
+        ov.style.display='none';
+        ov.classList.remove('closing');
+        document.body.style.overflow='';
+      },230);
+    }
+    btn.onclick=msgShow;
     var bk=document.getElementById('msgBackBtn');
-    if(bk)bk.onclick=function(){
-      document.getElementById('msgOverlay').style.display='none';
-      document.body.style.overflow='';
-    };
+    if(bk)bk.onclick=msgHide;
     document.addEventListener('keydown',function(e){
       if(e.key==='Escape'){
         var ov=document.getElementById('msgOverlay');
-        if(ov&&ov.style.display==='block'){
-          ov.style.display='none';
-          document.body.style.overflow='';
-        }
+        if(ov&&ov.style.display==='block') msgHide();
       }
     });
   })();
@@ -1812,193 +1840,161 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   var container = document.getElementById("ff-canvas");
   if(!container || typeof p5 === "undefined") return;
 
-  /* ForceFieldBackground — IST Trust Zone themed */
-  var img;
+  /* Calm ambient particle field — IST Trust Zone themed */
   var points = [];
   var palette = [];
-  var lastSpacing = -1, lastNoiseScale = -1, lastDensity = -1;
-  var lastHue = -1, lastSaturation = -1;
-  var magnifierX = 0, magnifierY = 0;
-  var magnifierInertia = 0.12;
+  var lastSpacing = -1, lastDensity = -1, lastHue = -1, lastSat = -1;
+  var mx = 0, my = 0, inertia = 0.14;
+  var W = 0, H = 0;
 
-  /* IST Trust Zone palette: ink blue + gold accents */
+  var SPACING = 18;        /* fewer, calmer particles = smooth 120fps */
+  var DENSITY = 1.5;
   var HUE = 210;
-  var SATURATION = 40;
-  var SPACING = 14;
-  var DENSITY = 1.8;
-  var MIN_STROKE = 1.5;
-  var MAX_STROKE = 4.5;
-  var FORCE_STRENGTH = 18;
-  var MAG_RADIUS = 160;
-  var FRICTION = 0.88;
-  var RESTORE_SPEED = 0.06;
-  var INVERT = false;
-  var THRESHOLD = 40;
-  var NOISE_SCALE = 0.006;
+  var SATURATION = 35;
+  var MIN_STROKE = 1.1;
+  var MAX_STROKE = 2.6;
+  var FORCE_STRENGTH = 24;
+  var MAG_RADIUS = 170;
+  var FRICTION = 0.90;
+  var RESTORE_SPEED = 0.05;
 
-  function generatePalette(h, s){
+  function generatePalette(){
     palette = [];
-    for(var i = 0; i < 12; i++){
-      var inter = i / 11;
-      var h2 = h + inter * 15 - 7;
-      var s2 = s * (0.6 + inter * 0.4);
-      var l = 35 + inter * 35;
-      palette.push("hsl(" + h2 + "," + s2 + "%," + l + "%)");
+    var base = [
+      ["hsl(210, 50%, 74%)", 0.30],
+      ["hsl(210, 45%, 64%)", 0.38],
+      ["hsl(210, 40%, 54%)", 0.38],
+      ["hsl(215, 45%, 44%)", 0.34],
+      ["hsl(42, 55%, 62%)", 0.32],
+      ["hsl(42, 50%, 52%)", 0.34]
+    ];
+    for(var i = 0; i < base.length; i++){
+      palette.push(base[i]);
     }
-    /* Add gold accent */
-    palette.push("hsl(42, 55%, 55%)");
-    palette.push("hsl(42, 45%, 45%)");
   }
-  generatePalette(HUE, SATURATION);
+  generatePalette();
+
+  function generatePoints(){
+    points = [];
+    var spacing = Math.max(SPACING, 8);
+    var density = Math.min(DENSITY, 2.5);
+    var rows = Math.floor(H / spacing);
+    var cols = Math.floor(W / spacing);
+    for(var r = 0; r < rows; r++){
+      for(var c = 0; c < cols; c++){
+        if(Math.random() > density) continue;
+        var x = c * spacing + spacing * 0.5;
+        var y = r * spacing + spacing * 0.5;
+        var n = Math.abs(Math.sin(c * 0.35 + r * 0.27) * 0.5) + 0.25;
+        var b = Math.min(1, n) * 255;
+        points.push({
+          x: x, y: y,
+          ox: x, oy: y,
+          vx: 0, vy: 0,
+          b: b,
+          ph: (c * 13.7 + r * 7.3) % (Math.PI * 2)
+        });
+      }
+    }
+    lastSpacing = SPACING;
+    lastDensity = DENSITY;
+  }
 
   var myP5 = new p5(function(p){
-    function processImage(){
-      if(!img || !img.width) return;
-      img.loadPixels();
-    }
-
-    function generatePoints(){
-      points = [];
-      if(!img || !img.width) return;
-      var safeSpacing = Math.max(SPACING, 5);
-      var w = p.width;
-      var h = p.height;
-      for(var x = 0; x < w; x += safeSpacing){
-        for(var y = 0; y < h; y += safeSpacing){
-          if(Math.random() > DENSITY) continue;
-          var nx = p.noise(x * NOISE_SCALE, y * NOISE_SCALE) - 0.5;
-          var ny = p.noise((x+500) * NOISE_SCALE, (y+500) * NOISE_SCALE) - 0.5;
-          var px = x + nx * safeSpacing;
-          var py = y + ny * safeSpacing;
-          points.push({
-            pos: p.createVector(px, py),
-            orig: p.createVector(px, py),
-            vel: p.createVector(0, 0)
-          });
-        }
-      }
-      lastSpacing = SPACING;
-      lastNoiseScale = NOISE_SCALE;
-      lastDensity = DENSITY;
-    }
-
-    function applyForceField(mx, my){
-      for(var i = 0; i < points.length; i++){
-        var pt = points[i];
-        var dx = pt.pos.x - mx;
-        var dy = pt.pos.y - my;
-        var d = Math.sqrt(dx*dx + dy*dy);
-        if(d < MAG_RADIUS && d > 0){
-          var f = FORCE_STRENGTH / Math.max(1, d);
-          pt.vel.x += (dx / d) * f;
-          pt.vel.y += (dy / d) * f;
-        }
-        pt.vel.x *= FRICTION;
-        pt.vel.y *= FRICTION;
-        pt.vel.x += (pt.orig.x - pt.pos.x) * RESTORE_SPEED;
-        pt.vel.y += (pt.orig.y - pt.pos.y) * RESTORE_SPEED;
-        pt.pos.x += pt.vel.x;
-        pt.pos.y += pt.vel.y;
-      }
-    }
-
-    p.preload = function(){
-      /* Generate a procedural gradient image instead of loading external */
-    };
 
     p.setup = function(){
       var canvas = p.createCanvas(container.clientWidth, container.clientHeight);
       canvas.parent("ff-canvas");
       p.pixelDensity(1);
-      p.noiseDetail(4, 0.5);
-
-      /* Create a procedural mountain-like image */
-      img = p.createGraphics(p.width, p.height);
-      img.loadPixels();
-      for(var x = 0; x < p.width; x++){
-        for(var y = 0; y < p.height; y++){
-          var n = p.noise(x * 0.003, y * 0.004);
-          var mountain = Math.pow(n, 1.5) * 255;
-          var gradient = p.map(y, 0, p.height, 0, 120);
-          var val = Math.min(255, mountain * 0.6 + gradient);
-          var idx = (x + y * p.width) * 4;
-          img.pixels[idx] = val;
-          img.pixels[idx+1] = val;
-          img.pixels[idx+2] = val;
-          img.pixels[idx+3] = 255;
-        }
-      }
-      img.updatePixels();
-      processImage();
+      p.frameRate(120);
+      W = p.width; H = p.height;
       generatePoints();
-      magnifierX = p.width / 2;
-      magnifierY = p.height / 2;
+      mx = W / 2; my = H / 2;
     };
 
     p.windowResized = function(){
       p.resizeCanvas(container.clientWidth, container.clientHeight);
-      /* Recreate procedural image */
-      img = p.createGraphics(p.width, p.height);
-      img.loadPixels();
-      for(var x = 0; x < p.width; x++){
-        for(var y = 0; y < p.height; y++){
-          var n = p.noise(x * 0.003, y * 0.004);
-          var mountain = Math.pow(n, 1.5) * 255;
-          var gradient = p.map(y, 0, p.height, 0, 120);
-          var val = Math.min(255, mountain * 0.6 + gradient);
-          var idx = (x + y * p.width) * 4;
-          img.pixels[idx] = val;
-          img.pixels[idx+1] = val;
-          img.pixels[idx+2] = val;
-          img.pixels[idx+3] = 255;
-        }
-      }
-      img.updatePixels();
-      processImage();
+      W = p.width; H = p.height;
       generatePoints();
     };
 
     p.draw = function(){
-      if(!img) return;
-      p.background(15, 22, 34);
-      if(HUE !== lastHue || SATURATION !== lastSaturation){
-        generatePalette(HUE, SATURATION);
-        lastHue = HUE;
-        lastSaturation = SATURATION;
-      }
-      if(SPACING !== lastSpacing || NOISE_SCALE !== lastNoiseScale || DENSITY !== lastDensity){
-        generatePoints();
-      }
-      magnifierX = p.lerp(magnifierX, p.mouseX, magnifierInertia);
-      magnifierY = p.lerp(magnifierY, p.mouseY, magnifierInertia);
-      applyForceField(magnifierX, magnifierY);
-      img.loadPixels();
-      p.noFill();
-      for(var i = 0; i < points.length; i++){
-        var pt = points[i];
-        var x = pt.pos.x;
-        var y = pt.pos.y;
-        var px = p.constrain(Math.floor(x), 0, img.width - 1);
-        var py = p.constrain(Math.floor(y), 0, img.height - 1);
-        var idx = (px + py * img.width) * 4;
-        var brightness = img.pixels[idx];
-        if(brightness === undefined) continue;
-        var show = INVERT ? brightness < THRESHOLD : brightness > THRESHOLD;
-        if(show){
-          var shadeIdx = Math.floor(p.map(brightness, 0, 255, 0, palette.length - 1));
-          shadeIdx = p.constrain(shadeIdx, 0, palette.length - 1);
-          var sz = p.map(brightness, 0, 255, MIN_STROKE, MAX_STROKE);
-          var d = p.dist(x, y, magnifierX, magnifierY);
-          if(d < MAG_RADIUS){
-            sz *= p.map(d, 0, MAG_RADIUS, 1.8, 1);
-          }
-          if(palette[shadeIdx]){
-            p.stroke(palette[shadeIdx]);
-            p.strokeWeight(sz);
-            p.point(x, y);
-          }
+      var ctx = p.drawingContext;
+      var w = p.width, h = p.height;
+
+      /* Soft calm deep-navy gradient */
+      var g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, "#0E2037");
+      g.addColorStop(0.55, "#16314E");
+      g.addColorStop(1, "#1D3D5F");
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+
+      /* Warm ambient glow (keeps it gentle, non-harsh) */
+      var glow = ctx.createRadialGradient(w * 0.5, h * 0.42, 10, w * 0.5, h * 0.42, Math.max(w, h) * 0.55);
+      glow.addColorStop(0, "rgba(180,144,63,0.055)");
+      glow.addColorStop(1, "rgba(180,144,63,0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, w, h);
+
+      /* Smooth cursor magnet */
+      mx = mx + (p.mouseX - mx) * inertia;
+      my = my + (p.mouseY - my) * inertia;
+
+      var t = p.millis() * 0.00022;
+
+      /* Physics pass */
+      var pts = points;
+      var n = pts.length;
+      for(var i = 0; i < n; i++){
+        var pt = pts[i];
+        var dx = pt.x - mx;
+        var dy = pt.y - my;
+        var d2 = dx * dx + dy * dy;
+        var d = Math.sqrt(d2);
+        if(d < MAG_RADIUS && d > 0.001){
+          var f = FORCE_STRENGTH / d;
+          pt.vx += (dx / d) * f;
+          pt.vy += (dy / d) * f;
         }
+        pt.vx *= FRICTION;
+        pt.vy *= FRICTION;
+        pt.vx += (pt.ox - pt.x) * RESTORE_SPEED;
+        pt.vy += (pt.oy - pt.y) * RESTORE_SPEED;
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+
+        /* Gentle ambient drift: whole field stays alive */
+        pt.x += Math.sin(t + pt.ph) * 0.35;
+        pt.y += Math.cos(t * 0.8 + pt.ph * 1.3) * 0.35;
       }
+
+      /* Draw — grouped by color, batched fillRect for max speed */
+      ctx.fillStyle = palette[0][0];
+      var curColor = "";
+      var lastIdx = -1;
+      for(var j = 0; j < n; j++){
+        var q = pts[j];
+        var b = q.b;
+        var idx = b > 170 ? 0 : b > 130 ? 1 : b > 90 ? 2 : b > 55 ? 3 : b > 30 ? 4 : 5;
+        if(idx !== lastIdx){
+          curColor = palette[idx][0];
+          ctx.globalAlpha = palette[idx][1];
+          ctx.fillStyle = curColor;
+          lastIdx = idx;
+        }
+        var sz = MIN_STROKE + (b / 255) * (MAX_STROKE - MIN_STROKE);
+        /* Punch up particle size near the cursor for a gentle magnify feel */
+        var ddx = q.x - mx;
+        var ddy = q.y - my;
+        var dist = Math.sqrt(ddx * ddx + ddy * ddy);
+        if(dist < MAG_RADIUS){
+          var f2 = 1 + (1 - dist / MAG_RADIUS) * 0.7;
+          sz *= f2;
+        }
+        ctx.fillRect(q.x - sz / 2, q.y - sz / 2, sz, sz);
+      }
+      ctx.globalAlpha = 1;
     };
   });
 })();
