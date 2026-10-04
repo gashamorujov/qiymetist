@@ -1827,6 +1827,14 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
   window.addEventListener('load', adSyncLogo);
 
 
+  /* --- Messages app source ---
+     Production: the deployed GitHub Pages app.
+     Localhost:  the sibling repo served on :8001, so local changes are
+     visible instead of the deployed build. No effect in production. */
+  var MESSAGES_URL=(location.hostname==='localhost'||location.hostname==='127.0.0.1')
+    ? 'http://'+location.hostname+':8001/'
+    : 'https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+
   // --- Messages overlay (animated) ---
   (function(){
     var btn=document.getElementById('openMessagesBtn');
@@ -1839,7 +1847,7 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
       ov.classList.add('open');
       ov.style.display='block';
       if(fr&&(fr.getAttribute('src')==='about:blank'||!fr.getAttribute('src'))){
-        fr.src='https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+        fr.src=MESSAGES_URL;
       }
       document.body.style.overflow='hidden';
     }
