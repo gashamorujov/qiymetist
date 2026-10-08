@@ -1828,12 +1828,9 @@ statHours.textContent = totalHours.toLocaleString("az-AZ");
 
 
   /* --- Messages app source ---
-     Production: the deployed GitHub Pages app.
-     Localhost:  the sibling repo served on :8001, so local changes are
-     visible instead of the deployed build. No effect in production. */
-  var MESSAGES_URL=(location.hostname==='localhost'||location.hostname==='127.0.0.1')
-    ? 'http://'+location.hostname+':8001/'
-    : 'https://gashamorujov.github.io/kurs-ve-imtahan-mesajlari/';
+     The messages app is bundled locally so this section keeps working
+     without depending on an external GitHub Pages deployment. */
+  var MESSAGES_URL=new URL('messages/index.html',document.baseURI).href;
 
   // --- Messages overlay (animated) ---
   (function(){

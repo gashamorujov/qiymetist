@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kurs və İmtahan Mesajları</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#0f172a;--primary-mid:#1e293b;--primary-light:#334155;
+  --accent:#2563eb;--accent-hover:#1d4ed8;--accent-soft:#eff6ff;
+  --bg:#f8fafc;--card:#ffffff;--text:#0f172a;--text-sec:#64748b;
+  --border:#e2e8f0;
+  --success:#16a34a;
+  --shadow-xs:0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg:0 20px 60px rgba(0,0,0,.15);
+  --radius:14px;--radius-sm:10px;--radius-xs:8px;
+  --header-h:60px;
+}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* Header */
+.header{position:sticky;top:0;z-index:90;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(226,232,240,.6);padding:0 16px}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:center;height:var(--header-h);gap:12px}
+.logo{font-size:1rem;font-weight:800;color:var(--primary);letter-spacing:-.02em;display:none}
+.tab-bar{display:flex;background:#f1f5f9;border-radius:var(--radius-sm);padding:4px;gap:2px;width:100%}
+.tab-btn{flex:1;padding:11px 14px;border:none;background:transparent;border-radius:10px;font-size:.85rem;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);white-space:nowrap;text-align:center;position:relative}
+.tab-btn.active{background:var(--card);color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.08);font-weight:700;transform:scale(1.02)}
+.tab-btn:not(.active):hover{color:var(--text);background:rgba(37,99,235,.05)}
+
+/* Main */
+.main{max-width:960px;margin:0 auto;padding:20px 20px 40px;min-height:calc(100vh - var(--header-h))}
+
+/* Sections */
+.section{display:none;animation:fadeUp .4s cubic-bezier(.4,0,.2,1)}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Search */
+.search-wrap{margin-bottom:16px}
+.search-box{position:relative}
+.search-box input{width:100%;padding:14px 16px 14px 46px;border:1.5px solid var(--border);border-radius:12px;font-size:.95rem;background:var(--card);color:var(--text);outline:none;transition:all .25s ease;font-weight:500}
+.search-box input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(37,99,235,.12),0 2px 8px rgba(37,99,235,.08)}
+.search-box input::placeholder{color:#94a3b8;font-weight:400}
+.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none;transition:color .2s ease}
+
+/* Course list */
+.course-list{display:flex;flex-direction:column;gap:8px}
+.course-item{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.03);animation:itemSlideIn .4s ease backwards}
+.course-item:nth-child(1){animation-delay:.05s}
+.course-item:nth-child(2){animation-delay:.1s}
+.course-item:nth-child(3){animation-delay:.15s}
+.course-item:nth-child(4){animation-delay:.2s}
+.course-item:nth-child(5){animation-delay:.25s}
+.course-item:nth-child(6){animation-delay:.3s}
+.course-item:nth-child(7){animation-delay:.35s}
+.course-item:nth-child(8){animation-delay:.4s}
+.course-item:nth-child(9){animation-delay:.45s}
+.course-item:nth-child(10){animation-delay:.5s}
+@keyframes itemSlideIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.course-item:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(37,99,235,.12);transform:translateY(-1px)}
+.course-num{display:flex;align-items:center;justify-content:center;min-width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent);font-size:.78rem;font-weight:800;flex-shrink:0;transition:all .3s ease}
+.course-item:hover .course-num{background:var(--accent);color:#fff;transform:scale(1.08);box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.course-info{flex:1;min-width:0}
+.course-name{font-size:.9rem;font-weight:600;color:var(--text);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.course-sub{font-size:.75rem;color:var(--text-sec);margin-top:2px;font-weight:500}
+.course-arrow{color:#cbd5e0;flex-shrink:0;transition:all .3s cubic-bezier(.4,0,.2,1);opacity:.5}
+.course-item:hover .course-arrow{color:var(--accent);transform:translateX(4px);opacity:1}
+.course-badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:.68rem;font-weight:700;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#b45309;margin-top:4px;width:fit-content;box-shadow:0 1px 4px rgba(180,83,9,.15)}
+
+/* Empty state */
+.empty-state{text-align:center;padding:48px 20px;color:var(--text-sec)}
+.empty-state p{font-size:.95rem;font-weight:500}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;visibility:hidden;transition:all .25s ease}
+.modal-overlay.open{opacity:1;visibility:visible}
+.modal-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.modal{position:relative;z-index:1;width:100%;max-width:560px;max-height:90vh;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column;transform:scale(.95) translateY(10px);transition:transform .25s ease}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-head{padding:20px 24px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.modal-title{font-size:1rem;font-weight:700;color:var(--primary);line-height:1.4;flex:1}
+.modal-close{width:36px;height:36px;border-radius:var(--radius-xs);border:1.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sec);transition:all .2s;flex-shrink:0}
+.modal-close:hover{background:#f1f5f9;color:var(--text)}
+.modal-body{padding:20px 24px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.branch-selector{display:flex;gap:8px;margin-bottom:16px}
+.branch-btn{flex:1;padding:11px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--card);font-size:.88rem;font-weight:600;cursor:pointer;text-align:center;transition:all .2s;color:var(--text-sec)}
+.branch-btn.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.modal-inputs{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.modal-inputs label{font-size:.75rem;font-weight:700;color:var(--text-sec);text-transform:uppercase;letter-spacing:.04em}
+.modal-inputs input{padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-xs);font-size:.95rem;background:var(--card);color:var(--text);outline:none;transition:all .2s;width:100%}
+.modal-inputs input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.modal-input-row{display:flex;gap:12px}
+.modal-input-row>div{flex:1}
+.msg-preview{background:#f8fafc;border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:16px;font-size:.9rem;line-height:1.75;white-space:pre-wrap;word-break:break-word;color:var(--text);min-height:80px}
+.modal-footer{padding:16px 24px 20px;border-top:1px solid var(--border);display:flex;flex-shrink:0}
+.btn-copy{display:flex;align-items:center;justify-content:center;width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--accent),#1d4ed8);color:#fff;font-size:.92rem;font-weight:700;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:0 4px 14px rgba(37,99,235,.3)}
+.btn-copy:hover{background:linear-gradient(135deg,#1d4ed8,#1e40af);box-shadow:0 6px 20px rgba(37,99,235,.4);transform:translateY(-1px)}
+.btn-copy:active{transform:scale(.98)}
+
+/* Toast */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--primary);color:#fff;padding:12px 24px;border-radius:var(--radius-sm);font-weight:700;font-size:.9rem;box-shadow:var(--shadow-lg);z-index:300;transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .35s ease;opacity:0;pointer-events:none;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast-icon{width:20px;height:20px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center}
+
+/* ===== ADMIN PANEL ===== */
+.admin-panel{position:fixed;inset:0;z-index:400;background:var(--bg);display:none;flex-direction:column;overflow-y:auto}
+.admin-panel.open{display:flex}
+.admin-header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.admin-title{font-size:1.05rem;font-weight:800;color:var(--primary)}
+.admin-back{padding:8px 16px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--card);font-size:.85rem;font-weight:600;cursor:pointer;color:var(--text-sec);transition:all .2s}
+.admin-back:hover{background:#f1f5f9;color:var(--text)}
+.admin-body{max-width:960px;margin:0 auto;width:100%;padding:20px;flex:1}
+.admin-section-label{font-size:.72rem;font-weight:800;color:var(--text-sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;margin-top:20px}
+.admin-cat-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.admin-cat-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s}
+.admin-cat-item:hover{border-color:var(--accent)}
+.admin-cat-name{font-size:.9rem;font-weight:600;color:var(--text)}
+.admin-cat-count{font-size:.78rem;color:var(--text-sec);font-weight:500}
+.admin-add-btn{width:100%;padding:12px;border:2px dashed var(--border);border-radius:var(--radius-sm);background:transparent;font-size:.88rem;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .2s}
+.admin-add-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.admin-msg-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.admin-msg-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm)}
+.admin-msg-content{flex:1;min-width:0}
+.admin-msg-title{font-size:.85rem;font-weight:600;color:var(--text);line-height:1.45;margin-bottom:4px}
+.admin-msg-preview{font-size:.78rem;color:var(--text-sec);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap}
+.admin-actions{display:flex;gap:6px;flex-shrink:0}
+.admin-action-btn{width:34px;height:34px;border-radius:var(--radius-xs);border:1.5px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-sec);transition:all .15s}
+.admin-action-btn:hover{background:#f1f5f9}
+.admin-action-btn.danger:hover{border-color:#ef4444;color:#ef4444;background:#fef2f2}
+.admin-input-group{margin-bottom:12px}
+.admin-input-group label{display:block;font-size:.75rem;font-weight:700;color:var(--text-sec);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.admin-input-group input,.admin-input-group textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-xs);font-size:.9rem;background:var(--card);color:var(--text);outline:none;transition:border-color .2s;font-family:inherit;line-height:1.6}
+.admin-input-group input:focus,.admin-input-group textarea:focus{border-color:var(--accent)}
+.admin-input-group textarea{min-height:140px;resize:vertical;white-space:pre-wrap}
+.admin-form-footer{display:flex;gap:10px;margin-top:16px}
+.admin-save{flex:1;padding:12px;border:none;border-radius:var(--radius-xs);background:var(--accent);color:#fff;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.admin-save:hover{background:var(--accent-hover)}
+.admin-cancel{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius-xs);background:var(--card);font-size:.9rem;font-weight:600;cursor:pointer;color:var(--text-sec);transition:all .2s}
+.admin-cancel:hover{background:#f1f5f9}
+.admin-sub-view{display:none}
+.admin-sub-view.active{display:block}
+
+@media(min-width:768px){
+  .course-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .logo{display:block}
+  .header-inner{justify-content:space-between}
+  .tab-bar{width:auto;min-width:320px}
+  .tab-btn{padding:10px 24px}
+}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:#cbd5e0;border-radius:3px}
+
+/* ===== Axtarış vurğusu (mark) ===== */
+mark{background:#fef08a;color:inherit;border-radius:3px;padding:0 1px;font-weight:700}
+
+/* ===== Tapıntı sayacı ===== */
+.search-meta{display:flex;justify-content:flex-end;align-items:center;gap:10px;font-size:.72rem;font-weight:600;color:var(--text-sec);margin:-8px 4px 10px;min-height:14px}
+
+/* ===== Sinxronizasiya vəziyyəti göstəricisi ===== */
+.sync-state{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:700;color:var(--text-sec);background:#f1f5f9;border:1px solid var(--border);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.sync-state::before{content:"";width:7px;height:7px;border-radius:50%;background:#94a3b8;flex-shrink:0}
+.sync-state[data-kind="ok"]::before{background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.sync-state[data-kind="error"]::before{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.15)}
+
+/* ===== Header düzəlişi (sync göstəricisi üçün yer) ===== */
+.header-inner{justify-content:center}
+.header-sync{position:absolute;right:16px;top:50%;transform:translateY(-50%)}
+@media (max-width:560px){
+  .header-sync{display:none}
+  .search-meta{font-size:.7rem}
+}
+
+/* ===== Toast mətn elementi ===== */
+.toast-label{font-weight:600}
+
+/* ===== Admin: əlavə düyməsi id ilə idarə olunur ===== */
+.admin-add-btn[hidden]{display:none}
+
+/* ===== Kurs adı vurğusu zamanı dizayn qorunması ===== */
+.course-name mark,.course-sub mark{background:#fef08a}
+
+/* ===== Fokus (klaviatura) ===== */
+.course-item:focus-visible,.admin-cat-item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ===== Mobil toxunma hedefləri (>= 44px) ===== */
+@media (max-width:560px){
+  .tab-btn{min-height:44px;display:flex;align-items:center;justify-content:center}
+  .search-box input{padding:16px 16px 16px 46px}
+  .course-item{min-height:56px}
+  .admin-back{min-height:44px;padding:12px 20px;display:inline-flex;align-items:center;justify-content:center}
+  .admin-action-btn{width:44px;height:44px}
+  .admin-add-btn{min-height:52px}
+  .admin-save,.admin-cancel{min-height:48px}
+  .admin-cat-item{min-height:56px}
+  .admin-input-group input,.admin-input-group textarea{padding:14px}
+  .modal-close{width:40px;height:40px}
+  .btn-copy{min-height:52px}
+  .msg-back{min-height:40px}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">Mesajlar</div>
+    <div class="sync-state header-sync" id="syncState" data-kind="ok">Onlayn</div>
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tabMsg" onclick="switchTab('messages')">Mesajlar</button>
+      <button class="tab-btn" id="tabExam" onclick="switchTab('exams')">İmtahanlar</button>
+      <button class="tab-btn" id="tabMixed" onclick="switchTab('mixed')">Qarışıq</button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="section active" id="sectionMessages">
+    <div class="search-wrap"><div class="search-box"><svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="searchMessages" placeholder="Kurs axtar..." autocomplete="off"></div></div>
+    <div class="search-meta"><span class="result-count" data-count-for="msgList"></span></div>
+    <div class="course-list" id="msgList"></div>
+  </div>
+
+  <div class="section" id="sectionExams">
+    <div class="search-wrap"><div class="search-box"><svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="searchExams" placeholder="Kurs axtar..." autocomplete="off"></div></div>
+    <div class="search-meta"><span class="result-count" data-count-for="examList"></span></div>
+    <div class="course-list" id="examList"></div>
+  </div>
+
+  <div class="section" id="sectionMixed">
+    <div class="search-wrap"><div class="search-box"><svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="searchMixed" placeholder="Mesaj axtar..." autocomplete="off"></div></div>
+    <div class="search-meta"><span class="result-count" data-count-for="mixedList"></span></div>
+    <div class="course-list" id="mixedList"></div>
+  </div>
+</div>
+
+<!-- Message Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <span class="modal-title" id="modalTitle"></span>
+      <button class="modal-close" onclick="closeModal()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer"><button class="btn-copy" onclick="copyMessage()">KOPYALA</button></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span class="toast-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span><span class="toast-label">Mesaj kopyalandı</span></div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-header">
+    <span class="admin-title">Admin Panel</span>
+    <button class="admin-back" onclick="closeAdmin()">Geri qayıt</button>
+  </div>
+  <div class="admin-body">
+
+    <!-- Main admin view -->
+    <div class="admin-sub-view active" id="adminMainView">
+      <div class="admin-section-label">Bölmələr</div>
+      <div class="admin-cat-grid" id="adminCategories"></div>
+    </div>
+
+    <!-- Category detail view -->
+    <div class="admin-sub-view" id="adminDetailView">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <button class="admin-back" onclick="showAdminMain()" style="padding:8px 12px;">&larr;</button>
+        <span class="admin-title" id="adminDetailTitle"></span>
+      </div>
+      <div class="admin-msg-list" id="adminMsgItems"></div>
+      <button class="admin-add-btn" id="adminAddItemBtn" onclick="openItemForm(null)" style="margin-top:12px;">+ Yeni mesaj əlavə et</button>
+    </div>
+
+    <!-- Item form -->
+    <div class="admin-sub-view" id="adminFormView">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <button class="admin-back" onclick="showAdminDetail()" style="padding:8px 12px;">&larr;</button>
+        <span class="admin-title" id="adminFormTitle"></span>
+      </div>
+      <div class="admin-input-group"><label>Başlıq / Ad</label><input type="text" id="formItemTitle"></div>
+      <div class="admin-input-group"><label>Mesaj mətni</label><textarea id="formItemContent"></textarea></div>
+      <div class="admin-form-footer">
+        <button class="admin-save" onclick="saveItem()">Yadda saxla</button>
+        <button class="admin-cancel" onclick="showAdminDetail()">Ləğv et</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* =============================================================================
+   Kurs ve Imtahan Mesajlari - tetbiq qati
+   ---------------------------------------------------------------------------
+   1) Konfiqurasiya        5) Store (vahid menbe, dedup, realtime)
+   2) Statik melumat       6) Axaris muherriqi (indekslenmis)
+   3) Komekciler           7) UI: tablar / siyahi / modal
+   4) Yaddas adapterleri   8) UI: admin panel  -  9) Bootstrap
+   ========================================================================== */
+
+/* ============================ 1) KONFIGURASIYA ============================ */
+
+/* Davamli (payliqli) verilenler bazası ucun Supabase konfigurasiyasi.
+   Bu iki xaneni doldurduqda tetbiq avtomatik real baza + realtime
+   kanalina kecir; bos buraxilsa tetbiq localStorage ile islemeye davam edir
+   (sayt hec bir sey qopmadan isleyen veziyyetde qalir).
+
+   | Satirlar (SQL) `schema.sql` faylindadir - bir defe Supabase SQL Editor-da
+   | icra edin. Sonra cevveli "Realtime" bolmesinden Publication-a qosin. */
+const BACKEND = {
+  supabaseUrl:    "",  /* https://xxxxxxxxxxxx.supabase.co */
+  supabaseAnonKey:"",  /* anon / publishable acar */
+  table:          "kurs_messages"
+};
+
+const ADMIN_CODE    = "1006";
+const DB_VERSION    = 6;
+const STORAGE_KEY   = "kurs_db_v6";
+const SYNC_CHANNEL  = "kurs-db-sync";
+const SUPABASE_CDN  = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js";
+
+const DEFAULT_COURSES = [
+  {id:1,name:"Əmniyyətli İdarəetmə haqqında Beynəlxalq Məcəllə",abbr:"SP",price:235,total:251,duration:"2 gün"},
+  {id:2,name:"Gəminin Mühafizəsi üzrə ümumi hazırlıq və təlimat",abbr:"251SI",price:144,total:160,duration:"1 gün"},
+  {id:3,name:"Gəminin Mühafizəsi üzrə müəyyən edilmiş vəzifələrə malik şəxslərin hazırlığı",abbr:"160SH",price:235,total:251,duration:"2 gün"},
+  {id:4,name:"Gəmi mühafizəsi üzrə məsul Şəxs",abbr:"251SG",price:235,total:251,duration:"3 gün"},
+  {id:5,name:"Bütün dənizçilər üçün təhlükəsizlik üzrə tanışlıq, ilkin hazırlıq və təlimat",abbr:"251SO",dualBranch:true,price:650,total:666,duration:"10 gün"},
+  {id:6,name:"Kapitan Körpüsü Resurslarının İdarə Olunması",abbr:"666SW",price:400,total:416,duration:"6 gün"},
+  {id:7,name:"Gəminin İdarə Olunması və Manevr Edilməsi",abbr:"416SV",price:350,total:366,duration:"5 gün"},
+  {id:8,name:"Radar, ARPA, kapitan körpüsü komandası və axtarış-xilasetmə (idarəetmə səviyyəsi)",abbr:"366SQ",price:611,total:627,duration:"5 gün"},
+  {id:9,name:"Radar müşahidəsi və təsviri, ARPA-nın istismarı (operativ səviyyə)",abbr:"627SR",price:900,total:916,duration:"13 gün"},
+  {id:10,name:"Elektron Xəritə Displeyinin və İnformasiya Sistemlərinin İstismar Qaydaları (ECDIS)",abbr:"916SZ",price:350,total:366,duration:"5 gün"},
+  {id:11,name:"Sərnişinlərin, yükün və gəmi gövdəsinin təhlükəsizliyi üzrə hazırlıq (Ro-Ro)",abbr:"366SF",price:300,total:316,duration:"3 gün"},
+  {id:12,name:"Sərnişinlərə bilavasitə xidmət göstərən heyət üzvləri üçün təhlükəsizlik üzrə hazırlıq",abbr:"316SD",price:235,total:251,duration:"1 gün"},
+  {id:13,name:"İzdihamın idarə olunması üzrə hazırlıq",abbr:"251SC",price:235,total:251,duration:"2 gün"},
+  {id:14,name:"Böhran zamanı idarəetmə və insan davranışı üzrə hazırlıq",abbr:"251SE",price:235,total:251,duration:"2 gün"},
+  {id:15,name:"Gəmi qaz analizatorları və onların istismarı",abbr:"251ST",price:235,total:251,duration:"1 gün"},
+  {id:16,name:"İnert qaz sistemi",abbr:"251SX",price:235,total:251,duration:"2 gün"},
+  {id:17,name:"Gəmidə ilk tibbi yardım",abbr:"251SN",price:300,total:316,duration:"5 gün"},
+  {id:18,name:"Gəmidə tibbi nəzarət",abbr:"316SM",price:350,total:366,duration:"6 gün"},
+  {id:19,name:"Qlobal Dəniz Fəlakət və Əmniyyətli Rabitə Sisteminin Ümumi Operatoru",abbr:"366DQ",price:1050,total:1066,duration:"14 gün"},
+  {id:20,name:"Neft və kimyəvi maddələr daşıyan tankerlərdə yük əməliyyatına dair ilkin hazırlıq və kvalifikasiya",abbr:"1066SA",price:320,total:336,duration:"6 gün"},
+  {id:21,name:"Neft tankerlərdə yük əməliyyatına dair geniş proqram üzrə hazırlıq",abbr:"336SB",price:350,total:366,duration:"7 gün"},
+  {id:22,name:"Kimyəvi maddələr daşıyan tankerlərdə yük əməliyyatına dair geniş proqram üzrə hazırlıq",abbr:"366AS",price:370,total:386,duration:"8 gün"},
+  {id:23,name:"Təhlükəli və zərərli yüklərin daşınması",abbr:"386SK",price:400,total:416,duration:"5 gün"},
+  {id:24,name:"Maşın şöbəsinin resurslarının idarə olunması",abbr:"416ER",price:300,total:316,duration:"5 gün"},
+  {id:25,name:"Liderlik və birgə iş fəaliyyəti",abbr:"316DL",price:300,total:316,duration:"3 gün"},
+  {id:26,name:"Yanğınla mübarizə geniş proqram üzrə",abbr:"316SJ",price:350,total:366,duration:"4 gün"},
+  {id:27,name:"Sürətli olmayan xilasedici qayıq, növbətçi qayıq və sallar üzrə mütəxəssis",abbr:"366SL",dualBranch:true,price:300,total:316,duration:"4 gün"},
+  {id:28,name:"Sürətli xilasetmə qayıqları üzrə mütəxəssis",abbr:"316SU",price:300,total:316,duration:"3 gün"}
+];
+const BRANCHES = {
+  elmler:{name:"Elmlər",map:"https://maps.app.goo.gl/Dc2B434XsM8aTFgu8"},
+  ramana:{name:"Ramana",map:"https://maps.app.goo.gl/WuJ8NdbjYYQXct5D6"}
+};
+
+const DEFAULT_MIXED = [
+  {id:"m1",title:"Sənəd tələbi",content:"Salam, hər vaxtınız xeyir.\n\nZəhmət olmasa, aşağıda qeyd etdiyim sənədləri göndərərsiniz:\n\n* Şəxsiyyət vəsiqəsinin ön və arxa tərəfi\n* Tibbi kitabçanın şəkil olan hissəi və təkrar müayinədən keçmə hissəsi\n* Diplomun şəkli"},
+  {id:"m2",title:"6–9 aylıq kurslar haqqında",content:"Salam.\n\n6–9 aylıq kurslar hazırda fəaliyyət göstərmir. Kursların nə vaxt yenidən açılacağı ilə bağlı isə hələlik dəqiq məlumat yoxdur.\n\nBu kurslara yazılmaq üçün Azərbaycan Dövlət Dəniz Akademiyasını (ADDA) və ya Azərbaycan Dövlət Dənizçilik Kollecini (ADK) bitirmək tələb olunur."},
+  {id:"m3",title:"Ödəniş xəbərdarlığı",content:"Salam,\nX kurs üzrə ödənişiniz olunmayıb.\nZəhmət olmasa, ödənişi nə vaxt edəcəyiniz barədə məlumat verməyinizi xahiş edirik.\nNəzərinizə çatdırırıq ki, ödəniş edilmədiyi təqdirdə imtahanda iştirakınız mümkün olmayacaq."}
+];
+
+/* ============================== 3) KOMEKCHILER ============================ */
+
+/* Unikal id. Movcud id-lere deymemek ucun addim-addim yoxlayir. */
+function uid(taken){
+  let id;
+  do{
+    id = (window.crypto && typeof crypto.randomUUID === "function")
+      ? crypto.randomUUID().replace(/-/g,"").slice(0,12)
+      : Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+  } while(taken && taken.has(id));
+  return id;
+}
+
+/* Axaris ucun normalizasiya (locale-aware, kicik herf). */
+function norm(value){
+  return String(value == null ? "" : value).toLocaleLowerCase("az-AZ");
+}
+
+/* HTML qacisi - hem metn, hem atribut kontekstinde tehlikesiz. */
+function escapeHtml(value){
+  return String(value == null ? "" : value)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+
+/* Axaris tapintisini <mark> ile vurulayir (metn evvelceden qacislanir). */
+function highlight(text, tokens){
+  const src = String(text == null ? "" : text);
+  if(!tokens.length) return escapeHtml(src);
+  const alts = tokens
+    .slice().sort(function(a,b){ return b.length - a.length; })
+    .map(function(t){ return t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"); })
+    .filter(Boolean);
+  if(!alts.length) return escapeHtml(src);
+  const re = new RegExp("(" + alts.join("|") + ")", "gi");
+  let out = "", last = 0, m;
+  while((m = re.exec(src)) !== null){
+    if(m[0] === ""){ re.lastIndex++; continue; }
+    out += escapeHtml(src.slice(last, m.index)) + "<mark>" + escapeHtml(m[0]) + "</mark>";
+    last = m.index + m[0].length;
+  }
+  return out + escapeHtml(src.slice(last));
+}
+
+function clone(v){ return JSON.parse(JSON.stringify(v)); }
+function asArray(v){ return Array.isArray(v) ? v : []; }
+function text(v, max){ var s = String(v == null ? "" : v); return max ? s.slice(0, max) : s; }
+
+/* Eyni id ve ya eyni (basliq + metn) imzali setirleri silir (req. 6). */
+function dedupe(list){
+  const seenId = new Set(), seenSig = new Set(), out = [];
+  for(const item of list){
+    if(!item || item.id == null) continue;
+    const id = String(item.id);
+    const sig = norm(item.title != null ? item.title : item.name) + " " +
+                norm(item.content != null ? item.content : item.abbr);
+    if(seenId.has(id) || seenSig.has(sig)) continue;
+    seenId.add(id); seenSig.add(sig);
+    out.push(item);
+  }
+  return out;
+}
+
+/* ======================= 4) YADDAS ADAPTERLERI ============================ */
+
+/* Butun melumati tenzimleyir, catismayan saheleri tamamlayir,
+   tekrarlari (eyni id / eyni mezmun) atir.
+   Kurslarda admin deyisiklikleri qorunur - evvelki versiya her yuklemede
+   kurslari defoltlarla evez edib redakte olunmus melumati silirdi. */
+function sanitize(stored){
+  const base = {
+    version : DB_VERSION,
+    courses : clone(DEFAULT_COURSES),
+    mixed   : clone(DEFAULT_MIXED),
+    custom  : [],
+    removed : { courses: [], mixed: [] }
+  };
+  if(!stored || typeof stored !== "object") return base;
+
+  const rmCourses = new Set(asArray(stored.removed && stored.removed.courses).map(String));
+  const rmMixed   = new Set(asArray(stored.removed && stored.removed.mixed).map(String));
+  base.removed.courses = [...rmCourses];
+  base.removed.mixed   = [...rmMixed];
+
+  /* --- kurslar: defolt + admin deyisiklikleri --- */
+  const storedById = new Map();
+  asArray(stored.courses).forEach(function(c){
+    if(c && c.id != null && typeof c.name === "string") storedById.set(String(c.id), c);
+  });
+  const merged = new Map();
+  base.courses.forEach(function(c){
+    const key = String(c.id);
+    if(rmCourses.has(key)) return;
+    const s = storedById.get(key);
+    merged.set(key, s ? Object.assign({}, c, s) : c);
+  });
+  /* bazada olmayan, yalniz admin terfinden elave olunan kurslar */
+  storedById.forEach(function(v,k){
+    if(!merged.has(k) && !rmCourses.has(k)) merged.set(k, v);
+  });
+  base.courses = dedupe([...merged.values()].sort(function(a,b){ return Number(a.id) - Number(b.id); }));
+
+  /* --- qarisig mesajlar --- */
+  const storedMixed = asArray(stored.mixed).filter(function(m){
+    return m && m.id != null && typeof m.title === "string";
+  });
+  base.mixed = dedupe(storedMixed.length ? storedMixed : base.mixed)
+    .filter(function(m){ return !rmMixed.has(String(m.id)); });
+
+  /* --- ferdi basliqlar --- */
+  const catIds = new Set();
+  base.custom = asArray(stored.custom).filter(function(c){
+    if(!c || c.id == null || typeof c.name !== "string") return false;
+    const key = String(c.id);
+    if(catIds.has(key)) return false;
+    catIds.add(key);
+    return true;
+  }).map(function(c){
+    return {
+      id: String(c.id),
+      name: text(c.name, 120),
+      items: dedupe(asArray(c.items).filter(function(i){
+        return i && i.id != null && typeof i.title === "string";
+      }).map(function(i){
+        return { id:String(i.id), title:text(i.title, 200), content:text(i.content, 20000) };
+      }))
+    };
+  });
+
+  return base;
+}
+
+/* ------------------------------ Local adapter ----------------------------- */
+/* localStorage + BroadcastChannel. Yazma emeliyatlari birlestirilir ve
+   yazma sayi azaldilir; eyni brauzerdeki butun tablolar real vaxtda
+   sinxronlasir. Hec bir sebeke sorgusu edilmir. */
+const LocalAdapter = {
+  name: "local",
+  _ch: null,
+
+  async load(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){
+      console.warn("[store] localStorage oxunmasi ugursuz oldu:", e);
+      return null;
+    }
+  },
+
+  async save(data){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      if(this._ch){ try{ this._ch.postMessage({ type:"db", at:Date.now() }); }catch(e){} }
+    }catch(e){
+      console.warn("[store] localStorage yazilmasi ugursuz oldu:", e);
+      throw e;
+    }
+  },
+
+  subscribe(onChange){
+    /* Yalniz bir neqli: BroadcastChannel varsa ondan istifade olunur,
+       `storage` hadisesi eyni anda qeyde alinmir (req. 6). */
+    if(typeof BroadcastChannel === "function"){
+      const ch = new BroadcastChannel(SYNC_CHANNEL);
+      this._ch = ch;
+      ch.onmessage = function(ev){ if(ev && ev.data && ev.data.type === "db") onChange(); };
+      const self = this;
+      return function(){
+        try{ ch.close(); }catch(e){}
+        if(self._ch === ch) self._ch = null;
+      };
+    }
+    const onStorage = function(ev){ if(ev.key === STORAGE_KEY) onChange(); };
+    window.addEventListener("storage", onStorage);
+    return function(){ window.removeEventListener("storage", onStorage); };
+  }
+};
+
+/* ---------------------------- Supabase adapter ---------------------------- */
+/* Payliqli SQL bazas + Postgres Realtime.
+   Her setir bir informasiya vahidi (UPSERT, PK = id) - tekrarlar bazada
+   mumkun deyil. Setirler yalniz dayisen yazilir, silinen yalniz onlar. */
+const SupabaseAdapter = {
+  name: "supabase",
+  _client: null,
+  _initPromise: null,
+
+  async client(){
+    if(this._client) return this._client;
+    if(!this._initPromise){
+      this._initPromise = (async ()=>{
+        if(!window.supabase){
+          await new Promise(function(resolve, reject){
+            const s = document.createElement("script");
+            s.src = SUPABASE_CDN;
+            s.onload = resolve;
+            s.onerror = function(){ reject(new Error("Supabase CDN yuklenmedi")); };
+            document.head.appendChild(s);
+          });
+        }
+        this._client = window.supabase.createClient(BACKEND.supabaseUrl, BACKEND.supabaseAnonKey);
+        return this._client;
+      })();
+    }
+    return this._initPromise;
+  },
+
+  async load(){
+    const c = await this.client();
+    const { data, error } = await c.from(BACKEND.table)
+      .select("id, kind, parent, payload, deleted")
+      .order("id", { ascending:true });
+    if(error) throw error;
+    return assemble(asArray(data));
+  },
+
+  /* Yalniz ferqi olan setirleri yazir - tam cevveli yeniden yazmir. */
+  async save(data, prev){
+    const c = await this.client();
+    const next   = flattenRows(data);
+    const before = prev ? flattenRows(prev) : {};
+    const upserts = [], removals = [];
+
+    Object.keys(next).forEach(function(id){
+      const row = next[id];
+      const old = before[id];
+      if(!old || old.__sig !== row.__sig) upserts.push(dbRow(row));
+    });
+    Object.keys(before).forEach(function(id){
+      if(!next[id] && !before[id].deleted) removals.push(id);
+    });
+    if(!upserts.length && !removals.length) return;   /* bos deyisiklik = sorgu yoxdur */
+
+    if(upserts.length){
+      const { error } = await c.from(BACKEND.table).upsert(upserts, { onConflict:"id" });
+      if(error) throw error;
+    }
+    if(removals.length){
+      const { error } = await c.from(BACKEND.table).delete().in("id", removals);
+      if(error) throw error;
+    }
+  },
+
+  subscribe(onChange){
+    let channel = null, closed = false;
+    const self = this;
+    this.client().then(function(c){
+      if(closed) return;
+      channel = c.channel(SYNC_CHANNEL)
+        .on("postgres_changes",
+            { event:"*", schema:"public", table: BACKEND.table },
+            function(){ onChange(); })
+        .subscribe();
+    }).catch(function(e){
+      console.warn("[store] realtime qosulmadi:", e);
+    });
+    return function(){
+      closed = true;
+      if(channel && self._client){
+        try{ self._client.removeChannel(channel); }catch(e){}
+      }
+    };
+  }
+};
+
+/* Setirler <-> DB obyekti (normalizasiya). */
+function flattenRows(data){
+  const rows = {};
+  const put = function(kind, parent, id, payload){
+    const key = kind + ":" + (parent ? parent + ":" : "") + id;
+    rows[key] = {
+      id: key,
+      kind: kind,
+      parent: parent || null,
+      payload: payload,
+      __sig: JSON.stringify(payload)
+    };
+  };
+  asArray(data.courses).forEach(function(c){ put("course", null, c.id, c); });
+  asArray(data.mixed).forEach(function(m){ put("mixed", null, m.id, m); });
+  asArray(data.custom).forEach(function(cat){
+    put("category", null, cat.id, { id:String(cat.id), name:cat.name });
+    asArray(cat.items).forEach(function(it){ put("item", cat.id, it.id, it); });
+  });
+  /* Məntiqi silmə nişanları: defolt sətirlər yenidən yaranmasın. */
+  const tomb = function(kind, ids){
+    asArray(ids).forEach(function(id){
+      const key = kind + ":" + id;
+      /* Nişan hər zaman üstün gəlir - eyni PK ilə yazıldığı üçün köhnə
+         sətrin üstünü yazır və ziddiyyət yaranmasına yol vermir. */
+      rows[key] = { id:key, kind:kind, parent:null, payload:{}, deleted:true, __sig:"~deleted" };
+    });
+  };
+  tomb("course", data.removed && data.removed.courses);
+  tomb("mixed",  data.removed && data.removed.mixed);
+  return rows;
+}
+
+/* Daxili __sig sütunu bazaya göndərilmir. */
+function dbRow(row){
+  return { id:row.id, kind:row.kind, parent:row.parent, payload:row.payload, deleted:!!row.deleted };
+}
+
+/* DB setirlerini obyekte yigir. */
+function assemble(rows){
+  const out = { version:DB_VERSION, courses:[], mixed:[], custom:[], removed:{ courses:[], mixed:[] } };
+  const cats = new Map();
+  rows.forEach(function(r){
+    if(!r || !r.id) return;
+    const p = r.payload || {};
+    if(r.deleted){
+      /* mentiqi silme: silinmis defolt setirler yeniden yaradilmasin */
+      const parts = String(r.id).split(":");
+      if(parts[0] === "course") out.removed.courses.push(parts[1]);
+      else if(parts[0] === "mixed") out.removed.mixed.push(parts[1]);
+      return;
+    }
+    if(r.kind === "course") out.courses.push(p);
+    else if(r.kind === "mixed") out.mixed.push(p);
+    else if(r.kind === "category"){
+      /* Item sətirləri payload id-sinə görə bağlanır. */
+      const key = String(p.id != null ? p.id : String(r.id).replace(/^category:/, ""));
+      cats.set(key, { id:key, name:p.name || "Basliq", items:[] });
+    }
+    else if(r.kind === "item"){
+      const key = String(r.parent);
+      if(!cats.has(key)) cats.set(key, { id:key, name:"Basliq", items:[] });
+      cats.get(key).items.push(p);
+    }
+  });
+  out.custom = [...cats.values()];
+  return out;
+}
+
+/* =========================== 5) STORE (VOHID MENBE) ======================= */
+/* Butun metumat buradan kecir. Bir nece UI dinleyicisi ola biler, ancaq
+   transport (realtime) dinleyicisi YALNIZ bir denedir ve say- say yaratilmir
+   (req. 6). Yazmalar debounce olunur, bildirisler frame-basina birlestirilir. */
+const Store = {
+  state: null,
+  adapter: null,
+  _uiListeners: new Set(),
+  _unsub: null,
+  _saveTimer: null,
+  _renderQueued: false,
+  _pending: false,
+  _syncing: false,
+  _lastSig: "",
+
+  /* Adapter seçimi: konfiqurasiya varsa Supabase, yoxdursa local. */
+  pickAdapter(){
+    if(BACKEND.supabaseUrl && BACKEND.supabaseAnonKey) return SupabaseAdapter;
+    return LocalAdapter;
+  },
+
+  async init(){
+    this.adapter = this.pickAdapter();
+    let loaded = null;
+    try{
+      loaded = await this.adapter.load();
+    }catch(e){
+      console.warn("[store] bazadan oxunmadi, lokal kece kecildi:", e);
+      this.adapter = LocalAdapter;
+      loaded = await LocalAdapter.load();
+    }
+    this.state = sanitize(loaded);
+
+    /* Defolt mezmun bazada yoxdursa birdefelik yaz (birer sozu da tekrar etmir). */
+    if(!loaded) this._persist(true);
+
+    /* YALNIZ bir realtime dinleyicisi. */
+    this._unsub = this.adapter.subscribe(()=>this.pull());
+    return this.state;
+  },
+
+  /* Uzakdan gelen deyisiklik: yeniden oxu, uygun gelmezse uygunlasdir. */
+  async pull(){
+    if(this._syncing) { this._pending = true; return; }
+    this._syncing = true;
+    try{
+      const raw = await this.adapter.load();
+      if(raw){
+        this.state = sanitize(raw);
+        this.notify();
+      }
+    }catch(e){
+      console.warn("[store] sinxronizasiya alnamadi:", e);
+    }finally{
+      this._syncing = false;
+      if(this._pending){ this._pending = false; this.pull(); }
+    }
+  },
+
+  onChange(fn){
+    this._uiListeners.add(fn);
+    return ()=>this._uiListeners.delete(fn);
+  },
+
+  /* Bildirisleri birlestirir: cox deyisiklikde yalniz bir render olur. */
+  notify(){
+    if(this._renderQueued) return;
+    this._renderQueued = true;
+    const run = ()=>{
+      if(!this._renderQueued) return;
+      this._renderQueued = false;
+      reindex();
+      this._uiListeners.forEach(function(fn){
+        try{ fn(); }catch(e){ console.error("[store] dinleyici xetasi:", e); }
+      });
+    };
+    /* iframe gizliyken rAF dayanir - sihet hemrе ve qeyd hadisesi ile
+       yeniden cagirilir ki, hec bir yenileme itmesin. */
+    if(document.visibilityState === "visible" && typeof requestAnimationFrame === "function"){
+      requestAnimationFrame(run);
+    }
+    setTimeout(run, 80);
+  },
+
+  /* Deysiklik tetbiq edir, saxlayir, bildirir. */
+  commit(mutator){
+    const next = clone(this.state);
+    mutator(next);
+    next.version = DB_VERSION;
+    this.state = sanitize(next);
+    this._persist();
+    this.notify();
+  },
+
+  _persist(immediate){
+    if(this._saveTimer){ clearTimeout(this._saveTimer); this._saveTimer = null; }
+    const snapshot = clone(this.state);
+    const prev = this._lastSnapshot || null;
+    this._lastSnapshot = snapshot;
+    const flush = ()=>{
+      this._saveTimer = null;
+      this.adapter.save(snapshot, prev).catch(function(e){
+        console.warn("[store] yazma ugursuz oldu:", e);
+        setSyncState("error", "Saxlanmadi");
+      });
+    };
+    if(immediate) flush(); else this._saveTimer = setTimeout(flush, 300);
+  },
+
+  /* Yarim qalan yazmani indi icra edir (səhifə bağlanarkən itməsin). */
+  flush(){
+    if(!this._saveTimer) return;
+    clearTimeout(this._saveTimer);
+    this._saveTimer = null;
+    this._persist(true);
+  },
+
+  /* Baza secimi: ilkin yuklemede sonraki deyisikliklerle muqayise etmek ucun. */
+  snapshot(){ return clone(this.state); }
+};
+
+/* ------------------------- Sync status indikatori ------------------------ */
+function setSyncState(kind, label){
+  const el = document.getElementById("syncState");
+  if(!el) return;
+  el.dataset.kind = kind;
+  el.textContent = label;
+  el.title = label;
+}
+
+/* ======================== 6) AXARIS MUHERRIQI ============================ */
+/* Indeks yalniz melumat deyisende yeniden qurulur - her reqem basina deyil.
+   Bu axarisi reqem basina O(1) edir (req. 2). */
+const Index = { courses:[], mixed:[] };
+const queries = { messages:"", exams:"", mixed:"" };
+
+function reindex(){
+  const s = Store.state;
+  Index.courses = asArray(s.courses).map(function(c){
+    return {
+      id: String(c.id),
+      course: c,
+      hay: norm(c.name) + " " + norm(c.abbr) + " " + norm(c.subtitle) + " " + norm(c.duration)
+    };
+  });
+  Index.mixed = asArray(s.mixed).map(function(m){
+    return {
+      id: String(m.id),
+      item: m,
+      hay: norm(m.title) + " " + norm(m.content)
+    };
+  });
+}
+
+function tokens(q){
+  return norm(q).trim().split(/\s+/).filter(Boolean);
+}
+
+function matchAll(hay, toks){
+  for(let i=0;i<toks.length;i++) if(hay.indexOf(toks[i]) === -1) return false;
+  return true;
+}
+
+function searchCourses(q){
+  const toks = tokens(q);
+  if(!toks.length) return Index.courses.map(function(r){ return r; });
+  return Index.courses.filter(function(r){ return matchAll(r.hay, toks); });
+}
+function searchMixed(q){
+  const toks = tokens(q);
+  if(!toks.length) return Index.mixed.slice();
+  return Index.mixed.filter(function(r){ return matchAll(r.hay, toks); });
+}
+
+/* ============================== 7) UI: TABLAR ============================= */
+
+let currentTab = "messages";
+let selectedCourse = null;
+let selectedBranch = "elmler";
+let selectedMixedId = null;
+let adminCatId = null;
+let editingItemId = null;
+let adminOpen = false;
+
+const TAB_LIST = {
+  messages:{ section:"sectionMessages", btn:"tabMsg", input:"searchMessages", list:"msgList",  mode:"messages" },
+  exams:   { section:"sectionExams",    btn:"tabExam", input:"searchExams",   list:"examList", mode:"exams" },
+  mixed:   { section:"sectionMixed",    btn:"tabMixed",input:"searchMixed",   list:"mixedList", mode:"mixed"   }
+};
+
+function switchTab(tab){
+  if(!TAB_LIST[tab]) return;
+  currentTab = tab;
+  Object.keys(TAB_LIST).forEach(function(k){
+    document.getElementById(TAB_LIST[k].section).classList.toggle("active", k === tab);
+    document.getElementById(TAB_LIST[k].btn).classList.toggle("active", k === tab);
+  });
+  renderActive();
+}
+
+/* Admin kodunu tutan axtaris qutusunu temizleyip siyahini berpas edir. */
+function clearQueries(){
+  Object.keys(TAB_LIST).forEach(function(k){
+    queries[k] = "";
+    const inp = document.getElementById(TAB_LIST[k].input);
+    if(inp) inp.value = "";
+  });
+}
+
+/* ============================ UI: LISTELERIN CIZIMI ======================= */
+
+function emptyStateHtml(textMsg){
+  return '<div class="empty-state"><p>' + escapeHtml(textMsg) + "</p></div>";
+}
+
+function renderActive(){
+  const cfg = TAB_LIST[currentTab];
+  if(!cfg) return;
+  if(cfg.mode === "mixed") renderMixedList(queries.mixed);
+  else renderCourseList(cfg.list, cfg.mode, queries[cfg.mode]);
+}
+
+function renderCourseList(containerId, mode, query){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  const toks = tokens(query);
+  const rows = searchCourses(query);
+
+  if(!rows.length){
+    container.innerHTML = emptyStateHtml("Netice tapilmadi");
+    updateResultCount(containerId, 0, true);
+    return;
+  }
+  updateResultCount(containerId, rows.length, toks.length > 0);
+
+  container.innerHTML = rows.map(function(r){
+    const c = r.course;
+    const sub = c.subtitle ? '<div class="course-sub">' + highlight(c.subtitle, toks) + "</div>" : "";
+    const badge = (c.dualBranch && mode === "messages") ? '<span class="course-badge">2 filial</span>' : "";
+    return '<div class="course-item" onclick="selectCourse(' + jsStr(c.id) + ',' + jsStr(mode) + ')" role="button" tabindex="0">' +
+      '<div class="course-num">' + escapeHtml(c.id) + "</div>" +
+      '<div class="course-info">' +
+        '<div class="course-name">' + highlight(c.name, toks) + "</div>" +
+        sub + badge +
+      "</div>" +
+      '<svg class="course-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>' +
+    "</div>";
+  }).join("");
+}
+
+function renderMixedList(query){
+  const container = document.getElementById("mixedList");
+  if(!container) return;
+  const toks = tokens(query);
+  const rows = searchMixed(query);
+
+  if(!rows.length){
+    container.innerHTML = emptyStateHtml("Netice tapilmadi");
+    updateResultCount("mixedList", 0, true);
+    return;
+  }
+  updateResultCount("mixedList", rows.length, toks.length > 0);
+
+  container.innerHTML = rows.map(function(r){
+    const m = r.item;
+    const preview = text(m.content).replace(/\s+/g, " ").slice(0, 80) + (m.content.length > 80 ? "\u2026" : "");
+    return '<div class="course-item" onclick="selectMixed(' + jsStr(m.id) + ')" role="button" tabindex="0">' +
+      '<div class="course-num">' + escapeHtml(m.id) + "</div>" +
+      '<div class="course-info">' +
+        '<div class="course-name">' + highlight(m.title, toks) + "</div>" +
+        '<div class="course-sub">' + highlight(preview, toks) + "</div>" +
+      "</div>" +
+      '<svg class="course-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>' +
+    "</div>";
+  }).join("");
+}
+
+/* Tapinti sayaci (axtaris aktiv olanda gorunur). */
+function updateResultCount(containerId, count, isSearch){
+  const el = document.querySelector('[data-count-for="' + containerId + '"]');
+  if(!el) return;
+  el.textContent = isSearch ? count + " netice" : "";
+}
+
+/* ------------------------------ Axaris handler ---------------------------- */
+/* Butun qutular ucun bir xidmet: reqem basinda indeks axtarisi (cherbe sorugu
+   yoxdur), render ise frame icinde birlestirilir. */
+let searchFrame = false;
+function onSearchInput(tab, value){
+  const raw = value;
+
+  /* Admin kodu: mesajlar bolmesinde 1006 yazildiqda admin acilir (req. 3). */
+  if(norm(raw).trim() === ADMIN_CODE){
+    const cfg = TAB_LIST[tab];
+    if(cfg && cfg.input){
+      const inp = document.getElementById(cfg.input);
+      if(inp) inp.value = "";
+    }
+    queries[tab] = "";
+    openAdmin();
+    return;
+  }
+
+  queries[tab] = raw;
+
+  /* Render birlestirme: suretli yazma zamani her reqemde DOM yeniden
+     qurulmur, ancaq bir frame icinde bir defe yenilenir. */
+  if(searchFrame) return;
+  searchFrame = true;
+  const run = function(){
+    searchFrame = false;
+    renderActive();
+  };
+  if(document.visibilityState === "visible" && typeof requestAnimationFrame === "function"){
+    requestAnimationFrame(run);
+  }
+  setTimeout(run, 60);
+}
+
+/* ------------------------- JS string literal (inline) --------------------- */
+/* Daxili onclick atributlarinda təhlükəsiz tək doted string yaradır. */
+function jsStr(value){
+  return "'" + String(value == null ? "" : value).replace(/\\/g, "\\\\").replace(/'/g, "\\'") + "'";
+}
+
+/* ========================= UI: SECIM + MODAL ============================= */
+
+function findCourse(id){
+  const key = String(id);
+  return asArray(Store.state.courses).find(function(c){ return String(c.id) === key; }) || null;
+}
+function findMixed(id){
+  const key = String(id);
+  return asArray(Store.state.mixed).find(function(m){ return String(m.id) === key; }) || null;
+}
+
+function selectCourse(id, mode){
+  const c = findCourse(id);
+  if(!c) return;
+  selectedCourse = c;
+  selectedBranch = "elmler";
+  const title = document.getElementById("modalTitle");
+  if(title) title.textContent = c.name;
+  renderModalBody(mode);
+  openModal();
+}
+
+function selectMixed(id){
+  const m = findMixed(id);
+  if(!m) return;
+  selectedMixedId = String(m.id);
+  const title = document.getElementById("modalTitle");
+  if(title) title.textContent = m.title;
+  const body = document.getElementById("modalBody");
+  if(body) body.innerHTML = '<div class="msg-preview">' + escapeHtml(m.content) + "</div>";
+  openModal();
+}
+
+function openModal(){
+  document.getElementById("modalOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeModal(){
+  document.getElementById("modalOverlay").classList.remove("open");
+  if(!adminOpen) document.body.style.overflow = "";
+  selectedCourse = null;
+  selectedMixedId = null;
+}
+
+function renderModalBody(mode){
+  const c = selectedCourse, body = document.getElementById("modalBody");
+  if(!c || !body) return;
+  let branchHtml = "";
+  if(c.dualBranch && mode === "messages"){
+    branchHtml = '<div class="branch-selector">' +
+      '<button class="branch-btn' + (selectedBranch === "elmler" ? " active" : "") + '" onclick="setBranch(\'elmler\',' + jsStr(mode) + ')">Elmlər</button>' +
+      '<button class="branch-btn' + (selectedBranch === "ramana" ? " active" : "") + '" onclick="setBranch(\'ramana\',' + jsStr(mode) + ')">Ramana</button>' +
+    "</div>";
+  }
+  let inputsHtml;
+  if(mode === "messages"){
+    inputsHtml = '<div class="modal-inputs"><div><label>Tarix</label>' +
+      '<input type="text" id="msgDate" placeholder="21.08.2026" oninput="updatePreview(' + jsStr(mode) + ')"></div></div>';
+  }else{
+    inputsHtml = '<div class="modal-inputs"><div class="modal-input-row">' +
+      '<div><label>Tarix</label><input type="text" id="examDate" placeholder="21.08.2026" oninput="updatePreview(' + jsStr(mode) + ')"></div>' +
+      '<div><label>Saat</label><input type="text" id="examTime" placeholder="11:30" oninput="formatTime(this);updatePreview(' + jsStr(mode) + ')"></div>' +
+    "</div></div>";
+  }
+  body.innerHTML = branchHtml + inputsHtml +
+    '<div class="msg-preview" id="msgPreview">' + escapeHtml(generateMessage(mode)) + "</div>";
+}
+
+function formatTime(input){
+  let v = input.value.replace(/[^0-9]/g, "");
+  if(v.length > 2) v = v.substring(0,2) + ":" + v.substring(2,4);
+  input.value = v;
+}
+
+function generateMessage(mode){
+  const c = selectedCourse;
+  if(!c) return "";
+  const branch = BRANCHES[selectedBranch];
+  if(mode === "messages"){
+    const dv = document.getElementById("msgDate") ? document.getElementById("msgDate").value : "";
+    const d = dv || "öz_tarixim";
+    return "Salam.\n\n" +
+      'Məlumat üçün bildiririk ki, "' + c.name + '" kursu aşağıdakı tarix və saatda ' + branch.name + " filialında başlayacaq:\n\n" +
+      "\u{1F4C5} Başlama tarixi: " + d + "\n" +
+      "\u{1F563} Başlama saatı: 08:30\n" +
+      "\u{1F4CD} Məkan: " + branch.name + " filialı\n" +
+      "\u{1F4CC} Konum: " + branch.map + "\n\n" +
+      "Kursun ödənişi:\n" +
+      "• Kursun qiyməti: " + c.price + " AZN\n" +
+      "• Rüsum daxil ümumi məbləğ: " + c.total + " AZN\n\n" +
+      "Qeyd: Kurs ödənişi kurs başlamazdan əvvəl və ya kursa iştirak etdiyiniz ilk gün ərzində kursun rəsmiləşdirilməsi üçün tam şəkildə ödənilməlidir. Ödəniş müəyyən edilmiş müddətdə həyata keçirilmədiyi halda kurs qeydiyyatı rəsmiləşdirilmir və iştirakçı kurs üzrə qeydiyyata alınmır.\n\n" +
+      "Əlavə qeyd: Agentlik tərəfindən müəyyən edilmiş yeni qaydalara əsasən, kurs iştirakçılarının davamiyyəti və jurnallar agentlik tərəfindən nəzarətdə saxlanılır və yoxlanılır. Kursa gecikmə və ya dərslərdə iştirak etməmə halları səbəbindən iştirakçının imtahana buraxılmaması halında təlim müəssisəsi bu qərara görə məsuliyyət daşımır.\n\n" +
+      "Zəhmət olmasa, kursda iştirak edib-etməyəcəyinizi təsdiq edəsiniz.";
+  }
+  const dv = document.getElementById("examDate") ? document.getElementById("examDate").value : "";
+  const tv = document.getElementById("examTime") ? document.getElementById("examTime").value : "";
+  const d = dv || "öz_tarixim", t = tv || "öz_saatım";
+  return "Salam,\n\n" +
+    "Dövlət Dəniz və Liman Agentliyi tərəfindən " + c.name + " kursunun imtahanı keçiriləcəkdir.\n\n" +
+    "\u{1F4C5} Tarix: " + d + "\n" +
+    "\u{23F0} Saat: " + t + "\n" +
+    "\u{1F4CD} Yerləşdiyi ünvan: Dövlət Dəniz və Liman Agentliyi\n" +
+    "\u{1F517} Konum: https://maps.app.goo.gl/R7kzyvyqhdYipxW76\n\n" +
+    "Qeyd: İmtahana gələrkən şəxsiyyət vəsiqənizin əslini və 2 ədəd kopyasını özünüzlə gətirməyiniz mütləqdir. Əks təqdirdə imtahana buraxılmayacaqsınız.";
+}
+
+function updatePreview(mode){
+  const p = document.getElementById("msgPreview");
+  if(p) p.textContent = generateMessage(mode);
+}
+function setBranch(branch, mode){
+  selectedBranch = branch;
+  renderModalBody(mode);
+}
+
+/* ------------------------------- Kopyalama ------------------------------- */
+function getCurrentText(){
+  if(selectedMixedId){
+    const m = findMixed(selectedMixedId);
+    if(m) return m.content;
+  }
+  return generateMessage(currentTab === "messages" ? "messages" : "exams");
+}
+function copyMessage(){
+  const t = getCurrentText();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(showToast, function(){ fallbackCopy(t); });
+  }else fallbackCopy(t);
+}
+function fallbackCopy(str){
+  const ta = document.createElement("textarea");
+  ta.value = str;
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  document.body.appendChild(ta);
+  ta.select();
+  let ok = false;
+  try{ ok = document.execCommand("copy"); }catch(e){ ok = false; }
+  document.body.removeChild(ta);
+  if(ok) showToast(); else alert("Kopyalama ugursuz.");
+}
+function showToast(){
+  const t = document.getElementById("toast");
+  if(!t) return;
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){ t.classList.remove("show"); }, 2500);
+}
+
+/* ======================== 8) UI: ADMIN PANEL ============================= */
+
+function getCategories(){
+  const s = Store.state;
+  const cats = [
+    { id:"courses", name:"Kurslar (Mesajlar)", count:asArray(s.courses).length, locked:true },
+    { id:"exams",   name:"Imtahanlar",          count:asArray(s.courses).length, locked:true },
+    { id:"mixed",   name:"Qarisig Mesajlar",    count:asArray(s.mixed).length }
+  ];
+  asArray(s.custom).forEach(function(c){
+    cats.push({ id:String(c.id), name:c.name, count:asArray(c.items).length });
+  });
+  return cats;
+}
+
+function openAdmin(){
+  closeModal();
+  adminOpen = true;
+  const panel = document.getElementById("adminPanel");
+  if(panel) panel.classList.add("open");
+  setSyncState(Store.adapter.name === "supabase" ? "ok" : "local", "Admin");
+  showAdminMain();
+}
+
+function closeAdmin(){
+  adminOpen = false;
+  const panel = document.getElementById("adminPanel");
+  if(panel) panel.classList.remove("open");
+  document.body.style.overflow = "";
+  clearQueries();
+  renderActive();
+}
+
+function showAdminMain(){
+  document.querySelectorAll(".admin-sub-view").forEach(function(v){ v.classList.remove("active"); });
+  document.getElementById("adminMainView").classList.add("active");
+  renderAdminCategories();
+}
+function showAdminDetail(){
+  document.querySelectorAll(".admin-sub-view").forEach(function(v){ v.classList.remove("active"); });
+  document.getElementById("adminDetailView").classList.add("active");
+  renderAdminDetail();
+}
+function showAdminForm(){
+  document.querySelectorAll(".admin-sub-view").forEach(function(v){ v.classList.remove("active"); });
+  document.getElementById("adminFormView").classList.add("active");
+}
+
+function renderAdminCategories(){
+  const el = document.getElementById("adminCategories");
+  if(!el) return;
+  el.innerHTML = getCategories().map(function(cat){
+    return '<div class="admin-cat-item" onclick="openCategory(' + jsStr(cat.id) + ')" role="button" tabindex="0">' +
+      '<span class="admin-cat-name">' + escapeHtml(cat.name) + "</span>" +
+      '<span class="admin-cat-count">' + cat.count + " mesaj</span>" +
+    "</div>";
+  }).join("") + '<button class="admin-add-btn" onclick="addCustomCategory()">+ Yeni basliq elave et</button>';
+}
+
+function openCategory(id){
+  adminCatId = String(id);
+  editingItemId = null;
+  const cat = getCategories().find(function(c){ return String(c.id) === adminCatId; });
+  const title = document.getElementById("adminDetailTitle");
+  if(title) title.textContent = cat ? cat.name : "";
+  /* Kurs kategoriyasi yalniz redaktə oluna bilər (yeni əlavə yox). */
+  const addBtn = document.getElementById("adminAddItemBtn");
+  if(addBtn) addBtn.style.display = (cat && cat.locked) ? "none" : "";
+  showAdminDetail();
+}
+
+/* Admin siyahisinin yekun hali: [{id,title,content}] */
+function adminItems(){
+  const s = Store.state;
+  if(adminCatId === "courses" || adminCatId === "exams"){
+    return asArray(s.courses).map(function(c){
+      let preview = "";
+      if(c.abbr) preview = "Abbr: " + c.abbr;
+      if(c.duration) preview += (preview ? " | " : "") + "Muddet: " + c.duration;
+      return { id:String(c.id), title:c.name, content:preview || "Kurs" };
+    });
+  }
+  if(adminCatId === "mixed"){
+    return asArray(s.mixed).map(function(m){ return { id:String(m.id), title:m.title, content:m.content }; });
+  }
+  const cat = asArray(s.custom).find(function(c){ return String(c.id) === adminCatId; });
+  return cat ? asArray(cat.items).map(function(i){
+    return { id:String(i.id), title:i.title, content:i.content };
+  }) : [];
+}
+
+function renderAdminDetail(){
+  const container = document.getElementById("adminMsgItems");
+  if(!container) return;
+  const items = adminItems();
+  if(!items.length){
+    container.innerHTML = emptyStateHtml("Hele mesaj yoxdur");
+    return;
+  }
+  container.innerHTML = items.map(function(item){
+    return '<div class="admin-msg-item">' +
+      '<div class="admin-msg-content">' +
+        '<div class="admin-msg-title">' + escapeHtml(item.title) + "</div>" +
+        '<div class="admin-msg-preview">' + escapeHtml(item.content) + "</div>" +
+      "</div>" +
+      '<div class="admin-actions">' +
+        '<button class="admin-action-btn" onclick="editItem(' + jsStr(item.id) + ')" title="Redakte">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>' +
+        "</button>" +
+        '<button class="admin-action-btn danger" onclick="deleteItem(' + jsStr(item.id) + ')" title="Sil">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' +
+        "</button>" +
+      "</div>" +
+    "</div>";
+  }).join("");
+}
+
+/* --------------------------------- Forma --------------------------------- */
+function openItemForm(itemId){
+  editingItemId = itemId == null ? null : String(itemId);
+  const title = document.getElementById("adminFormTitle");
+  const inpT = document.getElementById("formItemTitle");
+  const inpC = document.getElementById("formItemContent");
+  if(!title || !inpT || !inpC) return;
+
+  if(editingItemId){
+    title.textContent = "Redakte et";
+    const item = adminItems().find(function(i){ return String(i.id) === editingItemId; });
+    if(item){
+      inpT.value = item.title;
+      inpC.value = (adminCatId === "courses" || adminCatId === "exams") ? shortAbbr(item.content) : item.content;
+    }else{
+      inpT.value = ""; inpC.value = "";
+    }
+  }else{
+    title.textContent = "Yeni mesaj";
+    inpT.value = ""; inpC.value = "";
+  }
+  showAdminForm();
+}
+
+function shortAbbr(preview){
+  const m = /^Abbr:\s*(.*?)(\s*\|\s*Muddet:|$)/.exec(preview || "");
+  return m ? m[1].trim() : "";
+}
+function editItem(id){ openItemForm(id); }
+
+function saveItem(){
+  const title = text(document.getElementById("formItemTitle").value).trim();
+  const content = text(document.getElementById("formItemContent").value).trim();
+  const isCourse = (adminCatId === "courses" || adminCatId === "exams");
+
+  if(isCourse && !title){ alert("Ad bos ola bilmez."); return; }
+  if(!isCourse && (!title || !content)){ alert("Basliq ve metn bos ola bilmez."); return; }
+
+  Store.commit(function(db){
+    if(isCourse){
+      const c = db.courses.find(function(x){ return String(x.id) === String(editingItemId); });
+      if(c){
+        c.name = title;
+        if(content) c.abbr = content;
+        else delete c.abbr;
+      }
+      return;
+    }
+    if(adminCatId === "mixed"){
+      if(editingItemId){
+        const m = db.mixed.find(function(x){ return String(x.id) === editingItemId; });
+        if(m){ m.title = title; m.content = content; }
+      }else{
+        /* Təkrarların qarşısını alır: eyni başlıq + mətn artıq varsa, yenisini yaratmır. */
+        const dup = db.mixed.some(function(x){ return x.title === title && x.content === content; });
+        if(dup){ notifyDuplicate(); return; }
+        db.mixed.push({ id: uid(new Set(db.mixed.map(function(x){ return String(x.id); }))), title:title, content:content });
+      }
+      return;
+    }
+    const cat = db.custom.find(function(c){ return String(c.id) === adminCatId; });
+    if(!cat) return;
+    if(editingItemId){
+      const item = cat.items.find(function(i){ return String(i.id) === editingItemId; });
+      if(item){ item.title = title; item.content = content; }
+    }else{
+      const dup = cat.items.some(function(i){ return i.title === title && i.content === content; });
+      if(dup){ notifyDuplicate(); return; }
+      cat.items.push({ id: uid(new Set(cat.items.map(function(i){ return String(i.id); }))), title:title, content:content });
+    }
+  });
+
+  showAdminDetail();
+  renderActive();
+}
+
+function notifyDuplicate(){
+  showToastMsg("Bu mesaj artiq movcuddur");
+}
+
+function deleteItem(id){
+  if(!confirm("Silmek istediyinize eminsiniz?")) return;
+  const key = String(id);
+  const isCourse = (adminCatId === "courses" || adminCatId === "exams");
+
+  Store.commit(function(db){
+    if(isCourse){
+      db.courses = db.courses.filter(function(c){ return String(c.id) !== key; });
+      /* Defolt kurslar yeniden yaranmasin - məntiqi silmə nişanı. */
+      if(!db.removed.courses.includes(key)) db.removed.courses.push(key);
+      return;
+    }
+    if(adminCatId === "mixed"){
+      db.mixed = db.mixed.filter(function(m){ return String(m.id) !== key; });
+      if(!db.removed.mixed.includes(key)) db.removed.mixed.push(key);
+      return;
+    }
+    const cat = db.custom.find(function(c){ return String(c.id) === adminCatId; });
+    if(cat) cat.items = cat.items.filter(function(i){ return String(i.id) !== key; });
+  });
+
+  renderAdminDetail();
+  renderActive();
+}
+
+function addCustomCategory(){
+  const name = prompt("Yeni basligin adini yazin:");
+  if(!name || !name.trim()) return;
+  const clean = name.trim();
+  Store.commit(function(db){
+    const dup = db.custom.some(function(c){ return norm(c.name) === norm(clean); });
+    if(dup) return;
+    const ids = new Set(db.custom.map(function(c){ return String(c.id); }));
+    db.custom.push({ id:"custom_" + uid(ids), name:clean, items:[] });
+  });
+  renderAdminCategories();
+}
+
+function showToastMsg(msg){
+  const t = document.getElementById("toast");
+  if(!t) return;
+  const label = t.querySelector(".toast-label") || t;
+  t.dataset.msg = msg;
+  if(label) label.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._t2);
+  t._t2 = setTimeout(function(){
+    t.classList.remove("show");
+    setTimeout(function(){ if(label) label.textContent = "Mesaj kopyalandi"; }, 300);
+  }, 2200);
+}
+
+/* ============================= 9) BOOTSTRAP ============================== */
+
+function bindSearch(tab){
+  const cfg = TAB_LIST[tab];
+  const inp = document.getElementById(cfg.input);
+  if(!inp) return;
+  /* Dinleyici YALNIZ bir defe baglanir (req. 6). */
+  inp.addEventListener("input", function(){ onSearchInput(tab, this.value); });
+  inp.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && this.value){
+      this.value = "";
+      onSearchInput(tab, "");
+    }
+  });
+}
+
+function bindKeyboard(){
+  document.addEventListener("keydown", function(e){
+    const modal = document.getElementById("modalOverlay");
+    const admin = document.getElementById("adminPanel");
+    if(e.key !== "Escape") return;
+    if(modal && modal.classList.contains("open")){ closeModal(); e.preventDefault(); return; }
+    if(adminOpen){ closeAdmin(); e.preventDefault(); }
+  });
+  /* Ctrl+Space: növbəti tab */
+  document.addEventListener("keydown", function(e){
+    if(!(e.ctrlKey && e.code === "Space")) return;
+    e.preventDefault();
+    const order = ["messages","exams","mixed"];
+    switchTab(order[(order.indexOf(currentTab) + 1) % order.length]);
+  });
+}
+
+function wireStoreToUi(){
+  /* Realtime mesaj gələndə: indeks + BÜTÜN siyahılar yenilənir ki, admin
+     panelindən əlavə olunan məlumat heç bir səhifə yeniləməsi olmadan
+     dərhal görünsün (req. 4). */
+  Store.onChange(function(){
+    renderAll();
+    if(adminOpen){
+      const view = document.querySelector(".admin-sub-view.active");
+      if(view && view.id === "adminDetailView") renderAdminDetail();
+      else if(view && view.id === "adminMainView") renderAdminCategories();
+    }
+  });
+}
+
+/* Bütün tablaları bir dəfə çəkir: tab keçidləri ani olur. */
+function renderAll(){
+  renderCourseList("msgList",  "messages", queries.messages);
+  renderCourseList("examList", "exams",    queries.exams);
+  renderMixedList(queries.mixed);
+}
+
+/* Səhifə yenidən görünəndə və ya şəbəkə bərpasında sinxronizasiyanı təsdiqlə. */
+function wireVisibility(){
+  let online = navigator.onLine;
+  window.addEventListener("offline", function(){
+    online = false;
+    setSyncState("error", "Oflayn");
+  });
+  window.addEventListener("online", function(){
+    if(!online){
+      online = true;
+      setSyncState("ok", "Sinxron");
+      Store.pull();
+    }
+  });
+  document.addEventListener("visibilitychange", function(){
+    if(document.visibilityState === "hidden"){ Store.flush(); return; }
+    if(Store.adapter.name === "supabase") Store.pull();
+  });
+  /* Səhifə bağlanarkən yarım qalan yazma itməsin. */
+  window.addEventListener("pagehide", function(){ Store.flush(); });
+  window.addEventListener("beforeunload", function(){ Store.flush(); });
+}
+
+(async function bootstrap(){
+  /* Əvvəlcə dərhal siyahını çək: ilkin çəkilmə gecikməsin. */
+  Store.state = sanitize(null);
+  reindex();
+  switchTab("messages");
+
+  bindSearch("messages"); bindSearch("exams"); bindSearch("mixed");
+  bindKeyboard();
+  wireStoreToUi();
+  wireVisibility();
+
+  await Store.init();
+
+  reindex();
+  renderAll();
+  setSyncState("ok", "Onlayn");
+
+  /* Defolt kursor / fokus itkisini olmasin. */
+  document.addEventListener("click", function(e){
+    const item = e.target.closest && e.target.closest(".course-item");
+    if(!item) return;
+    item.setAttribute("tabindex","-1");
+  });
+})();
+</script>
+</body>
+</html>
