@@ -293,8 +293,10 @@
   function makeFlake(init){
     var u=Math.random(), f={L:0,r:0,vy:0,a:0,amp:0,wf:0};
     if(MODE==='snow'){
-      /* Qaranlıq fonda görünən xırda, yumru və yavaş dənəciklər. */
-      f.L=4; f.r=rnd(.65,1.3); f.vy=rnd(18,36); f.a=rnd(.48,.76); f.amp=rnd(4,10); f.wf=.28;
+      /* Müxtəlif ölçülü buz kristalları və yumşaq işıqlı xırda dənəciklər. */
+      f.L=Math.random()<.09?5:4;
+      f.r=f.L===5?rnd(1.4,2.35):rnd(.65,1.35);
+      f.vy=f.L===5?rnd(20,40):rnd(18,37); f.a=f.L===5?rnd(.52,.82):rnd(.48,.78); f.amp=rnd(4,11); f.wf=.3;
     }
     else if(u<.42){ f.L=0; f.r=rnd(.8,1.6); f.vy=rnd(22,40); f.a=rnd(.55,.85); f.amp=rnd(5,12); f.wf=.3; }
     else if(u<.82){ f.L=1; f.r=rnd(1.7,3.1); f.vy=rnd(44,72); f.a=rnd(.82,.97); f.amp=rnd(9,20); f.wf=.55; }
@@ -323,8 +325,18 @@
   function drawFlake(f){
     fctx.globalAlpha=f.a;
     if(MODE==='snow'){
-      fctx.fillStyle='rgba(180,202,220,.32)'; fctx.beginPath(); fctx.arc(f.x,f.y,f.r+.45,0,TAU); fctx.fill();
-      fctx.fillStyle='rgba(255,255,255,.88)'; fctx.beginPath(); fctx.arc(f.x,f.y,f.r,0,TAU); fctx.fill();
+      if(f.L===5){
+        fctx.save(); fctx.translate(f.x,f.y); fctx.rotate(f.rot); fctx.strokeStyle='rgba(239,249,255,.9)'; fctx.lineWidth=.42; fctx.lineCap='round';
+        for(var a=0;a<6;a++){
+          fctx.save(); fctx.rotate(a*Math.PI/3); fctx.beginPath(); fctx.moveTo(0,0); fctx.lineTo(0,-f.r*2.1);
+          fctx.moveTo(0,-f.r*1.05); fctx.lineTo(-f.r*.48,-f.r*1.55); fctx.moveTo(0,-f.r*1.05); fctx.lineTo(f.r*.48,-f.r*1.55); fctx.stroke(); fctx.restore();
+        }
+        fctx.restore();
+      }else{
+        var fg=fctx.createRadialGradient(f.x-f.r*.35,f.y-f.r*.4,.1,f.x,f.y,f.r+.55);
+        fg.addColorStop(0,'rgba(255,255,255,.98)'); fg.addColorStop(.5,'rgba(238,248,255,.9)'); fg.addColorStop(.8,'rgba(175,214,239,.48)'); fg.addColorStop(1,'rgba(175,214,239,0)');
+        fctx.fillStyle=fg; fctx.beginPath(); fctx.arc(f.x,f.y,f.r+.55,0,TAU); fctx.fill();
+      }
     }else if(f.L===2){
       fctx.save(); fctx.translate(f.x,f.y); fctx.rotate(f.rot);
       var s=f.r*2.4; fctx.drawImage(spCrystal,-s,-s,s*2,s*2); fctx.restore();
@@ -349,7 +361,7 @@
     var dk=Math.exp(-2.6*dt), push=hasP&&mspeed>90;
     for(var i=0;i<flakes.length;i++){
       var f=flakes[i];
-      f.ph+=dt*f.sp; f.rot+=f.rs*dt*(f.L===2?0.6:0);
+      f.ph+=dt*f.sp; f.rot+=f.rs*dt*((f.L===2||f.L===5)?0.6:0);
       if(push){
         var ddx=f.x-px, ddy=f.y-py, dd=ddx*ddx+ddy*ddy;
         if(dd<14400){
