@@ -1,14 +1,17 @@
-/* ❄ Realistik qar mühərriki (index.html və messages/index.html tərəfindən paylaşılır)
-   1) Yer qar örtüyü (#ff-canvas varsa): hündürlük xəritəsi + işıqlandırma. Maus və barmaq qarı sürüb
-      kənarlara yığır, qum kimi sıçradır; yağan qar səbəbilə yer yenidən örtülür.
-   2) Qatlı (parallax) yağan qar: uzaq / orta / yaxın (bokeh) dənəciklər, külək və maus/barmaq təsiri.
-   Uçan qar hissəcikləri hər zaman ön qatda çəkilir ki, kontentin üstündə görünsün. */
+/* ❄ Realistik qar mühərriki — IST Trust Zone
+   Üç rejim (window.IstSnow.setMode):
+     'winter' – yer qar örtüyü (#ff-canvas varsa) + yağan qar + maus/barmaq qarı sürüşdürür
+     'snow'   – YALNIZ yağan qar. Arxa planda qar örtüyü yoxdur, maus/barmaq təsiri yoxdur
+     'normal' – heç nə çəkilmir
+   Rejimi theme.js Firebase-dən oxuyub bura ötürür (hamı üçün real vaxtda dəyişir). */
 (function(){
   if(window.__snowInit) return; window.__snowInit = true;
 
   var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var host = document.getElementById('ff-canvas');
-  var GROUND = !!host;
+  var GROUND = false;            /* yalnız 'winter' rejimində və #ff-canvas varsa */
+  var MODE = 'off';
+  var POINTER = false;           /* maus/barmaq təsiri yalnız 'winter' rejimində */
 
   function rnd(a,b){ return a+Math.random()*(b-a); }
   function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
@@ -255,7 +258,7 @@
   /* ===================== YAĞAN QAR ===================== */
   var fc=document.createElement('canvas'), fctx=fc.getContext('2d');
   fc.id='snowCanvas'; fc.setAttribute('aria-hidden','true');
-  fc.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:8000';
+  fc.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:8000;display:none;opacity:0;transition:opacity .7s ease';
   document.body.appendChild(fc);
   var flakes=[], bursts=[], fdpr=1;
 
@@ -370,6 +373,7 @@
 
   /* klikdə qar “tüstüsü” */
   window.__snowBurst=function(x,y,n){
+    if(MODE!=='winter') return;
     if(x==null){ x=W/2; y=H*.7; }
     if(GROUND && !reduced){
       var cx=x/CELL, cy=y/CELL, rem=dig(cx,cy,34/CELL,0.9,0,-1), c=Math.min(26,Math.round(rem*0.08)+8);
@@ -384,16 +388,18 @@
   };
 
   function onMove(e){
+    if(!POINTER) return;
     px=e.clientX; py=e.clientY;
     if(!hasP){ hasP=true; lpx=px; lpy=py; fpx=px; fpy=py; }
     moved=true;
   }
   window.addEventListener('pointermove',onMove,{passive:true});
   window.addEventListener('pointerdown',function(e){
-    onMove(e); lpx=px; lpy=py; if(window.__snowBurst) window.__snowBurst(e.clientX,e.clientY,6);
+    if(!POINTER) return; onMove(e); lpx=px; lpy=py; if(window.__snowBurst) window.__snowBurst(e.clientX,e.clientY,6);
   },{passive:true});
   /* Toxunma: brauzer sürüşdürməyə başlayanda pointercancel gəlir, buna görə barmağı touchmove ilə izləyirik */
   function setPointer(x,y){
+    if(!POINTER) return;
     px=x; py=y;
     if(!hasP){ hasP=true; lpx=px; lpy=py; fpx=px; fpy=py; }
     moved=true;
@@ -403,17 +409,58 @@
   window.addEventListener('touchend',function(e){ if(!e.touches||e.touches.length===0) hasP=false; },{passive:true});
   window.addEventListener('touchcancel',function(){ hasP=false; },{passive:true});
   document.documentElement.addEventListener('mouseleave',function(){ hasP=false; },{passive:true});
-  document.addEventListener('visibilitychange',function(){ if(document.hidden) stop(); else start(); });
+  document.addEventListener('visibilitychange',function(){ if(document.hidden) stop(); else if(MODE==='winter'||MODE==='snow') start(); });
 
   var rzT=0;
   window.addEventListener('resize',function(){
     resizeFlakes();
     clearTimeout(rzT);
-    rzT=setTimeout(function(){ if(GROUND) setupGround(); },120);
+    rzT=setTimeout(function(){ if(GROUND) setupGround(); else if(gc) gc._stale=true; },120);
   });
 
   resizeFlakes();
-  if(GROUND) setupGround();
-  if(reduced){ fc.style.display='none'; return; }
-  start();
+
+  var offT=0;
+  function setMode(m){
+    if(m!=='winter' && m!=='snow') m='normal';
+    if(m===MODE) return;
+    MODE=m;
+    clearTimeout(offT);
+
+    if(m==='normal'){
+      POINTER=false; hasP=false; moved=false; GROUND=false;
+      bursts.length=0;
+      fc.style.opacity='0';
+      if(host){ host.style.transition='opacity .7s ease'; host.style.opacity='0'; }
+      offT=setTimeout(function(){
+        if(MODE!=='normal') return;
+        stop(); fc.style.display='none'; fctx.clearRect(0,0,W,H);
+        if(host) host.style.display='none';
+      },720);
+      return;
+    }
+
+    POINTER=(m==='winter'); GROUND=(m==='winter' && !!host);
+    if(!POINTER){ hasP=false; moved=false; }
+
+    if(host){
+      if(GROUND){
+        host.style.display='';
+        if(!gc || gc._stale){ setupGround(); if(gc) gc._stale=false; }
+        needDraw=true;
+        host.style.transition='opacity .7s ease';
+        void host.offsetWidth; host.style.opacity='1';
+      }else{
+        host.style.opacity='0';
+        offT=setTimeout(function(){ if(!GROUND) host.style.display='none'; },720);
+      }
+    }
+    if(reduced){ fc.style.display='none'; return; }
+    fc.style.display='';
+    void fc.offsetWidth; fc.style.opacity='1';
+    resizeFlakes();
+    start();
+  }
+
+  window.IstSnow={ setMode:setMode, get mode(){ return MODE; } };
 })();

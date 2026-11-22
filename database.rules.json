@@ -1,0 +1,25 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "ist": {
+      "settings": {
+        ".read": true,
+        "mode": {
+          ".write": true,
+          ".validate": "newData.isString() && (newData.val() === 'normal' || newData.val() === 'winter' || newData.val() === 'snow' || newData.val() === 'dark' || newData.val() === 'cyber' || newData.val() === 'micro')"
+        },
+        "updatedAt": { ".write": true },
+        "updatedBy": { ".write": true },
+        "$other": { ".validate": false }
+      },
+      "messages": {
+        ".read": true,
+        ".write": true,
+        "courses": { "$id": { ".validate": "newData.hasChildren(['name']) && newData.child('name').isString() && newData.child('name').val().length <= 300" } },
+        "mixed": { "$id": { ".validate": "newData.hasChildren(['title','content']) && newData.child('content').val().length <= 20000" } },
+        "templates": { "$k": { ".validate": "newData.isString() && newData.val().length <= 20000" } }
+      }
+    }
+  }
+}
