@@ -23,9 +23,9 @@
   var INFO = {
     normal: { name: "Normal",  desc: "Qarsız, sadə və təmiz görünüş." },
     winter: { name: "Qış",     desc: "Qar örtüyü, buz keçidləri, maus və barmaqla qarı sürüşdürmə." },
-    snow:   { name: "Qar",     desc: "Şimal işıqları, ay və qarlı dağ mənzərəsi." },
+    snow:   { name: "Qar",     desc: "Səhər boz səması və yüngül qar yağışı." },
     dark:   { name: "Dark",    desc: "Yumşaq tünd rənglər — gözü yormayan rahat görünüş." },
-    micro:  { name: "Micro",  desc: "Yüngül mint rənglər və rahat, aydın səthlər." },
+    micro:  { name: "Micro",  desc: "Açıq rənglər, aydın mətnlər və rahat görünüş." },
     cyber:  { name: "Cyber",   desc: "Elektrik mavisi, neon yaşıl və siqnal sarısı." }
   };
 
