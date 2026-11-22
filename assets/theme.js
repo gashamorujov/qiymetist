@@ -23,10 +23,10 @@
   var INFO = {
     normal: { name: "Normal",  desc: "Qarsız, sadə və təmiz görünüş." },
     winter: { name: "Qış",     desc: "Qar örtüyü, buz keçidləri, maus və barmaqla qarı sürüşdürmə." },
-    snow:   { name: "Qar",     desc: "Gecə səması üzərində realistik ağ qar yağışı. Maus effekti yoxdur." },
+    snow:   { name: "Qar",     desc: "Şimal işıqları, ay və qarlı dağ mənzərəsi." },
     dark:   { name: "Dark",    desc: "Yumşaq tünd rənglər — gözü yormayan rahat görünüş." },
-    micro:  { name: "Micro",  desc: "Terminal üslubu: Matrix yağışı və yaşıl kod yazısı." },
-    cyber:  { name: "Cyber",   desc: "Synthwave: neon günəş, hərəkətli şəbəkə və parlayan kənarlar." }
+    micro:  { name: "Micro",  desc: "Yüngül mint rənglər və rahat, aydın səthlər." },
+    cyber:  { name: "Cyber",   desc: "Elektrik mavisi, neon yaşıl və siqnal sarısı." }
   };
 
   function valid(m) { return MODES.indexOf(m) !== -1 ? m : null; }
@@ -53,7 +53,7 @@
 
 
   /* ===========================================================================
-     Canlı fon: #bgfx (CSS ilə animasiya) və Micro rejimi üçün Matrix yağışı
+     Canlı fon: #bgfx (rejimlərə uyğun CSS effektləri)
      =========================================================================== */
   function ensureBgfx() {
     if (document.getElementById("bgfx")) return;
@@ -61,40 +61,7 @@
     d.innerHTML = "<i></i><i></i><i></i>";
     document.body.insertBefore(d, document.body.firstChild);
   }
-  var rain = null;
-  function startRain() {
-    if (rain || reduce) return;
-    var cv = document.createElement("canvas"); cv.id = "rain"; cv.setAttribute("aria-hidden", "true");
-    document.body.insertBefore(cv, document.body.firstChild);
-    var g = cv.getContext("2d"), W = 0, H = 0, FS = 16, cols = 0, drops = [], last = 0, raf = 0;
-    var CH = "01アイウエオカキクケコサシスセソタチツテトナニヌネノ<>/\\{}[]$#%&=+*".split("");
-    function size() {
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = window.innerWidth; H = window.innerHeight; cv.width = W * dpr; cv.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.ceil(W / FS); drops = [];
-      for (var i = 0; i < cols; i++) drops.push(Math.random() * -H / FS);
-      g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
-    }
-    function frame(ts) {
-      raf = requestAnimationFrame(frame);
-      if (ts - last < 55) return; last = ts;
-      g.fillStyle = "rgba(0,4,1,.14)"; g.fillRect(0, 0, W, H);
-      g.font = FS + "px monospace";
-      for (var i = 0; i < cols; i++) {
-        var y = drops[i] * FS, ch = CH[(Math.random() * CH.length) | 0];
-        g.fillStyle = "rgba(190,255,200,.95)"; g.fillText(ch, i * FS, y);
-        g.fillStyle = "rgba(57,255,20,.55)"; g.fillText(CH[(Math.random() * CH.length) | 0], i * FS, y - FS);
-        if (y > H && Math.random() > 0.975) drops[i] = Math.random() * -20;
-        drops[i] += 1;
-      }
-    }
-    function onVis() { if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else if (!raf) raf = requestAnimationFrame(frame); }
-    size(); window.addEventListener("resize", size); document.addEventListener("visibilitychange", onVis);
-    raf = requestAnimationFrame(frame);
-    rain = { stop: function () { cancelAnimationFrame(raf); window.removeEventListener("resize", size); document.removeEventListener("visibilitychange", onVis); cv.remove(); } };
-  }
-  function stopRain() { if (rain) { rain.stop(); rain = null; } }
-  function fxFor(m) { ensureBgfx(); if (m === "micro") startRain(); else stopRain(); }
+  function fxFor() { ensureBgfx(); }
 
   var api = {
     MODES: MODES,
