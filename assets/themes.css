@@ -304,7 +304,7 @@ html[data-mode="micro"] .ad-frame{background:var(--paper)}
 
 @media (prefers-reduced-motion:reduce){html[data-mode="cyber"] #bgfx i{animation:none!important}}
 
-/* Qar: sakit boz səhər səması və yüngül qar yağışı */
+/* Qar: qaranlıq, yüngül ağ işıqlı fon və zərif qar */
 html[data-mode="snow"]{
   --hull:#526873;--hull-2:#637B86;--hull-3:#78909A;
   --chart:rgba(230,236,235,.94);--paper:rgba(249,251,250,.94);--line:#C4CECE;--line-2:#D7DEDD;
@@ -316,7 +316,7 @@ html[data-mode="snow"]{
   color-scheme:light;
 }
 html[data-mode="snow"] #bgfx{display:none}
-html[data-mode="snow"] body{background:linear-gradient(180deg,#DCE6EA 0%,#F7FAFB 42%,#EEF3F5 72%,#E2EAEE 100%) fixed}
+html[data-mode="snow"] body{background:radial-gradient(ellipse at 50% 8%,rgba(255,255,255,.105),transparent 52%),radial-gradient(ellipse at 84% 94%,rgba(210,225,238,.045),transparent 42%),linear-gradient(180deg,#080A0E 0%,#0C0F14 58%,#10141A 100%) fixed}
 html[data-mode="snow"] .panel,html[data-mode="snow"] .dialog,html[data-mode="snow"] .item,html[data-mode="snow"] .cat,html[data-mode="snow"] .form,html[data-mode="snow"] .ad-panel{backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);border-color:rgba(89,109,112,.2)}
 html[data-mode="snow"] header.top{border-color:#BCC7C7}
 html[data-mode="snow"] header.top::before{background:linear-gradient(90deg,#76878C,#CED6D2,#D8BB82,#BBC7C5)}
