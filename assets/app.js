@@ -137,6 +137,18 @@
     var list = filterCourses(v);
     renderTable(list); updateSearchMeta(list);
   });
+  /* Enter: yazılan kod kursun koduna dəqiq uyğundursa kurs seçilir və axtarış təmizlənir */
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter") return;
+    var q = fold(searchInput.value).trim();
+    if (!q) return;
+    var course = COURSES.find(function (c) { return fold(c.code) === q; });
+    if (!course || course.price === null) return;
+    e.preventDefault();
+    if (!selected.has(course.code)) selected.set(course.code, course);
+    searchInput.value = ""; clearBtn.classList.remove("show");
+    refresh(); updateSearchMeta(COURSES);
+  });
   clearBtn.addEventListener("click", function () {
     searchInput.value = ""; clearBtn.classList.remove("show");
     renderTable(COURSES); updateSearchMeta(COURSES); searchInput.focus();
@@ -213,6 +225,8 @@
   }
   $("select5Btn").addEventListener("click", function () { selectPreset(["SP", "SH", "SL", "SI", "SO"]); });
   $("select3Btn").addEventListener("click", function () { selectPreset(["SH", "SL", "SK"]); });
+  $("selectZ1Btn").addEventListener("click", function () { selectPreset(["DL", "SJ", "SN", "SW"]); });
+  $("selectZ2Btn").addEventListener("click", function () { selectPreset(["SN", "SJ", "DL", "ER"]); });
   $("clearCalc").addEventListener("click", function () { selected.clear(); refresh(); });
 
   var pdfBtn = $("exportPdf"), pdfBtnHtml = pdfBtn.innerHTML;
