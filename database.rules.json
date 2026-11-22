@@ -16,7 +16,7 @@
       "messages": {
         ".read": true,
         ".write": true,
-        "courses": { "$id": { ".validate": "newData.hasChildren(['name']) && newData.child('name').isString() && newData.child('name').val().length <= 300" } },
+        "courses": { "$id": { ".validate": "newData.hasChildren(['name']) && newData.child('name').isString() && newData.child('name').val().length <= 300", "tplMsgElmler": { ".validate": "newData.isString() && newData.val().length <= 20000" }, "tplMsgRamana": { ".validate": "newData.isString() && newData.val().length <= 20000" }, "tplExam": { ".validate": "newData.isString() && newData.val().length <= 20000" } } },
         "mixed": { "$id": { ".validate": "newData.hasChildren(['title','content']) && newData.child('content').val().length <= 20000" } },
         "templates": { "$k": { ".validate": "newData.isString() && newData.val().length <= 20000" } }
       }

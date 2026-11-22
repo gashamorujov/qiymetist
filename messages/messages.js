@@ -35,12 +35,6 @@
       "Qeyd: İmtahana gələrkən şəxsiyyət vəsiqənizin əslini və 2 ədəd kopyasını özünüzlə gətirməyiniz mütləqdir. Əks təqdirdə imtahana buraxılmayacaqsınız."
   };
 
-  /* Üç sabit şablon: hər biri ayrıca redaktə olunur */
-  var TPL_META = [
-    { key: "msgElmler", title: "Kurs mesajı — Elmlər filialı", hint: "“Mesajlar” bölməsində Elmlər filialı üçün göndərilən mesaj." },
-    { key: "msgRamana", title: "Kurs mesajı — Ramana filialı", hint: "“Mesajlar” bölməsində iki filiallı kurslar üçün Ramana seçiləndə göndərilən mesaj." },
-    { key: "exam",      title: "İmtahan mesajı",               hint: "“İmtahanlar” bölməsində göndərilən mesaj." }
-  ];
   function deriveBranch(base, k) { return String(base).replace(/\{filial\}/g, DEFAULT_BRANCHES[k].name).replace(/\{xerite\}/g, DEFAULT_BRANCHES[k].map); }
   function defaultTpl(key) {
     if (key === "msgElmler") return deriveBranch(DEFAULT_TPL.msg, "elmler");
@@ -279,7 +273,11 @@
   function findMixed(id) { return state.mixed.find(function (m) { return String(m.id) === String(id); }) || null; }
 
   function fill(tpl, v) { return String(tpl).replace(/\{(kurs|kod|tarix|saat|filial|xerite|qiymet)\}/g, function (m, k) { return v[k] != null && v[k] !== "" ? v[k] : m; }); }
-  function tplFor(c, mode, branchKey) { return (mode === "exams" ? c.tplExam : c.tplMsg) || (mode === "exams" ? state.tpl.exam : (c.dualBranch && branchKey === "ramana" ? state.tpl.msgRamana : state.tpl.msgElmler)); }
+  function tplFor(c, mode, branchKey) {
+    if (mode === "exams") return c.tplExam || state.tpl.exam;
+    if (c.dualBranch && branchKey === "ramana") return c.tplMsgRamana || c.tplMsg || state.tpl.msgRamana;
+    return c.tplMsgElmler || c.tplMsg || state.tpl.msgElmler;
+  }
   function vars(c, mode, date, time, b) {
     return { kurs: c.name, kod: codeLabel(c.abbr), tarix: date || "öz_tarixim", saat: mode === "exams" ? (time || "öz_saatım") : "08:30-16:20", filial: b.name, xerite: b.map, qiymet: c.total != null ? c.total : "" };
   }
@@ -353,13 +351,18 @@
   });
 
   /* ------------------------------ 6) İdarəetmə ------------------------------ */
-  var adminOpen = false, adminCat = null, editingId = null, formKind = null, formTpl = null, formTplKey = "msg";
+  /* Ağac:  Əsas → Mesaj şablonları → (Kurs mesajı | İmtahan mesajı) → kurs siyahısı → redaktə
+            Əsas → Qarışıq mesajlar / əlavə başlıqlar → mesaj siyahısı → redaktə                */
+  var adminOpen = false, adminCat = null, editingId = null, formKind = null, adminQuery = "";
+  var tf = null;   /* şablon redaktə vəziyyəti */
   var ico = {
-    book: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></svg>',
-    tpl: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>',
-    chat: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    tpl: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>',
+    chat: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    book: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></svg>',
+    exam: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>',
     edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>',
-    del: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'
+    del: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+    chev: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>'
   };
   function showView(id) { document.querySelectorAll(".view").forEach(function (v) { v.classList.toggle("active", v.id === id); }); $("admin").scrollTop = 0; }
 
@@ -371,12 +374,13 @@
   function showMain() { adminCat = null; renderCats(); showView("v-main"); }
   function renderAdminCurrent() {
     if ($("v-main").classList.contains("active")) renderCats();
-    else if ($("v-list").classList.contains("active")) renderList();
+    else if ($("v-list").classList.contains("active")) renderList(true);
   }
+  function fail(err) { console.error(err); toast("Saxlanmadı: " + (err && err.message ? err.message : "xəta"), "error"); }
 
   function categories() {
     var cs = [
-      { id: "templates", name: "Mesaj şablonları", s: "Elmlər, Ramana və imtahan mesajları", n: 3, ico: ico.tpl },
+      { id: "templates", name: "Mesaj şablonları", s: "Kurs mesajı və imtahan mesajı — hər kurs üçün ayrıca", n: state.courses.length, ico: ico.tpl },
       { id: "mixed", name: "Qarışıq mesajlar", s: "Hazır cavab mətnləri", n: state.mixed.length, ico: ico.chat }
     ];
     state.custom.forEach(function (c) { cs.push({ id: "custom:" + c.id, name: c.name, s: "Əlavə başlıq", n: (c.items || []).length, ico: ico.chat }); });
@@ -389,114 +393,205 @@
   }
   $("cats").addEventListener("click", function (e) {
     var cat = e.target.closest("[data-cat]");
-    if (cat) { adminCat = cat.dataset.cat; renderList(); showView("v-list"); return; }
+    if (cat) { adminCat = cat.dataset.cat; adminQuery = ""; renderList(); showView("v-list"); return; }
     if (e.target.id === "addCat") {
       ask({ title: "Yeni başlıq", text: "Başlığın adını yazın:", input: true, yes: "Əlavə et" }).then(function (name) {
         if (!name) return;
         var id = "custom_" + newKey("custom");
-        write(clean({ ["custom/" + id]: { name: name.slice(0, 120), ord: Date.now() } })).then(function () { toast("Başlıq əlavə olundu"); }).catch(fail);
+        write({ ["custom/" + id]: { name: name.slice(0, 120), ord: Date.now() } }).then(function () { toast("Başlıq əlavə olundu"); }).catch(fail);
       });
     }
   });
-  function fail(err) { console.error(err); toast("Saxlanmadı: " + (err && err.message ? err.message : "xəta"), "error"); }
 
   function customCat() { var id = String(adminCat).replace(/^custom:/, ""); return state.custom.find(function (c) { return String(c.id) === id; }); }
-  function adminItems() {
-    if (adminCat === "templates") return TPL_META.map(function (m) { return { id: m.key, t: m.title, p: state.tpl[m.key] }; });
-    if (adminCat === "mixed") return state.mixed.map(function (m) { return { id: m.id, t: m.title, p: m.content }; });
-    var cat = customCat(); return cat ? (cat.items || []).map(function (i) { return { id: i.id, t: i.title, p: i.content }; }) : [];
-  }
-  function renderList() {
+  function isTplCourses() { return adminCat === "tpl:msg" || adminCat === "tpl:exam"; }
+  function customized(c, sub) { return sub === "exam" ? !!c.tplExam : !!(c.tplMsgElmler || c.tplMsgRamana || c.tplMsg); }
+
+  function renderList(keepSearch) {
+    var box = $("rows"), searchWrap = $("adminSearchWrap"), tools = $("listTools");
+    tools.innerHTML = ""; $("addItem").hidden = true; searchWrap.hidden = true;
+
+    /* --- Mesaj şablonları: 2 kateqoriya --- */
+    if (adminCat === "templates") {
+      $("listTitle").textContent = "Mesaj şablonları";
+      box.innerHTML = '<div class="cats">' +
+        '<button class="cat big" type="button" data-sub="msg"><span class="ico">' + ico.book + '</span><span><b>Kurs mesajı</b><span class="s">“Mesajlar” bölməsi — Elmlər və Ramana</span></span><span class="cnt">' + state.courses.length + ' kurs</span></button>' +
+        '<button class="cat big" type="button" data-sub="exam"><span class="ico">' + ico.exam + '</span><span><b>İmtahan mesajı</b><span class="s">“İmtahanlar” bölməsi</span></span><span class="cnt">' + state.courses.length + ' kurs</span></button></div>';
+      return;
+    }
+    /* --- Kurs siyahısı (istifadəçi paneli kimi) --- */
+    if (isTplCourses()) {
+      var sub = adminCat === "tpl:exam" ? "exam" : "msg";
+      $("listTitle").textContent = sub === "exam" ? "İmtahan mesajı" : "Kurs mesajı";
+      searchWrap.hidden = false;
+      if (!keepSearch) $("adminSearch").value = adminQuery;
+      var rows = searchCourses(adminQuery), toks = tokens(adminQuery);
+      var html = '<button class="crow general" type="button" data-general="1"><span class="gi">' + ico.tpl + '</span><span class="info"><span class="t">Ümumi mətn — bütün kurslar üçün</span><span class="p">Fərdi mətni olmayan hər kurs bunu istifadə edir</span></span>' + ico.chev + '</button>';
+      html += rows.length ? rows.map(function (x) {
+        var c = x.c, code = codeLabel(c.abbr), custom = customized(c, sub);
+        return '<button class="crow" type="button" data-course="' + esc(c.id) + '"><span class="lead">' + (code ? '<span class="flag">' + esc(code) + "</span>" : '<span class="num">' + esc(c.id) + "</span>") + '</span>' +
+          '<span class="info"><span class="t">' + highlight(c.name, toks) + '</span><span class="p">' + (custom ? '<em class="st on">Fərdi mətn</em>' : '<em class="st">Ümumi mətn</em>') + (sub === "msg" && c.dualBranch ? '<em class="st br">Elmlər + Ramana</em>' : "") + "</span></span>" + ico.chev + "</button>";
+      }).join("") : '<div class="empty">Nəticə tapılmadı</div>';
+      box.innerHTML = html;
+      return;
+    }
+    /* --- Qarışıq / əlavə başlıqlar --- */
     var cat = categories().find(function (c) { return c.id === adminCat; });
     if (!cat) { showMain(); return; }
     $("listTitle").textContent = cat.name;
-    var isTpl = adminCat === "templates", isCustom = String(adminCat).indexOf("custom:") === 0;
-    $("addItem").hidden = isTpl;
-    $("addItem").textContent = "+ Yeni mesaj əlavə et";
-    $("listTools").innerHTML = isCustom ? '<button class="btn btn-ghost" type="button" data-tool="rename">Adı dəyiş</button> <button class="btn btn-danger" type="button" data-tool="delcat">Başlığı sil</button>' : "";
+    if (String(adminCat).indexOf("custom:") === 0) tools.innerHTML = '<button class="btn btn-ghost" type="button" data-tool="rename">Adı dəyiş</button> <button class="btn btn-danger" type="button" data-tool="delcat">Başlığı sil</button>';
+    $("addItem").hidden = false; $("addItem").textContent = "+ Yeni mesaj əlavə et";
     var items = adminItems();
-    $("rows").innerHTML = items.length ? items.map(function (it) {
-      return '<div class="arow">' + (it.code ? '<span class="flag">' + esc(it.code) + "</span>" : "") + '<div class="info"><div class="t">' + esc(it.t) + '</div><div class="p">' + esc(it.p) + '</div></div><div class="acts">' +
+    box.innerHTML = items.length ? items.map(function (it) {
+      return '<div class="arow"><div class="info"><div class="t">' + esc(it.t) + '</div><div class="p">' + esc(it.p) + '</div></div><div class="acts">' +
         '<button class="icon-btn" type="button" data-edit="' + esc(it.id) + '" title="Redaktə et" aria-label="Redaktə et">' + ico.edit + "</button>" +
-        (isTpl ? "" : '<button class="icon-btn danger" type="button" data-del="' + esc(it.id) + '" title="Sil" aria-label="Sil">' + ico.del + "</button>") + "</div></div>";
+        '<button class="icon-btn danger" type="button" data-del="' + esc(it.id) + '" title="Sil" aria-label="Sil">' + ico.del + "</button></div></div>";
     }).join("") : '<div class="empty">Hələ mesaj yoxdur</div>';
   }
-  $("listBack").addEventListener("click", showMain);
-  $("addItem").addEventListener("click", function () { openForm(null); });
+  function adminItems() {
+    if (adminCat === "mixed") return state.mixed.map(function (m) { return { id: m.id, t: m.title, p: m.content }; });
+    var cat = customCat(); return cat ? (cat.items || []).map(function (i) { return { id: i.id, t: i.title, p: i.content }; }) : [];
+  }
+  $("adminSearch").addEventListener("input", function (e) { adminQuery = e.target.value; renderList(true); });
+  $("listBack").addEventListener("click", function () {
+    if (isTplCourses()) { adminCat = "templates"; renderList(); } else showMain();
+  });
+  $("addItem").addEventListener("click", function () { openItemForm(null); });
   $("listTools").addEventListener("click", function (e) {
     var t = e.target.dataset.tool, cat = customCat(); if (!t || !cat) return;
     if (t === "rename") ask({ title: "Başlığın adı", input: true, value: cat.name, yes: "Yadda saxla" }).then(function (n) { if (n) write({ ["custom/" + cat.id + "/name"]: n.slice(0, 120) }).then(function () { toast("Hamı üçün yeniləndi"); }).catch(fail); });
     else ask({ title: "Başlıq silinsin?", text: "“" + cat.name + "” və içindəki bütün mesajlar hamı üçün silinəcək.", yes: "Sil" }).then(function (ok) { if (ok) write({ ["custom/" + cat.id]: null }).then(function () { toast("Başlıq silindi"); showMain(); }).catch(fail); });
   });
   $("rows").addEventListener("click", function (e) {
+    var sub = e.target.closest("[data-sub]");
+    if (sub) { adminCat = "tpl:" + sub.dataset.sub; adminQuery = ""; renderList(); return; }
+    var g = e.target.closest("[data-general]");
+    if (g) { openTplForm(null); return; }
+    var cr = e.target.closest("[data-course]");
+    if (cr) { openTplForm(cr.dataset.course); return; }
     var ed = e.target.closest("[data-edit]"), del = e.target.closest("[data-del]");
-    if (ed) openForm(ed.dataset.edit);
+    if (ed) openItemForm(ed.dataset.edit);
     if (del) deleteItem(del.dataset.del);
   });
-
   function deleteItem(id) {
     var it = adminItems().find(function (x) { return String(x.id) === String(id); });
     ask({ title: "Silinsin?", text: "“" + (it ? clip(it.t, 80) : "") + "” hamı üçün silinəcək.", yes: "Sil" }).then(function (ok) {
       if (!ok) return;
-      var path = adminCat === "courses" ? "courses/" + id : adminCat === "mixed" ? "mixed/" + id : "custom/" + customCat().id + "/items/" + id;
+      var path = adminCat === "mixed" ? "mixed/" + id : "custom/" + customCat().id + "/items/" + id;
       write({ [path]: null }).then(function () { toast("Silindi — hamıda yeniləndi"); }).catch(fail);
     });
   }
 
-  /* ---- Forma ---- */
-  var chipsHtml = '<div class="chips">' + PLACEHOLDERS.map(function (p) { return '<button type="button" class="chip" data-ph="' + p[0] + '" title="' + p[1] + '">' + p[0] + "</button>"; }).join("") + "</div>";
+  function backToList() { renderList(); showView("v-list"); }
+  $("formBack").addEventListener("click", backToList);
 
-  function openForm(id) {
-    editingId = id == null ? null : String(id);
-    var f = $("form"), html = "";
-    if (adminCat === "templates") {
-      formKind = "template"; formTplKey = editingId;
-      var meta = TPL_META.find(function (m) { return m.key === editingId; }) || TPL_META[0];
-      $("formTitle").textContent = meta.title;
-      formTpl = { v: state.tpl[editingId] };
-      html += '<p class="fhint" style="margin:0 0 14px">' + esc(meta.hint) + '</p>' +
-        '<div class="fgroup"><label for="fTpl">Mesaj mətni</label><textarea id="fTpl" style="min-height:300px"></textarea>' +
-        '<p class="fhint">Aşağıdakı düymələrə basaraq mətnin içinə avtomatik doldurulan söz əlavə edə bilərsən. <button type="button" class="link-btn" id="tplReset">Standart mətnə qaytar</button></p>' + chipsHtml + '</div>' +
-        '<div class="sect">İstifadəçi panelində belə görünəcək</div><div class="msg-preview big" id="fPrev"></div>';
-    } else {
-      formKind = "item";
-      var cur = adminItems().find(function (i) { return String(i.id) === editingId; });
-      $("formTitle").textContent = cur ? "Mesajı redaktə et" : "Yeni mesaj";
-      html = '<div class="fgroup"><label for="fTitle">Başlıq</label><input id="fTitle" value="' + esc(cur ? cur.t : "") + '"></div>' +
-        '<div class="fgroup"><label for="fText">Mesaj mətni</label><textarea id="fText" style="min-height:220px">' + esc(cur ? cur.p : "") + "</textarea></div>";
-    }
-    html += '<div class="form-foot"><button class="btn btn-primary" type="button" id="formSave">Yadda saxla və hamıya tətbiq et</button><button class="btn btn-ghost" type="button" id="formCancel">Ləğv et</button></div>' +
-      '<div class="apply-note">Təsdiqlədikdən sonra dəyişiklik saytı açan hər kəsdə avtomatik yenilənir.</div>';
-    f.innerHTML = html;
-    if (formKind === "template") { $("fTpl").value = formTpl.v; refreshPrev(); }
+  /* ---- Qarışıq / əlavə başlıq mesajı formu ---- */
+  function openItemForm(id) {
+    formKind = "item"; editingId = id == null ? null : String(id);
+    var cur = adminItems().find(function (i) { return String(i.id) === editingId; });
+    $("formTitle").textContent = cur ? "Mesajı redaktə et" : "Yeni mesaj";
+    $("form").innerHTML =
+      '<div class="fgroup"><label for="fTitle">Başlıq</label><input id="fTitle" value="' + esc(cur ? cur.t : "") + '"></div>' +
+      '<div class="fgroup"><label for="fText">Mesaj mətni</label><textarea id="fText" style="min-height:240px">' + esc(cur ? cur.p : "") + "</textarea></div>" + formFoot();
     showView("v-form");
   }
-  function refreshPrev() {
-    var p = $("fPrev"); if (!p || formKind !== "template") return;
-    var c = state.courses.find(function (x) { return x.dualBranch; }) || state.courses[0] || { name: "Kursun adı", abbr: "SP", total: 251 };
-    var mode = formTplKey === "exam" ? "exams" : "messages";
-    p.textContent = fill($("fTpl").value, vars(c, mode, tomorrow(), "11:30", branchOf(formTplKey === "msgRamana" ? "ramana" : "elmler")));
+  function formFoot() {
+    return '<div class="form-foot"><button class="btn btn-primary" type="button" id="formSave">Yadda saxla və hamıya tətbiq et</button><button class="btn btn-ghost" type="button" id="formCancel">Ləğv et</button></div>' +
+      '<div class="apply-note">Təsdiqlədikdən sonra dəyişiklik saytı açan hər kəsdə avtomatik yenilənir.</div>';
   }
-  $("form").addEventListener("input", function (e) {
-    var id = e.target.id;
-    if (id === "fTpl") formTpl.v = e.target.value;
-    refreshPrev();
-  });
+
+  /* ---- Şablon redaktəsi (kurs üzrə və ya ümumi) ---- */
+  var chipLabels = { "{kurs}": "Kursun adı", "{kod}": "Qısa kod", "{tarix}": "Tarix", "{saat}": "Saat", "{filial}": "Filial", "{xerite}": "Xəritə linki", "{qiymet}": "Ödəniş" };
+  function chipsFor(general, exam) {
+    var list = general ? PLACEHOLDERS.map(function (p) { return p[0]; }) : (exam ? ["{tarix}", "{saat}"] : ["{tarix}"]);
+    return '<div class="chips">' + list.map(function (k) { return '<button type="button" class="chip" data-ph="' + k + '" title="' + chipLabels[k] + '">' + chipLabels[k] + " " + k + "</button>"; }).join("") + "</div>";
+  }
+  /* Redaktə mətni: kurs üçün real dəyərlər (ad, ödəniş, filial) artıq yazılıb, yalnız {tarix}/{saat} qalır */
+  function editBase(c, sub, bk) {
+    var g = sub === "exam" ? state.tpl.exam : (bk === "ramana" ? state.tpl.msgRamana : state.tpl.msgElmler);
+    var v = vars(c, sub === "exam" ? "exams" : "messages", "{tarix}", "{saat}", branchOf(bk));
+    return fill(g, v);
+  }
+  function courseOverride(c, key) {
+    if (key === "exam") return c.tplExam || "";
+    if (key === "ramana") return c.tplMsgRamana || c.tplMsg || "";
+    return c.tplMsgElmler || c.tplMsg || "";
+  }
+
+  function openTplForm(courseId) {
+    var sub = adminCat === "tpl:exam" ? "exam" : "msg";
+    var c = courseId ? findCourse(courseId) : null;
+    if (courseId && !c) return;
+    formKind = "tpl"; editingId = courseId ? String(courseId) : null;
+    var keys = sub === "exam" ? ["exam"] : ["elmler", "ramana"];
+    tf = { sub: sub, course: c, general: !c, keys: keys, cur: keys[0], text: {}, base: {}, dual: c ? !!c.dualBranch : false };
+    keys.forEach(function (k) {
+      if (c) {
+        tf.base[k] = editBase(c, sub, k === "ramana" ? "ramana" : "elmler");
+        tf.text[k] = courseOverride(c, k) || tf.base[k];
+      } else {
+        tf.text[k] = sub === "exam" ? state.tpl.exam : (k === "ramana" ? state.tpl.msgRamana : state.tpl.msgElmler);
+        tf.base[k] = null;
+      }
+    });
+    $("formTitle").textContent = (sub === "exam" ? "İmtahan mesajı" : "Kurs mesajı") + (c ? "" : " — ümumi mətn");
+    renderTplForm();
+    showView("v-form");
+  }
+  function branchBtns() {
+    if (tf.sub === "exam") return "";
+    return '<div class="seg big" id="tfSeg">' + tf.keys.map(function (k) {
+      var nm = branchOf(k).name, changed = tf.course && tf.text[k] !== tf.base[k];
+      return '<button type="button" data-k="' + k + '" class="' + (tf.cur === k ? "active" : "") + '">' + esc(nm) + (changed ? ' <i class="dot"></i>' : "") + "</button>";
+    }).join("") + "</div>";
+  }
+  function renderTplForm() {
+    var c = tf.course, head = "";
+    if (c) {
+      var code = codeLabel(c.abbr);
+      head = '<div class="tf-head">' + (code ? '<span class="flag lg">' + esc(code) + "</span>" : "") + '<div><div class="tf-name">' + esc(c.name) + '</div><div class="tf-sub">' + (tf.sub === "exam" ? "İmtahan mesajı" : "Kurs mesajı") + "</div></div></div>";
+    } else {
+      head = '<div class="tf-head"><span class="gi">' + ico.tpl + '</span><div><div class="tf-name">Ümumi mətn</div><div class="tf-sub">Fərdi mətni olmayan bütün kurslara tətbiq olunur</div></div></div>';
+    }
+    var dualBox = (c && tf.sub === "msg") ? '<label class="check"><input type="checkbox" id="tfDual"' + (tf.dual ? " checked" : "") + '> Bu kursda Ramana filialı da var (istifadəçi panelində Elmlər/Ramana düyməsi görünür)</label>' : "";
+    var note = c ? '<p class="fhint">Mətn istifadəçi panelindəki kimi yazılıb. <b>{tarix}</b>' + (tf.sub === "exam" ? " və <b>{saat}</b>" : "") + ' istifadə zamanı avtomatik doldurulur — onları olduğu kimi saxlayın. <button type="button" class="link-btn" id="tfReset">Ümumi mətnə qaytar</button></p>'
+      : '<p class="fhint">{kurs}, {tarix} kimi sözlər istifadə zamanı avtomatik doldurulur. <button type="button" class="link-btn" id="tfReset">Standart mətnə qaytar</button></p>';
+    $("form").innerHTML = head + branchBtns() + dualBox +
+      '<div class="fgroup"><textarea id="tfText" class="bubble" aria-label="Mesaj mətni"></textarea>' + note + chipsFor(!c, tf.sub === "exam") + "</div>" + formFoot();
+    $("tfText").value = tf.text[tf.cur];
+  }
+  $("form").addEventListener("input", function (e) { if (e.target.id === "tfText" && tf) tf.text[tf.cur] = e.target.value; });
+  $("form").addEventListener("change", function (e) { if (e.target.id === "tfDual" && tf) tf.dual = e.target.checked; });
   $("form").addEventListener("click", function (e) {
     var t = e.target;
-    var ph = t.closest("[data-ph]");
-    if (ph) { var ta = $("fTpl"), s = ta.selectionStart, en = ta.selectionEnd; ta.value = ta.value.slice(0, s) + ph.dataset.ph + ta.value.slice(en); ta.focus(); ta.selectionStart = ta.selectionEnd = s + ph.dataset.ph.length; ta.dispatchEvent(new Event("input", { bubbles: true })); return; }
-    if (t.id === "tplReset") { formTpl.v = defaultTpl(formTplKey); $("fTpl").value = formTpl.v; refreshPrev(); return; }
-    if (t.id === "formCancel") { renderList(); showView("v-list"); return; }
+    if (formKind === "tpl" && tf) {
+      var ph = t.closest("[data-ph]");
+      if (ph) { var ta = $("tfText"), s = ta.selectionStart, en = ta.selectionEnd; ta.value = ta.value.slice(0, s) + ph.dataset.ph + ta.value.slice(en); ta.focus(); ta.selectionStart = ta.selectionEnd = s + ph.dataset.ph.length; tf.text[tf.cur] = ta.value; return; }
+      var sg = t.closest("#tfSeg button");
+      if (sg) { tf.text[tf.cur] = $("tfText").value; tf.cur = sg.dataset.k; var keepDual = $("tfDual") ? $("tfDual").checked : tf.dual; tf.dual = keepDual; renderTplForm(); return; }
+      if (t.id === "tfReset") {
+        tf.text[tf.cur] = tf.course ? tf.base[tf.cur] : defaultTpl(tf.sub === "exam" ? "exam" : (tf.cur === "ramana" ? "msgRamana" : "msgElmler"));
+        $("tfText").value = tf.text[tf.cur]; if ($("tfSeg")) { var d = $("tfDual") ? $("tfDual").checked : tf.dual; tf.dual = d; renderTplForm(); } return;
+      }
+    }
+    if (t.id === "formCancel") { backToList(); return; }
     if (t.id === "formSave") saveForm();
   });
-  $("formBack").addEventListener("click", function () { renderList(); showView("v-list"); });
 
   function saveForm() {
     var btn = $("formSave"), upd = {};
-    if (formKind === "template") {
-      if (!formTpl.v.trim()) { toast("Şablon boş ola bilməz", "warn"); return; }
-      upd["templates/" + formTplKey] = formTpl.v;
+    if (formKind === "tpl") {
+      tf.text[tf.cur] = $("tfText").value;
+      for (var i = 0; i < tf.keys.length; i++) if (!String(tf.text[tf.keys[i]]).trim()) { toast("Mesaj boş ola bilməz", "warn"); return; }
+      if (tf.course) {
+        var id = tf.course.id, fld = { exam: "tplExam", elmler: "tplMsgElmler", ramana: "tplMsgRamana" };
+        tf.keys.forEach(function (k) { upd["courses/" + id + "/" + fld[k]] = tf.text[k] === tf.base[k] ? null : tf.text[k].slice(0, 20000); });
+        if (tf.sub === "msg") {
+          upd["courses/" + id + "/tplMsg"] = null;
+          upd["courses/" + id + "/dualBranch"] = $("tfDual") ? ($("tfDual").checked ? true : null) : (tf.dual ? true : null);
+        }
+      } else if (tf.sub === "exam") upd["templates/exam"] = tf.text.exam;
+      else { upd["templates/msgElmler"] = tf.text.elmler; upd["templates/msgRamana"] = tf.text.ramana; }
     } else {
       var title = $("fTitle").value.trim(), text = $("fText").value.trim();
       if (!title || !text) { toast("Başlıq və mətn boş ola bilməz", "warn"); return; }
@@ -509,7 +604,7 @@
       upd[base + key] = { title: title.slice(0, 200), content: text.slice(0, 20000), ord: ex && ex.ord ? ex.ord : Date.now() };
     }
     btn.disabled = true; btn.textContent = "Saxlanılır…";
-    write(upd).then(function () { toast("Hamı üçün yeniləndi"); renderList(); showView("v-list"); }).catch(function (err) { btn.disabled = false; btn.textContent = "Yadda saxla və hamıya tətbiq et"; fail(err); });
+    write(upd).then(function () { toast("Hamı üçün yeniləndi"); backToList(); }).catch(function (err) { btn.disabled = false; btn.textContent = "Yadda saxla və hamıya tətbiq et"; fail(err); });
   }
   $("adminExit").addEventListener("click", closeAdmin);
 

@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="../assets/base.css">
 <link rel="stylesheet" href="messages.css">
 <script>try{var m=localStorage.getItem('ist_mode_v2');if(/^(normal|winter|snow|dark|cyber|micro)$/.test(m))document.documentElement.setAttribute('data-mode',m);}catch(e){}</script>
+<link rel="stylesheet" href="../assets/themes.css">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <header class="header">
@@ -72,7 +74,8 @@
     <div class="view active" id="v-main"><div class="cats" id="cats"></div></div>
     <div class="view" id="v-list">
       <div class="crumbs"><button class="icon-btn" type="button" id="listBack" aria-label="Geri">←</button><h3 id="listTitle"></h3><span id="listTools"></span></div>
-      <div class="rows" id="rows"></div>
+      <div class="search" id="adminSearchWrap" hidden><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" id="adminSearch" placeholder="Kurs adı və ya kodu — məsələn SH, SI, SL" autocomplete="off" spellcheck="false"></div>
+      <div class="rows" id="rows" style="margin-top:12px"></div>
       <button class="add-dash" type="button" id="addItem">+ Əlavə et</button>
     </div>
     <div class="view" id="v-form">

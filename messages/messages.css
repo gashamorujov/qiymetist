@@ -148,3 +148,38 @@ input.field:focus,textarea.field:focus,.fgroup input:focus,.fgroup textarea:focu
 @media (max-width:600px){.branch-edit{grid-template-columns:1fr}}
 .sect{margin:20px 0 8px;font:700 14px var(--f-display)}
 .msg-preview.big{font-size:15px;min-height:120px;background:var(--chart)}
+
+/* ---------- Şablon idarəsi (yenidən dizayn) ---------- */
+#adminSearchWrap{margin-bottom:4px}
+.cat.big{padding:22px 20px}
+.cat.big .ico{width:50px;height:50px;border-radius:14px;background:var(--buoy-soft);color:var(--buoy-deep)}
+.cat.big b{font-size:17px}
+.crow{
+  display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:13px 16px;margin-bottom:8px;
+  background:var(--paper);border:1.5px solid var(--line);border-radius:14px;cursor:pointer;color:inherit;
+  transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease;
+}
+.crow:hover{border-color:var(--hull-3);box-shadow:var(--shadow-1);transform:translateY(-1px)}
+.crow>svg{color:var(--faint);flex:none}
+.crow .lead{width:62px;flex:none;display:flex}
+.crow .num{min-width:34px;height:34px;border-radius:10px;background:var(--chart);color:var(--mute);display:grid;place-items:center;font:700 12.5px var(--f-display)}
+.crow .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.crow .t{font-size:14.5px;font-weight:600;line-height:1.35}
+.crow .p{display:flex;gap:6px;flex-wrap:wrap}
+.crow.general{border-style:dashed;background:transparent}
+.gi{width:38px;height:38px;border-radius:11px;background:var(--buoy-soft);color:var(--buoy-deep);display:grid;place-items:center;flex:none}
+.crow.general .p{font-size:12.5px;color:var(--mute);display:block}
+.st{font-style:normal;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--chart);color:var(--mute)}
+.st.on{background:var(--buoy-soft);color:var(--buoy-deep)}
+.st.br{background:var(--sea-soft);color:var(--sea)}
+.tf-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--line-2)}
+.tf-name{font:700 17px/1.35 var(--f-display)}
+.tf-sub{font-size:12.5px;color:var(--mute);margin-top:2px}
+.seg.big{margin:0 0 14px;padding:5px}
+.seg.big button{padding:13px 8px;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.seg .dot{width:8px;height:8px;border-radius:50%;background:var(--buoy);display:inline-block}
+textarea.bubble{
+  width:100%;min-height:340px;resize:vertical;padding:18px;line-height:1.7;font-size:14.5px;background:var(--chart);
+  border:1.5px solid var(--line);border-radius:16px 16px 16px 4px;outline:none;white-space:pre-wrap;
+}
+textarea.bubble:focus{border-color:var(--hull);box-shadow:0 0 0 3px rgba(11,42,74,.08)}

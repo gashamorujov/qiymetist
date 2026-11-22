@@ -302,9 +302,3 @@ html[data-mode="winter"] header.top::after{
 .admin-link>span:last-child{color:var(--ink)}
 .admin-link>span:last-child>span{display:block;color:var(--mute)}
 
-html[data-mode="micro"] header.top::before{background:repeating-linear-gradient(90deg,#00FF41 0 6px,transparent 6px 12px);height:3px}
-html[data-mode="snow"] header.top::before{background:repeating-linear-gradient(90deg,#fff 0 34px,#9FB8D6 34px 68px)}
-html[data-mode="cyber"] header.top::before{background:linear-gradient(90deg,#00F0FF,#B026FF,#FF2BD6,#00F0FF)}
-html[data-mode="dark"] .brand img,html[data-mode="cyber"] .brand img,html[data-mode="snow"] .brand img{filter:brightness(0) invert(1)}
-html[data-mode="micro"] .brand img{filter:brightness(0) invert(1) sepia(1) saturate(9) hue-rotate(72deg)}
-html[data-mode="dark"] .ad-frame,html[data-mode="cyber"] .ad-frame,html[data-mode="snow"] .ad-frame,html[data-mode="micro"] .ad-frame{background:#1a2740}
