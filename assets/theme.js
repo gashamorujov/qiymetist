@@ -25,7 +25,7 @@
     winter: { name: "Qış",     desc: "Qar örtüyü, buz keçidləri, maus və barmaqla qarı sürüşdürmə." },
     snow:   { name: "Qar",     desc: "Səhər boz səması və yüngül qar yağışı." },
     dark:   { name: "Dark",    desc: "Yumşaq tünd rənglər — gözü yormayan rahat görünüş." },
-    micro:  { name: "Micro",  desc: "Tünd hack üslubu, ölçülü neon rənglər və aydın mətnlər." },
+    micro:  { name: "Micro",  desc: "Dərin mavi tonlar və təmiz, aydın görünüş." },
     cyber:  { name: "Cyber",   desc: "Elektrik mavisi, neon yaşıl və siqnal sarısı." }
   };
 
