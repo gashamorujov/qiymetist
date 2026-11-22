@@ -266,13 +266,13 @@
   var spSharp=mkSprite(48,function(g,s){
     var h=s/2, gr=g.createRadialGradient(h,h,0,h,h,h);
     gr.addColorStop(0,'rgba(255,255,255,1)'); gr.addColorStop(.38,'rgba(255,255,255,.97)');
-    gr.addColorStop(.52,'rgba(240,246,255,.72)'); gr.addColorStop(.63,'rgba(150,182,225,.30)'); gr.addColorStop(1,'rgba(150,182,225,0)');
+    gr.addColorStop(.52,'rgba(240,246,255,.85)'); gr.addColorStop(.63,'rgba(86,119,164,.62)'); gr.addColorStop(.82,'rgba(150,182,225,.3)'); gr.addColorStop(1,'rgba(86,119,164,0)');
     g.fillStyle=gr; g.fillRect(0,0,s,s);
   });
   var spBokeh=mkSprite(96,function(g,s){
     var h=s/2, gr=g.createRadialGradient(h,h,0,h,h,h);
     gr.addColorStop(0,'rgba(255,255,255,.80)'); gr.addColorStop(.62,'rgba(255,255,255,.72)');
-    gr.addColorStop(.86,'rgba(205,224,247,.50)'); gr.addColorStop(1,'rgba(190,210,240,0)');
+    gr.addColorStop(.82,'rgba(185,207,233,.68)'); gr.addColorStop(1,'rgba(98,128,170,0)');
     g.fillStyle=gr; g.fillRect(0,0,s,s);
   });
   var spCrystal=mkSprite(128,function(g,s){
@@ -302,6 +302,7 @@
     else if(u<.82){ f.L=1; f.r=rnd(1.7,3.1); f.vy=rnd(44,72); f.a=rnd(.82,.97); f.amp=rnd(9,20); f.wf=.55; }
     else if(u<.89){ f.L=2; f.r=rnd(3.6,5.4); f.vy=rnd(40,62); f.a=rnd(.8,.95); f.amp=rnd(16,30); f.wf=.8; }
     else { f.L=3; f.r=rnd(4.5,9); f.vy=rnd(95,150); f.a=rnd(.22,.45); f.amp=rnd(20,40); f.wf=1.2; }
+    if(MODE==='winter' && reduced){ f.vy*=.62; f.amp*=.68; }
     f.x=rnd(0,W); f.y=init?rnd(-H*0.05,H):rnd(-30,-6);
     f.ph=rnd(0,6.28); f.sp=rnd(.5,1.5); f.rot=rnd(0,6.28); f.rs=rnd(-.9,.9); f.ex=0; f.ey=0;
     return f;
@@ -317,13 +318,15 @@
     W=window.innerWidth; H=window.innerHeight;
     fc.width=Math.round(W*fdpr); fc.height=Math.round(H*fdpr);
     fctx.setTransform(fdpr,0,0,fdpr,0,0);
-    var n=MODE==='snow'?Math.max(45,Math.min(130,Math.round(W*H/14000))):Math.max(45,Math.min(260,Math.round(W*H/7500)));
+    var n=MODE==='snow'?Math.max(45,Math.min(130,Math.round(W*H/14000))):
+      (reduced?Math.max(45,Math.min(110,Math.round(W*H/17000))):Math.max(45,Math.min(260,Math.round(W*H/7500))));
     while(flakes.length<n) flakes.push(makeFlake(true));
     if(flakes.length>n) flakes.length=n;
   }
 
   function drawFlake(f){
     fctx.globalAlpha=f.a;
+    if(MODE==='winter'){ fctx.shadowColor='rgba(37,66,105,.56)'; fctx.shadowBlur=f.L===2?5:(f.L===3?3:2); }
     if(MODE==='snow'){
       if(f.L===5){
         fctx.save(); fctx.translate(f.x,f.y); fctx.rotate(f.rot); fctx.strokeStyle='rgba(239,249,255,.9)'; fctx.lineWidth=.42; fctx.lineCap='round';
@@ -342,6 +345,7 @@
       var s=f.r*2.4; fctx.drawImage(spCrystal,-s,-s,s*2,s*2); fctx.restore();
     }else if(f.L===3){ var b=f.r*1.0; fctx.drawImage(spBokeh,f.x-b,f.y-b,b*2,b*2); }
     else{ var q=f.r*1.7; fctx.drawImage(spSharp,f.x-q,f.y-q,q*2,q*2); }
+    fctx.shadowBlur=0; fctx.shadowColor='transparent';
   }
 
   function frame(ts){
@@ -475,7 +479,6 @@
         offT=setTimeout(function(){ if(!GROUND) host.style.display='none'; },720);
       }
     }
-    if(reduced){ fc.style.display='none'; return; }
     fc.style.display='';
     void fc.offsetWidth; fc.style.opacity='1';
     resizeFlakes();
