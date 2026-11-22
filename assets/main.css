@@ -302,3 +302,6 @@ html[data-mode="winter"] header.top::after{
 .admin-link>span:last-child{color:var(--ink)}
 .admin-link>span:last-child>span{display:block;color:var(--mute)}
 
+/* Axtarış nəticələrini kurs siyahısına yaxınlaşdır */
+.hero{padding-bottom:2px}
+.workspace{padding-top:4px}
