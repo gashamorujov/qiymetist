@@ -316,7 +316,7 @@ html[data-mode="snow"]{
   color-scheme:light;
 }
 html[data-mode="snow"] #bgfx{display:none}
-html[data-mode="snow"] body{background:linear-gradient(180deg,#99A7AA 0%,#B6C1C1 48%,#D4D9D6 100%) fixed}
+html[data-mode="snow"] body{background:linear-gradient(180deg,#DCE6EA 0%,#F7FAFB 42%,#EEF3F5 72%,#E2EAEE 100%) fixed}
 html[data-mode="snow"] .panel,html[data-mode="snow"] .dialog,html[data-mode="snow"] .item,html[data-mode="snow"] .cat,html[data-mode="snow"] .form,html[data-mode="snow"] .ad-panel{backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);border-color:rgba(89,109,112,.2)}
 html[data-mode="snow"] header.top{border-color:#BCC7C7}
 html[data-mode="snow"] header.top::before{background:linear-gradient(90deg,#76878C,#CED6D2,#D8BB82,#BBC7C5)}
@@ -457,3 +457,27 @@ html[data-mode="micro"] .mode-txt span{color:var(--mute)}
 html[data-mode="micro"] .ad-frame{background:#10263A}
 html[data-mode="micro"] .toast{background:#15527C;color:#F5FBFF}
 html[data-mode="micro"] ::selection{background:rgba(85,184,242,.35);color:#fff}
+
+/* Mavi tonu gücləndir: daha soyuq göy işıq və mavi səthlər */
+html[data-mode="micro"]{
+  --hull:#12639A;--hull-2:#197DB8;--hull-3:#329BD4;
+  --chart:#091A2C;--paper:#102A43;--line:#2D5B7D;--line-2:#244B69;
+  --buoy:#50B9FF;--buoy-deep:#9AD9FF;--buoy-soft:rgba(80,185,255,.18);
+  --sea:#52D4EA;--sea-soft:rgba(82,212,234,.16);
+  --hdr:rgba(5,20,36,.96);
+}
+html[data-mode="micro"] body{background-color:#06182B;background-image:radial-gradient(ellipse at 12% 0%,rgba(31,128,196,.34),transparent 46%),radial-gradient(ellipse at 92% 25%,rgba(25,96,166,.25),transparent 42%),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px)}
+html[data-mode="micro"] .panel,html[data-mode="micro"] .calc,html[data-mode="micro"] .dialog,html[data-mode="micro"] .form,html[data-mode="micro"] .ad-panel,html[data-mode="micro"] .item,html[data-mode="micro"] .cat{background:linear-gradient(145deg,rgba(17,48,76,.99),rgba(11,34,57,.99));border-color:#2D5B7D}
+html[data-mode="micro"] .btn-primary,html[data-mode="micro"] .tab.active,html[data-mode="micro"] .seg button.active,html[data-mode="micro"] .branch button.active{background:#50B9FF;border-color:#50B9FF;color:#06233B}
+
+/* Cyber: daha güclü mavi, yaşıl və sarı neon konturlar */
+html[data-mode="cyber"] .panel,html[data-mode="cyber"] .calc,html[data-mode="cyber"] .form,html[data-mode="cyber"] .dialog,html[data-mode="cyber"] .search,html[data-mode="cyber"] .item,html[data-mode="cyber"] .cat,html[data-mode="cyber"] .ad-panel{
+  border-color:rgba(25,243,255,.72);box-shadow:0 0 0 1px rgba(25,243,255,.16),0 0 22px rgba(25,243,255,.16),0 12px 34px rgba(0,0,0,.38)
+}
+html[data-mode="cyber"] .btn-primary,html[data-mode="cyber"] .tab.active,html[data-mode="cyber"] .seg button.active{box-shadow:0 0 10px rgba(255,45,170,.75),0 0 26px rgba(255,45,170,.48),inset 0 0 12px rgba(255,255,255,.12)}
+html[data-mode="cyber"] .btn-dark{border-color:#19F3FF;box-shadow:0 0 12px rgba(25,243,255,.3),inset 0 0 16px rgba(25,243,255,.18)}
+html[data-mode="cyber"] .flag,html[data-mode="cyber"] .calc-badge{box-shadow:0 0 12px rgba(25,243,255,.24)}
+html[data-mode="cyber"] .row.added{box-shadow:inset 3px 0 #FFE14D,0 0 14px rgba(255,225,77,.12)}
+html[data-mode="cyber"] header.top::before{filter:drop-shadow(0 0 7px rgba(25,243,255,.9))}
+html[data-mode="cyber"] .brand img{filter:brightness(0) invert(1) drop-shadow(0 0 5px #19F3FF) drop-shadow(0 0 11px #19F3FF)}
+@media (prefers-reduced-motion:reduce){html[data-mode="cyber"] *,html[data-mode="cyber"] *::before,html[data-mode="cyber"] *::after{scroll-behavior:auto}}

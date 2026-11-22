@@ -292,7 +292,11 @@
 
   function makeFlake(init){
     var u=Math.random(), f={L:0,r:0,vy:0,a:0,amp:0,wf:0};
-    if(u<.42){ f.L=0; f.r=rnd(.8,1.6); f.vy=rnd(22,40); f.a=rnd(.55,.85); f.amp=rnd(5,12); f.wf=.3; }
+    if(MODE==='snow'){
+      /* Xırda, yumru və sakit dənəciklər; ağ-boz fonda kənarı yumşaq seçilir. */
+      f.L=4; f.r=rnd(.75,1.55); f.vy=rnd(24,48); f.a=rnd(.58,.9); f.amp=rnd(5,13); f.wf=.32;
+    }
+    else if(u<.42){ f.L=0; f.r=rnd(.8,1.6); f.vy=rnd(22,40); f.a=rnd(.55,.85); f.amp=rnd(5,12); f.wf=.3; }
     else if(u<.82){ f.L=1; f.r=rnd(1.7,3.1); f.vy=rnd(44,72); f.a=rnd(.82,.97); f.amp=rnd(9,20); f.wf=.55; }
     else if(u<.89){ f.L=2; f.r=rnd(3.6,5.4); f.vy=rnd(40,62); f.a=rnd(.8,.95); f.amp=rnd(16,30); f.wf=.8; }
     else { f.L=3; f.r=rnd(4.5,9); f.vy=rnd(95,150); f.a=rnd(.22,.45); f.amp=rnd(20,40); f.wf=1.2; }
@@ -311,14 +315,17 @@
     W=window.innerWidth; H=window.innerHeight;
     fc.width=Math.round(W*fdpr); fc.height=Math.round(H*fdpr);
     fctx.setTransform(fdpr,0,0,fdpr,0,0);
-    var n=Math.max(45,Math.min(260,Math.round(W*H/7500)));
+    var n=MODE==='snow'?Math.max(55,Math.min(180,Math.round(W*H/10500))):Math.max(45,Math.min(260,Math.round(W*H/7500)));
     while(flakes.length<n) flakes.push(makeFlake(true));
     if(flakes.length>n) flakes.length=n;
   }
 
   function drawFlake(f){
     fctx.globalAlpha=f.a;
-    if(f.L===2){
+    if(MODE==='snow'){
+      fctx.fillStyle='rgba(151,180,198,.52)'; fctx.beginPath(); fctx.arc(f.x,f.y,f.r+.55,0,TAU); fctx.fill();
+      fctx.fillStyle='rgba(255,255,255,.96)'; fctx.beginPath(); fctx.arc(f.x,f.y,f.r,0,TAU); fctx.fill();
+    }else if(f.L===2){
       fctx.save(); fctx.translate(f.x,f.y); fctx.rotate(f.rot);
       var s=f.r*2.4; fctx.drawImage(spCrystal,-s,-s,s*2,s*2); fctx.restore();
     }else if(f.L===3){ var b=f.r*1.0; fctx.drawImage(spBokeh,f.x-b,f.y-b,b*2,b*2); }
@@ -425,6 +432,7 @@
     if(m!=='winter' && m!=='snow') m='normal';
     if(m===MODE) return;
     MODE=m;
+    if(m==='snow') flakes.length=0;
     clearTimeout(offT);
 
     if(m==='normal'){
